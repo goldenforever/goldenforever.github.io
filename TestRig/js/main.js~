@@ -1,0 +1,10 @@
+function makescreen() {
+	$(".inner").css("height",(document.getElementById("height").value)+"px");
+	$(".inner").css("width",(document.getElementById("width").value)+"px");
+	$(".inner").css("border-radius","0");
+}
+function makecirclescreen() {
+	$(".inner").css("height",(document.getElementById("radius").value)+"px");
+	$(".inner").css("width",(document.getElementById("radius").value)+"px");
+	$(".inner").css("border-radius",((document.getElementById("radius").value)/2)+"px");
+}
