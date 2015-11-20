@@ -15,7 +15,7 @@
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        menu: /^@menu((\|(?:[^|\n])*)*)(?:\n+|$)/,
+        webject: /^@([a-zA-Z]+)((?:\|(?:[^|\n])*)*)(?:\n+|$)/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -258,11 +258,11 @@
                 continue;
             }
 
-            // menu
-            if (cap = this.rules.menu.exec(src)) {
+            // webject
+            if (cap = this.rules.webject.exec(src)) {
                 src = src.substring(cap[0].length);
                 this.tokens.push({
-                    type: 'menu'
+                    type: 'webject'
                 });
                 continue;
             }
@@ -819,7 +819,7 @@
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.menu = function() {
+    Renderer.prototype.webject = function() {
         console.log(arguments)
         return '<nav></nav>\n';
     };
