@@ -24,7 +24,7 @@
         html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
         def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
         table: noop,
-        paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
+        paragraph: /^((?:[^\n]+\n?(?!hr|menu|heading|lheading|blockquote|tag|def))+)\n*/,
         text: /^[^\n]+/
     };
 
@@ -570,11 +570,11 @@
      */
 
     InlineLexer.prototype.output = function(src) {
-        var out = ''
-            , link
-            , text
-            , href
-            , cap;
+        var out = '',
+            link,
+            text,
+            href,
+            cap;
 
         while (src) {
             // escape
