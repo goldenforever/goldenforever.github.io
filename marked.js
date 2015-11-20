@@ -262,7 +262,7 @@
             if (cap = this.rules.webject.exec(src)) {
                 src = src.substring(cap[0].length);
                 var a = cap[2].split(/\|/);
-                console.log(a)
+                console.log(a);
                 this.tokens.push({
                     type: 'webject',
                     webject: cap[1],
