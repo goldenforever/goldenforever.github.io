@@ -261,6 +261,7 @@
             // webject
             if (cap = this.rules.webject.exec(src)) {
                 src = src.substring(cap[0].length);
+                console.log(cap)
                 this.tokens.push({
                     type: 'webject'
                 });
