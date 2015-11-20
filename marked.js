@@ -996,8 +996,8 @@
             case 'hr': {
                 return this.renderer.hr();
             }
-            case 'menu': {
-                return this.renderer.menu();
+            case 'webject': {
+                return this.renderer.webject();
             }
             case 'heading': {
                 return this.renderer.heading(
