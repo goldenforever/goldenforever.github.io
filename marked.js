@@ -823,7 +823,7 @@
     };
 
     Renderer.prototype.webject = function() {
-        console.log(arguments)
+        //console.log(arguments)
         return '<nav></nav>\n';
     };
 
