@@ -10,14 +10,6 @@
 # Simplifying Web Development
 
 @menu|Requirements Specification|Components|Design
-@menu|
-
-@menu||
-@menu|Design
-
-@menu|Design|
-
-@menu
 
 * * *
 
@@ -67,12 +59,32 @@ Small file size     | *see below*
 #### Responsive design
 - Min expectable size
 - Max expectable size
+
 #### Fast to load
 - Max time allowed to load
+
 #### Small file size
+As part of Ofcom's duties as a regulator, they used the following data from SamKnows (11/2014).
+
 http://media.ofcom.org.uk/content/posts/news/2015/one-in-three-uk-broadband-superfast
 
+The minimum average download speed for a currently offered service (and over 99.5% in use are) in the UK is
+7.5Mbit/s. Google says a website should aim to have loaded within a second and
+so = 7.5(1-x)Mbits where x is the time taken to create the website.
 
+Therefore I will sit an upper bound on 7.5Mbits as the size of the website *including* the assets.
+
+The average size of the images on a web-page is 1.4Mbits {http://httparchive.org/trends.php},
+so I will subtract the size of these assets from the upper bound to make a new
+***upper bound of 6.1Mbit/s***.
+
+Adding hosted libraries (js/css/fonts) through runtime adding of links seems to
+be a very logical way to mitigate this upper bound whilst still retaining a
+wide range of output formats.
+
+I would account Adobe Flash into my calculations but since YouTube has moved to using a
+HTML5 player instead, mean usage has reduced by approximately 40% and is now less than
+half of the mean font transfer size.
 
 ---Page---
 
