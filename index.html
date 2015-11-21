@@ -57,8 +57,42 @@ Fast to load        | *see below*
 Small file size     | *see below*
 
 #### Responsive design
-- Min expectable size
-- Max expectable size
+http://www.rapidtables.com/web/dev/screen-resolution-statistics.htm
+
+The link shows popular screen resolutions.
+
+Screen resolution | Display ratio | Usage | Screen size / type
+------------------|---------------|-------|-----------------
+1366x768 | 16:9 | 19.1% | 14" Notebook / 15.6" Laptop / 18.5" monitor
+1920x1080 | 16:9 | 9.4% | 21.5" monitor / 23" monitor / 1080p TV
+1280x800 | 8:5 | 8.5% | 14" Notebook
+320x568 | 9:16 | 6.4% | 4" iPhone 5
+1440x900 | 8:5 | 5.7% | 19" monitor
+1280x1024 | 5:4 | 5.5% | 19" monitor
+320x480 | 2:3 | 5.2% | 3.5" iPhone
+1600x900 | 16:9 | 4.6% | 20" monitor
+768x1024 | 3:4 | 4.5% | 9.7" iPad
+1024x768 | 4:3 | 3.9% | 15" monitor
+1680x1050 | 8:5 | 2.8% | 22" monitor
+360x640 | 9:16 | 2.3% |
+1920x1200 | 8:5 | 1.7% | 24" monitor
+720x1280 | 9:16 | 1.6% | 4.8" Galaxy S
+480x800 | 3:5 | 1.1% |
+1360x768 | 16:9 | 0.9% |
+1280x720 | 16:9 | 0.9% | 720p TV
+         |      | **84.1%** |
+
+The 320x480 of the first three generations of the iPhone seem to provide
+a lower bound as they are responsible for over 5% of web-page loads.
+
+The 1920x1080 resolution will serve as an upper bound as larger screens are
+responsible for less than 5% of web-page loads.
+
+The screen will need to support resolutions between
+16:9 in landscape to 16:9 in portrait.
+
+i.e. all of these:
+![](aspect-ratio-diagram.png)
 
 #### Fast to load
 - Max time allowed to load
@@ -76,7 +110,7 @@ Therefore I will sit an upper bound on 7.5Mbits as the size of the website *incl
 
 The average size of the images on a web-page is 1.4Mbits {http://httparchive.org/trends.php},
 so I will subtract the size of these assets from the upper bound to make a new
-***upper bound of 6.1Mbit/s***.
+***upper bound of 6.1Mbits***.
 
 Adding hosted libraries (js/css/fonts) through runtime adding of links seems to
 be a very logical way to mitigate this upper bound whilst still retaining a
