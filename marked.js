@@ -1,8 +1,10 @@
+
 /**
  * marked - a markdown parser
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
  * https://github.com/chjj/marked
  */
+console.log("Oh hai!");
 
 ;(function() {
 
@@ -149,16 +151,8 @@
      */
 
     Lexer.prototype.token = function(src, top, bq) {
-        var src = src.replace(/^ +$/gm, '')
-            , next
-            , loose
-            , cap
-            , bull
-            , b
-            , item
-            , space
-            , i
-            , l;
+        var src = src.replace(/^ +$/gm, ''),
+            next, loose, cap, bull, b, item, space, i, l;
 
         while (src) {
             // newline
@@ -261,12 +255,15 @@
             // webject
             if (cap = this.rules.webject.exec(src)) {
                 src = src.substring(cap[0].length);
+                var arg = cap[2].split("|").slice(1);
+                if (arg.length > 0 && arg[arg.length-1] === "") {
+                    arg.pop()
+                }
                 this.tokens.push({
                     type: 'webject',
-                    webject: cap[1],
-                    args: a[a.length-1] ? cap[2].split("|").slice(1) : cap[2].split("|").slice(1).pop()
+                    webject: cap[1].toLowerCase(),
+                    args: arg
                 });
-                console.log(this.tokens[this.tokens.length-1]);
                 continue;
             }
 
@@ -822,9 +819,21 @@
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.webject = function() {
-        //console.log(arguments)
-        return '<nav></nav>\n';
+    Renderer.prototype.webject = function(webject, args) {
+        loopVals = {
+            "menu":[
+                '<nav>',
+                '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(\' \',\'-\'))">', args, '</a>',
+                '<span class="separator"></span>',
+                '</nav>'
+            ],
+            "page":[
+                '<article>', '', [], '', '', '</article>'
+            ]
+        };
+
+        var val = loopVals[webject];
+        return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
     Renderer.prototype.list = function(body, ordered) {
@@ -999,7 +1008,9 @@
                 return this.renderer.hr();
             }
             case 'webject': {
-                return this.renderer.webject();
+                return this.renderer.webject(
+                    this.token.webject,
+                    this.token.args);
             }
             case 'heading': {
                 return this.renderer.heading(
@@ -1104,6 +1115,20 @@
     /**
      * Helpers
      */
+
+    function loop(u,l,params,r,s,d) {
+        var newStr = u;
+        var tmp = l;
+        console.log(newStr);
+        for (var i=0;i<params.length;i++) {
+            l = l.replace("||p||", params[i]).replace("||i||", i);
+            newStr += l + params[i] + r;
+            if (i<params.length-1) newStr += s;
+            l = tmp;
+            console.log(newStr);
+        }
+        return newStr + d;
+    }
 
     function escape(html, encode) {
         return html
