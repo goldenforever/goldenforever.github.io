@@ -1,11 +1,8 @@
-
 /**
  * marked - a markdown parser
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
  * https://github.com/chjj/marked
  */
-console.log("Oh hai!");
-
 ;(function() {
 
     /**
@@ -17,7 +14,7 @@ console.log("Oh hai!");
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        webject: /^@([a-zA-Z]+)((?:\|(?:[^|\n])*)*)(?:\n+|$)/,
+        webject: /^@([a-zA-Z]+)((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -255,9 +252,19 @@ console.log("Oh hai!");
             // webject
             if (cap = this.rules.webject.exec(src)) {
                 src = src.substring(cap[0].length);
-                var arg = cap[2].split("|").slice(1);
+                var arg = cap[2].split(/[|:,]/g).slice(1);
+                console.log(arg);
                 if (arg.length > 0 && arg[arg.length-1] === "") {
                     arg.pop()
+                }
+                for (i=0; i<arg.length; i++) {
+                    arg[i] = arg[i].trim();
+                    if (arg[i].length > 1 && (
+                        (arg[i].charAt(0) == '"' && arg[i].charAt(arg[i].length-1) == '"')
+                            || (arg[i].charAt(0) == "'" && arg[i].charAt(arg[i].length-1) == "'")
+                        )) {
+                        arg[i] = arg[i].substring(1,arg[i].length-1);
+                    }
                 }
                 this.tokens.push({
                     type: 'webject',
@@ -570,11 +577,7 @@ console.log("Oh hai!");
      */
 
     InlineLexer.prototype.output = function(src) {
-        var out = '',
-            link,
-            text,
-            href,
-            cap;
+        var out = '', link, text, href, cap;
 
         while (src) {
             // escape
@@ -781,7 +784,7 @@ console.log("Oh hai!");
         }
 
         if (!lang) {
-            return '<pre><code>'
+            return '<pre><code class="nohighlight">'
                 + (escaped ? code : escape(code, true))
                 + '\n</code></pre>';
         }
@@ -823,7 +826,7 @@ console.log("Oh hai!");
         loopVals = {
             "menu":[
                 '<nav>',
-                '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(\' \',\'-\'))">', args, '</a>',
+                '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(/ /g,\'-\'))">', args, '</a>',
                 '<span class="separator"></span>',
                 '</nav>'
             ],

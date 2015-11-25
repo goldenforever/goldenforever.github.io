@@ -453,7 +453,7 @@ th {
 */
 
 body {
-    padding: 10px;
+    padding: 30px;
 }
 
 article {
@@ -1126,3 +1126,12 @@ body :checked+.radio-label {
 .separator {
     margin-left: 20px;
 }
+
+@media (max-aspect-ratio: 9/16) and (min-aspect-ratio: 16/9) {
+    body:before {
+        content: 'This aspect ratio is unsupported.';
+        display: block;
+        color: red;
+    }
+}
+
