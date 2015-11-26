@@ -14,7 +14,7 @@
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        webject: /^@([a-zA-Z]+)((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
+        blockweb: /^@([a-zA-Z]+)((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -26,6 +26,25 @@
         paragraph: /^((?:[^\n]+\n?(?!hr|menu|heading|lheading|blockquote|tag|def))+)\n*/,
         text: /^[^\n]+/
     };
+
+    function loopVals(object, args) {
+        return {
+        "menu":[
+            '<nav>',
+            '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(/ /g,\'-\'))">', args, '</a>',
+            '<span class="separator"></span>',
+            '</nav><hr>'
+        ],
+        "page":[
+            '<article>', '', [], '', '', '</article>'
+        ],
+        "icon":[
+            '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
+        ],
+        "underline":[
+            '<span style="text-decoration:underline">', '', [args.join('')], '', '', '</span>'
+        ]}[object]
+    }
 
     block.bullet = /(?:[*+-]|\d+\.)/;
     block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
@@ -249,11 +268,10 @@
                 continue;
             }
 
-            // webject
-            if (cap = this.rules.webject.exec(src)) {
+            // blockweb
+            if (cap = this.rules.blockweb.exec(src)) {
                 src = src.substring(cap[0].length);
                 var arg = cap[2].split(/[|:,]/g).slice(1);
-                console.log(arg);
                 if (arg.length > 0 && arg[arg.length-1] === "") {
                     arg.pop()
                 }
@@ -267,8 +285,8 @@
                     }
                 }
                 this.tokens.push({
-                    type: 'webject',
-                    webject: cap[1].toLowerCase(),
+                    type: 'blockweb',
+                    blockweb: cap[1].toLowerCase(),
                     args: arg
                 });
                 continue;
@@ -465,6 +483,7 @@
      */
 
     var inline = {
+        inlineweb: /^@([a-zA-Z]+)((?:[|,:](?:[^|@\n])*)*)@/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -477,7 +496,7 @@
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
-        text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+        text: /^[\s\S]+?(?=[@\\<!\[_*`]| {2,}\n|$)/
     };
 
     inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -584,6 +603,26 @@
             if (cap = this.rules.escape.exec(src)) {
                 src = src.substring(cap[0].length);
                 out += cap[1];
+                continue;
+            }
+
+            // inlineweb
+            if (cap = this.rules.inlineweb.exec(src)) {
+                src = src.substring(cap[0].length);
+                var arg = cap[2].split(/[|:,]/g).slice(1);
+                if (arg.length > 0 && arg[arg.length-1] === "") {
+                    arg.pop()
+                }
+                for (i=0; i<arg.length; i++) {
+                    arg[i] = arg[i].trim();
+                    if (arg[i].length > 1 && (
+                            (arg[i].charAt(0) == '"' && arg[i].charAt(arg[i].length-1) == '"')
+                            || (arg[i].charAt(0) == "'" && arg[i].charAt(arg[i].length-1) == "'")
+                        )) {
+                        arg[i] = arg[i].substring(1,arg[i].length-1);
+                    }
+                }
+                out += this.renderer.inlineweb(cap[1].toLowerCase(), arg);
                 continue;
             }
 
@@ -750,10 +789,7 @@
 
     InlineLexer.prototype.mangle = function(text) {
         if (!this.options.mangle) return text;
-        var out = ''
-            , l = text.length
-            , i = 0
-            , ch;
+        var out = '', l = text.length, i = 0, ch;
 
         for (; i < l; i++) {
             ch = text.charCodeAt(i);
@@ -784,7 +820,7 @@
         }
 
         if (!lang) {
-            return '<pre><code class="nohighlight">'
+            return '<pre><code>'
                 + (escaped ? code : escape(code, true))
                 + '\n</code></pre>';
         }
@@ -822,20 +858,8 @@
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.webject = function(webject, args) {
-        loopVals = {
-            "menu":[
-                '<nav>',
-                '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(/ /g,\'-\'))">', args, '</a>',
-                '<span class="separator"></span>',
-                '</nav>'
-            ],
-            "page":[
-                '<article>', '', [], '', '', '</article>'
-            ]
-        };
-
-        var val = loopVals[webject];
+    Renderer.prototype.blockweb = function(blockweb, args) {
+        var val = loopVals(blockweb, args);
         return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
@@ -894,6 +918,11 @@
 
     Renderer.prototype.del = function(text) {
         return '<del>' + text + '</del>';
+    };
+
+    Renderer.prototype.inlineweb = function(inlineweb, args) {
+        var val = loopVals(inlineweb, args);
+        return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
     Renderer.prototype.link = function(href, title, text) {
@@ -1010,9 +1039,12 @@
             case 'hr': {
                 return this.renderer.hr();
             }
-            case 'webject': {
-                return this.renderer.webject(
-                    this.token.webject,
+            case 'inlineweb': {
+                return this.renderer.inlineweb(this.token.inlineweb);
+            }
+            case 'blockweb': {
+                return this.renderer.blockweb(
+                    this.token.blockweb,
                     this.token.args);
             }
             case 'heading': {
@@ -1027,13 +1059,7 @@
                     this.token.escaped);
             }
             case 'table': {
-                var header = ''
-                    , body = ''
-                    , i
-                    , row
-                    , cell
-                    , flags
-                    , j;
+                var header = '', body = '', i, row, cell, flags, j;
 
                 // header
                 cell = '';
@@ -1122,13 +1148,11 @@
     function loop(u,l,params,r,s,d) {
         var newStr = u;
         var tmp = l;
-        console.log(newStr);
         for (var i=0;i<params.length;i++) {
             l = l.replace("||p||", params[i]).replace("||i||", i);
             newStr += l + params[i] + r;
             if (i<params.length-1) newStr += s;
             l = tmp;
-            console.log(newStr);
         }
         return newStr + d;
     }
@@ -1201,13 +1225,10 @@
 
             opt = merge({}, marked.defaults, opt || {});
 
-            var highlight = opt.highlight
-                , tokens
-                , pending
-                , i = 0;
+            var highlight = opt.highlight, tokens, pending, i = 0;
 
             try {
-                tokens = Lexer.lex(src, opt)
+                tokens = Lexer.lex(src, opt);
             } catch (e) {
                 return callback(e);
             }
@@ -1274,7 +1295,7 @@
             }
             throw e;
         }
-    }
+    };
 
     /**
      * Options

@@ -6,8 +6,6 @@
 
 @MENU: Requirements Specification, Components, Design@
 
-* * *
-
 ## Requirements Specification
 
 From the specification:
@@ -51,9 +49,13 @@ Responsive design   | ***see below***
 Fast to load        | ***see below***
 Small file size     | ***see below***
 
-#### Responsive design
+    public static void main(String[] args) {
+        System.out.println("Hello world!");
+    }
 
-This table (http://www.rapidtables.com/web/dev/screen-resolution-statistics.htm)
+#### Responsive design&copyright;
+
+[This table](http://www.rapidtables.com/web/dev/screen-resolution-statistics.htm)
 shows popular screen resolutions.
 
 Screen resolution | Display ratio | Usage     | Screen size / type
@@ -119,11 +121,14 @@ half of the mean font transfer size.
 
 ## Components
 
-Markdown will be used as the base of the idea
+**Markdown** will be used as the base of the idea.
+
+**GFM** (**G**ithub **F**lavoured **M**arkdown) is the variant of Markdown which is used by Github.
+It has these added benefits to Markdown:
+- URLs automatically become links
+- Strikethroughs can be added: `~~Went wrong~~` @ICON:long-arrow-right@ ~~Went wrong~~
 
 ## Design
-
-After studying the 
 
 I will need to add some syntax to Markdown to allow the user to add web objects.
 
@@ -131,7 +136,9 @@ Markdown already uses most of the unicode characters for its syntax.
 
 As there are many more objects to be added, a user would not want to learn a different
 one for each one, and few of the web objects to be added have a visually similar code
-equivalent, a general markdown web object is needed.
+equivalent, a general markdown web object is needed. This will be the start point of most
+objects, though if there are some objects that clearly would benefit from special syntax,
+this can be added later.
 
 This will have the added benefit of making the transition from having used Markdown
 before much simpler.
@@ -144,23 +151,19 @@ a syntax for both.
     block   = content [close];
     inline  = content close;
     
-    content = open object {delim {" "} argument {" "}};
-    object  = char {char};
-    char    = upper | lower
-    upper   = "A" | "B" | "C" | "D" | "E" | "F" | "G"
-            | "H" | "I" | "J" | "K" | "L" | "M" | "N"
-            | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
-            | "V" | "W" | "X" | "Y" | "Z" ;
-    lower   = "a" | "b" | "c" | "d" | "e" | "f" | "g"
-            | "h" | "i" | "j" | "k" | "l" | "m" | "n"
-            | "o" | "p" | "q" | "r" | "s" | "t" | "u"
-            | "v" | "w" | "x" | "y" | "z" ;
+    content = open object {delim {" "} argument {" "}} ;
+    object  = char {char} ;
+    char    = upper | lower ;
+    upper   = "A" | "B" | "C" | ... | "Y" | "Z" ;
+    lower   = "a" | "b" | "c" | ... | "y" | "z" ;
 
-#### Initial choices for the actual characters:
+What about this?
 
-    open  = '@';
-    close = '@';
-    delim = ':' | ',' | '|';
+#### Initial choices of characters:
+
+    open  = "@" ;
+    close = "@" ;
+    delim = ":" | "," | "|" ;
 
 ##### Logic
 
@@ -173,18 +176,29 @@ Markdown in the case that someone wanted to write an email address.
 A choice of three delimiters allow flexibility in the way the website
 can be written, though I would recommend making the object uppercase and 
 giving the first delimiter a different character to the others as good 
-practice, as then someone reading it could easily differentiate the 
+practice, as then someone reading it could easily differentiate the object
+and its arguments.
+
 
 #### Example
 If I wanted to create a menu that opens 
 '*Home*', '*Services*', '*About Us*' and '*Contact*', I could write:
 
-    ...
-    @MENU:Home, "Services", 'About Us', Contact
-    ...
-    
-And if I wanted to underline some text, I would write:
+```none
 
-    ...@UNDERLINE:this is now underlined@...
+@MENU:Home, "Services", 'About Us', Contact
+
+```
+which would become:
+
+@MENU:Home, "Services", 'About Us', Contact
+
+And if I wanted to underline some text, I could write:
+
+```none
+...@UNDERLINE:this is now underlined@...
+```
+which would become: @UNDERLINE:this is now underlined@
+
 </body>
 </html>
