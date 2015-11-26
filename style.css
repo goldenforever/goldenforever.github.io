@@ -958,6 +958,7 @@ body kbd {
     font-size: 11px;
     line-height: 10px;
     color: #555;
+    color: #555;
     vertical-align: middle;
     background-color: #fcfcfc;
     border: solid 1px #ccc;
@@ -1120,14 +1121,24 @@ code.hljs {
 }
 
 .separator {
-    margin-left: 20px;
+    margin: 0 20px;
 }
 
-@media (max-aspect-ratio: 9/16) and (min-aspect-ratio: 16/9) {
-    body:before {
-        content: 'This aspect ratio is unsupported.';
+.separator:before {
+    content: '|';
+    font-weight: bold;
+    color: #e7e7e7;
+}
+
+@media (max-width: 768px) {
+    .separator:before {
+        content: '';
+    }
+    .separator {
+        content: '';
+        margin: 0 3px;
+    }
+    nav a {
         display: block;
-        color: red;
     }
 }
-
