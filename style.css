@@ -1130,15 +1130,26 @@ code.hljs {
     color: #e7e7e7;
 }
 
+blockquote blockquote {
+    border-left: 4px solid #666;
+    color: #666;
+}
+
 @media (max-width: 768px) {
     .separator:before {
         content: '';
     }
     .separator {
         content: '';
-        margin: 0 3px;
+        margin: 0;
+    }
+    nav a:before {
+        content: '';
+        display: block;
+        margin-top: 5px;
     }
     nav a {
         display: block;
+        margin-top: 5px;
     }
 }

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
-<script src="freeDOM.js"></script>
 <body style="white-space:pre-wrap;font-family:monospace"
 ># Simplifying Web Development
 
-@MENU: Requirements Specification, Components, Design@
+@MENU: To dos, Requirements Specification, Components, Design, Documentation@
+## To Dos
+- Add parent divs to each header 'tree'
+- Fix **&amp;lt;** in code bug
 
 ## Requirements Specification
 
@@ -32,7 +34,6 @@ and aggressively context-predictive content display.
 I will set this balance to be that which satisfies 95% of
 the population for quantifiable metrics.
 
-
 ![](images/normal-distribution.png)
 
 ![](images/normal-distribution-both.png)
@@ -50,12 +51,8 @@ Responsive design   | ***see below***
 Fast to load        | ***see below***
 Small file size     | ***see below***
 
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
-
 #### Responsive design
-
+* This is indented four spaces, because it's two spaces further than the item above.
 [This table](http://www.rapidtables.com/web/dev/screen-resolution-statistics.htm)
 shows popular screen resolutions.
 
@@ -94,13 +91,10 @@ For the same reason, the screen will need to support resolutions between
 
 ![](images/aspect-ratio-diagram.png)
 
-#### Fast to load
-- Max time allowed to load
-
-#### Small file size
-As part of Ofcom's duties as a regulator, they used the following data from SamKnows (11/2014).
-
-http://media.ofcom.org.uk/content/posts/news/2015/one-in-three-uk-broadband-superfast
+#### Fast to load / Small file size
+As part of Ofcom's duties as a regulator, they used 
+[this data](http://media.ofcom.org.uk/content/posts/news/2015/one-in-three-uk-broadband-superfast)
+from SamKnows (11/2014).
 
 The minimum average download speed for a currently offered service (and over 99.5% in use are) in the UK is
 7.5Mbit/s. Google says a website should aim to have loaded within a second and
@@ -139,37 +133,7 @@ As there are many more objects to be added, a user would not want to learn a dif
 one for each one, and few of the web objects to be added have a visually similar code
 equivalent, a general markdown web object is needed. This will be the start point of most
 objects, though if there are some objects that clearly would benefit from special syntax,
-this can be added later.
-
-This will have the added benefit of making the transition from having used Markdown
-before much simpler.
-
-HTML and Markdown both have block and inline elements. Therefore, it makes sense to make
-a syntax for both.
-
-#### EBNF syntax:
-
-    block   = content [close];
-    inline  = content close;
-    
-    content = open object {delim {" "} argument {" "}} ;
-    object  = char {char} ;
-    char    = upper | lower ;
-    upper   = "A" | "B" | "C" | ... | "Y" | "Z" ;
-    lower   = "a" | "b" | "c" | ... | "y" | "z" ;
-
-#### Initial choices of characters:
-
-    open  = "@" ;
-    close = "@" ;
-    delim = ":" | "," | "|" ;
-
-##### Logic
-
-`@` is not used in Markdown to describe syntax. It is also an unintimidating choice,
-as it is a common character to anyone who uses the web.
-
-`:`, `,` and `|` were chosen as they would prevent `@` from being read as
+this `,` and `|` were chosen as they would prevent `@` from being read as
 Markdown in the case that someone wanted to write an email address.
 
 A choice of three delimiters allow flexibility in the way the website
@@ -196,7 +160,219 @@ And if I wanted to underline some text, I could write:
 ```none
 ...@UNDERLINE:this is now underlined@...
 ```
-which would become: @UNDERLINE:this is now underlined@
+which would become: 
 
+> ...@UNDERLINE:this is now underlined@...
+
+## Documentation
+
+@MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
+
+Most simple elements in the language are rendered from **Markdown**.
+
+Some have been added from **GFM** - *Github Flavoured Markdown* - which is essentially Markdown with
+a few helpful changes and extensions used for project documentation on Github.
+
+The rest have been specially added to accommodate web development. Most of these are in the
+*general web object* form.
+
+HTML, CSS and JS have mixed support.
+- HTML should not be used within objects (except paragraphs or blockquotes)
+- Markdown will not be changed to HTML inside a HTML tag other than the body tag
+
+@HSPACE:30px@ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
+
+@HSPACE:30px@ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
+
+@HSPACE:30px@ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
+
+@HSPACE:30px@ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
+
+- CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
+- JavaScript scripts in the head of the document should be placed below the FreeDOM script.
+
+Example document <`head`>
+```html
+<link rel="stylesheet" href="myStyle.css">
+<script src="freeDOM.js"></script>
+<link rel="stylesheet" href="myOtherStyle.css">
+<!-- v~- this must be included below the freeDOM.js file -->
+<script src="myScript.js"></script>
+```
+
+### Markdown
+
+#### Paragraphs
+
+Paragraphs in Markdown are just one or more lines of consecutive text followed by one or more blank lines.
+
+```markdown
+On July 2, an alien mothership entered Earth's orbit and deployed several dozen saucer-shaped "destroyer"
+spacecraft, each 15 miles (24 km) wide.
+
+On July 3, the Black Knights, a squadron of Marine Corps F/A-18 Hornets, participated in an assault on a destroyer
+near the city of Los Angeles.
+```
+
+> On July 2, an alien mothership entered Earth's orbit and deployed several dozen saucer-shaped "destroyer"
+> spacecraft, each 15 miles (24 km) wide.
+> 
+> On July 3, the Black Knights, a squadron of Marine Corps F/A-18 Hornets, participated in an assault on a destroyer
+> near the city of Los Angeles.
+
+#### Headings
+
+You can create a heading by adding one or more `#` symbols before your heading text. The number of `#` 
+you use will determine the size of the heading.
+
+```markdown
+# The largest heading
+## The second largest heading
+...
+###### The 6th largest heading (smallest allowed)
+```
+
+> # The largest heading
+> ## The second largest heading
+> ...
+> ###### The 6th largest heading (smallest allowed)
+
+#### Blockquotes
+
+You can indicate [blockquote](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) with a `&gt;`.
+
+```markdown
+In the words of Abraham Lincoln:
+
+> Pardon my french
+```
+
+> In the words of Abraham Lincoln:
+> 
+> > Pardon my french
+
+#### Styling text
+
+You can make text **[bold](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong)** or *[italic](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)*.
+
+```markdown
+*This text will be italic* and
+**this text will be bold**
+```
+
+> *This text will be italic* and
+> **this text will be bold**
+
+Both **bold** and *italic* can use either a `*` or an `_` around the text for styling
+
+This allows you to combine both bold and italic if needed.
+
+```markdown
+*Everyone __must__ attend the meeting at 5 o'clock today.*
+```
+
+> *Everyone __must__ attend the meeting at 5 o'clock today.*
+
+#### Unordered lists
+
+You can make an [unordered list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul) by preceding list items with either a `*` or a `-`.
+four
+```markdown
+* Item
+* Item
+* Item
+
+- Item
+- Item
+- Item
+```
+
+#### Ordered lists
+
+You can make an [ordered list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol) by preceding list items with a number.
+
+```markdown
+1. Item 1
+2. Item 2
+3. Item 3
+```
+
+#### Nested lists
+
+You can create nested lists by indenting list items by four spaces.
+
+```markdown
+1. Item 1
+    1. A corollary to the above item.
+    2. Yet another point to consider.
+2. Item 2
+    * A corollary that does not need to be ordered.
+        * This is indented eight spaces, because 
+          it's four spaces further than the item above.
+    * You might want to consider making a new list.
+3. Item 3
+```
+
+> 1. Item 1
+>     1. A corollary to the above item.
+>     2. Yet another point to consider.
+> 2. Item 2
+>     * A corollary that does not need to be ordered.
+>         * This is indented eight spaces, because 
+>           it's four spaces further than the item above.
+>     * You might want to consider making a new list.
+> 3. Item 3
+
+#### Inline formats
+
+Use single backticks (`) to format text in a special monospace format. Everything within the backticks appear as-is, with no other special formatting.
+
+```markdown
+Here's an idea: why don't we take `SuperiorProject`
+and turn it into `**Reasonable**Project`.
+```
+
+> Here's an idea: why don't we take `SuperiorProject` and turn it into `**Reasonable**Project`.
+
+#### Multiple lines
+
+You can use triple backticks (\`\`\`) to format text as its own distinct block.
+
+Check out this neat program I wrote:
+<pre><code class="hljs markdown"
+>```
+x = 0
+x = 2 + 2
+what is x
+```
+</code></pre>
+
+> ```
+> x = 0
+> x = 2 + 2
+> what is x
+> ```
+
+#### Links
+
+You can create an inline link by wrapping link text in brackets and wrapping the link in parentheses ( `( )` ).
+
+```[Visit my GitHub!](https://www.github.com/goldenforever)```.
+
+> [Visit my GitHub!](https://www.github.com/goldenforever)
+
+#### Images
+
+You may also create an image from a link to an image by putting an exclamation mark in front of the link:
+
+```![Alt text for cat picture](images/cat.jpg)```
+
+> ![Alt text for cat picture](images/cat.jpg)
+
+### GFM
+
+Hello :P
+
+<script src="freeDOM.js"></script>
 </body>
 </html>

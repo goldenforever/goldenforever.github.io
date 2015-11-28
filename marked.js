@@ -11,10 +11,11 @@
 
     var block = {
         newline: /^\n+/,
+        comment: /^\/\*.*?\*\/(?=.|$)/,
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        blockweb: /^@([a-zA-Z]+)((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
+        web: /^@ *([a-zA-Z]+) *((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -28,22 +29,36 @@
     };
 
     function loopVals(object, args) {
-        return {
-        "menu":[
-            '<nav>',
-            '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(/ /g,\'-\'))">', args, '</a>',
-            '<span class="separator"></span>',
-            '</nav><hr>'
-        ],
-        "page":[
-            '<article>', '', [], '', '', '</article>'
-        ],
-        "icon":[
-            '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
-        ],
-        "underline":[
-            '<span style="text-decoration:underline">', '', [args.join('')], '', '', '</span>'
-        ]}[object]
+        try {
+            var x = {
+            "menu":[
+                '<nav>',
+                '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(/ /g,\'-\'))">', args, '</a>',
+                '<span class="separator"></span>',
+                '</nav><hr>'
+            ],
+            "page":[
+                '<article>', '', [], '', '', '</article>'
+            ],
+            "icon":[
+                '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
+            ],
+            "underline":[
+                '<span style="text-decoration:underline">', '', [args.join('')], '', '', '</span>'
+            ],
+            "comment":[
+                '', '', [], '', '', ''
+            ],
+            "vspace":[
+                '<div style="margin-top:', '', [args[0]], '', '', '"></div>'
+            ],
+            "hspace":[
+                '<span style="margin-left:', '', [args[0]], '', '', '"></span>'
+            ]}[object];
+        } catch (e) {
+            new Error("Incorrect number of arguments in " + object);
+        }
+        return x;
     }
 
     block.bullet = /(?:[*+-]|\d+\.)/;
@@ -268,8 +283,8 @@
                 continue;
             }
 
-            // blockweb
-            if (cap = this.rules.blockweb.exec(src)) {
+            // web
+            if (cap = this.rules.web.exec(src)) {
                 src = src.substring(cap[0].length);
                 var arg = cap[2].split(/[|:,]/g).slice(1);
                 if (arg.length > 0 && arg[arg.length-1] === "") {
@@ -285,8 +300,8 @@
                     }
                 }
                 this.tokens.push({
-                    type: 'blockweb',
-                    blockweb: cap[1].toLowerCase(),
+                    type: 'web',
+                    web: cap[1].toLowerCase(),
                     args: arg
                 });
                 continue;
@@ -483,7 +498,8 @@
      */
 
     var inline = {
-        inlineweb: /^@([a-zA-Z]+)((?:[|,:](?:[^|@\n])*)*)@/,
+        comment: /^\/\*.*?\*\/(?=.|$)/,
+        web: /^@ *([a-zA-Z]+) *((?:[|,:](?:[^|@\n])*)*)@/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -496,7 +512,7 @@
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
-        text: /^[\s\S]+?(?=[@\\<!\[_*`]| {2,}\n|$)/
+        text: /^[\s\S]+?(?=[@/\\<!\[_*`]| {2,}\n|$)/
     };
 
     inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -606,8 +622,14 @@
                 continue;
             }
 
-            // inlineweb
-            if (cap = this.rules.inlineweb.exec(src)) {
+            // comment
+            if (cap = this.rules.comment.exec(src)) {
+                src = src.substring(cap[0].length);
+                continue;
+            }
+
+            // web
+            if (cap = this.rules.web.exec(src)) {
                 src = src.substring(cap[0].length);
                 var arg = cap[2].split(/[|:,]/g).slice(1);
                 if (arg.length > 0 && arg[arg.length-1] === "") {
@@ -622,7 +644,7 @@
                         arg[i] = arg[i].substring(1,arg[i].length-1);
                     }
                 }
-                out += this.renderer.inlineweb(cap[1].toLowerCase(), arg);
+                out += this.renderer.web(cap[1].toLowerCase(), arg);
                 continue;
             }
 
@@ -858,8 +880,8 @@
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.blockweb = function(blockweb, args) {
-        var val = loopVals(blockweb, args);
+    Renderer.prototype.web = function(web, args) {
+        var val = loopVals(web, args);
         return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
@@ -918,11 +940,6 @@
 
     Renderer.prototype.del = function(text) {
         return '<del>' + text + '</del>';
-    };
-
-    Renderer.prototype.inlineweb = function(inlineweb, args) {
-        var val = loopVals(inlineweb, args);
-        return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
     Renderer.prototype.link = function(href, title, text) {
@@ -1039,12 +1056,9 @@
             case 'hr': {
                 return this.renderer.hr();
             }
-            case 'inlineweb': {
-                return this.renderer.inlineweb(this.token.inlineweb);
-            }
-            case 'blockweb': {
-                return this.renderer.blockweb(
-                    this.token.blockweb,
+            case 'web': {
+                return this.renderer.web(
+                    this.token.web,
                     this.token.args);
             }
             case 'heading': {
