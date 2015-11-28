@@ -28,16 +28,47 @@
         text: /^[^\n]+/
     };
 
+    /**
+     * Heading Counter
+     */
+
+    var counter = {
+        "1" : 0,
+        "2" : 0,
+        "3" : 0,
+        "4" : 0,
+        "5" : 0,
+        "6" : 0
+    };
+
+
+    window.changePage = function(name) {
+        if ($('body').hasClass('onepage')) {
+            var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
+            window.location.assign(window.location.href.substring(0, window.location.href.lastIndexOf('#')) + tag);
+        } else {
+            var query = $('#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, ''));
+            query.css("display","block");
+            query.siblings('.header-parent').css("display","none");
+        }
+    }
+
+    /**
+     * Web object values
+     */
+
     function loopVals(object, args) {
         try {
             var x = {
-            "menu":[
+            "menu": [
                 '<nav>',
-                '<a class="menu-item" onclick="window.location.assign(window.location.href.substring(0,window.location.href.lastIndexOf(\'#\')) + \'#||p||\'.toLowerCase().replace(/ /g,\'-\'))">', args, '</a>',
+                '<a onclick="changePage(\'||p||\')">',
+                args,
+                '</a>',
                 '<span class="separator"></span>',
                 '</nav><hr>'
             ],
-            "page":[
+                "page":[
                 '<article>', '', [], '', '', '</article>'
             ],
             "icon":[
@@ -50,7 +81,7 @@
                 '', '', [], '', '', ''
             ],
             "vspace":[
-                '<div style="margin-top:', '', [args[0]], '', '', '"></div>'
+                '<div style="margin-bottom:', '', [args[0]], '', '', '"></div>'
             ],
             "hspace":[
                 '<span style="margin-left:', '', [args[0]], '', '', '"></span>'
@@ -285,8 +316,61 @@
 
             // web
             if (cap = this.rules.web.exec(src)) {
+                var arg = cap[2];
+                var sep;
+                if (arg) {
+                    sep = arg.substring(1);
+                    var x = sep.indexOf('|');
+                    var y = sep.indexOf(':');
+                    var z = sep.indexOf(',');
+                    if (arg.charAt(0) == ',') {
+                        if (x>=0 || y>=0) {
+                            sep = x < 0 ? y : (y < 0 ? x : Math.min(x,y));
+                        } else sep = -1;
+                    } else if (arg.charAt(0) == '|') {
+                        if (y>=0 || z>=0) {
+                            sep = y < 0 ? z : (z < 0 ? y : Math.min(y,z));
+                        } else sep = -1;
+                    } else {
+                        if (x>=0 || z>=0) {
+                            sep = x < 0 ? z : (z < 0 ? x : Math.min(x,z));
+                        } else sep = -1;
+                    }
+                    if (sep >= 0) {
+                        sep = arg.charAt(sep+1);
+
+                        arg = arg.substring(1);//.split(sep);
+
+                        var slashCount = 0;
+                        var inString = false;
+                        for (var i=0; i<arg.length; i++) {
+                            var char = arg.charAt(i);
+                            if (char == '"' && slashCount % 2 == 0) {
+                                inString = !inString;
+                            } else if (char == sep && !inString) {
+                                arg = arg.substring(0,i) + '\u0000' + arg.substring(i+1);
+                            }
+                            if (char == '\\') {
+                                slashCount++;
+                            } else {
+                                if (slashCount) {
+                                    arg = arg.substring(0,i-Math.floor((slashCount+1)/2)) + arg.substring(i);
+                                }
+                                slashCount = 0;
+                            }
+                        }
+                        arg = arg.split('\u0000');
+                        for (var i=0; i<arg.length; i++) {
+                            arg[i] = arg[i].trim();
+                            if (arg[i].length > 1 && arg[i].charAt(0) == '"' && arg[i].charAt(arg.length-1) == '"') {
+                                arg[i] = arg[i].substring(1,arg[i].length-1);
+                            }
+                        }
+                    } else {
+                        arg = [cap[2].substring(1)];
+                    }
+                }
                 src = src.substring(cap[0].length);
-                var arg = cap[2].split(/[|:,]/g).slice(1);
                 if (arg.length > 0 && arg[arg.length-1] === "") {
                     arg.pop()
                 }
@@ -864,16 +948,16 @@
     };
 
     Renderer.prototype.heading = function(text, level, raw) {
-        return '<h'
-            + level
-            + ' id="'
-            + this.options.headerPrefix
-            + raw.toLowerCase().replace(/[^\w]+/g, '-')
-            + '">'
-            + text
-            + '</h'
-            + level
-            + '>\n';
+        var headerCloses = 0;
+        var out = "";
+        for (var i=level; i<7; i++) {
+            headerCloses += counter[""+i];
+            counter[""+i] = 0;
+        }
+        counter[""+level] = 1;
+        while (headerCloses>0) { out += "</div>"; headerCloses--; }
+        return out + '<div class="header-parent" id="' + raw.toLowerCase().replace(/[^\w]+/g, '-') + '">' +
+            '<h' + level  + this.options.headerPrefix + '>' + text + '</h' + level + '>\n';
     };
 
     Renderer.prototype.hr = function() {
@@ -1163,7 +1247,7 @@
         var newStr = u;
         var tmp = l;
         for (var i=0;i<params.length;i++) {
-            l = l.replace("||p||", params[i]).replace("||i||", i);
+            l = l.replace("||p||", params[i].replace('"','%22').replace(' ','%20')).replace("||i||", i);
             newStr += l + params[i] + r;
             if (i<params.length-1) newStr += s;
             l = tmp;

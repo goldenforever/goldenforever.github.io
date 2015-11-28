@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
-<body style="white-space:pre-wrap;font-family:monospace"
-># Simplifying Web Development
+<body style="white-space:pre-wrap;font-family:monospace">
+@VSPACE: -40px@
+
+# Simplifying Web Development
 
 @MENU: To dos, Requirements Specification, Components, Design, Documentation@
 ## To Dos
-- Add parent divs to each header 'tree'
+- Fix top header v spacing
 - Fix **&amp;lt;** in code bug
 
 ## Requirements Specification
@@ -106,13 +108,12 @@ The average size of the images on a web-page is 1.4Mbits {http://httparchive.org
 so I will subtract the size of these assets from the upper bound to make a new
 ***upper bound of 6.1Mbits***.
 
+Video would not affect the initial loading time on most modern browsers as it is part of the HTML5 standard.
+
 Adding hosted libraries (js/css/fonts) through runtime adding of links seems to
 be a very logical way to mitigate this upper bound whilst still retaining a
-wide range of output formats.
-
-I would account Adobe Flash into my calculations but since YouTube has moved to using a
-HTML5 player instead, mean usage has reduced by approximately 40% and is now less than
-half of the mean font transfer size.
+wide range of output formats. For example, in the case I have no icons, then I
+need not include icons
 
 ## Components
 
@@ -120,8 +121,11 @@ half of the mean font transfer size.
 
 **GFM** (**G**ithub **F**lavoured **M**arkdown) is the variant of Markdown which is used by Github.
 It has these added benefits to Markdown:
-- URLs automatically become links
-- Strikethroughs can be added: `~~Went wrong~~` @ICON:long-arrow-right@ ~~Went wrong~~
+
+Difference                      | Example code                                 | Example result
+--------------------------------|:--------------------------------------------:|:---------------:
+URLs automatically become links | `http://www.google.com`                      | http://www.google.com
+Strikethroughs can be added:    | `~~Went wrong~~`                             | ~~Went wrong~~
 
 ## Design
 
@@ -148,12 +152,12 @@ If I wanted to create a menu that opens
 '*Home*', '*Services*', '*About Us*' and '*Contact*', I could write:
 
 ```none
-@MENU:Home, "Services", 'About Us', Contact
+@MENU:Home, "Services", About Us, Contact
 ```
 
-which would become:
+which would become something like:
 
-@MENU:Home, "Services", 'About Us', Contact
+@MENU:Home, "Services", About Us, Contact
 
 And if I wanted to underline some text, I could write:
 
@@ -165,8 +169,6 @@ which would become:
 > ...@UNDERLINE:this is now underlined@...
 
 ## Documentation
-
-@MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
 
 Most simple elements in the language are rendered from **Markdown**.
 
@@ -180,13 +182,13 @@ HTML, CSS and JS have mixed support.
 - HTML should not be used within objects (except paragraphs or blockquotes)
 - Markdown will not be changed to HTML inside a HTML tag other than the body tag
 
-@HSPACE:30px@ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
 
-@HSPACE:30px@ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
 
-@HSPACE:30px@ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
 
-@HSPACE:30px@ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
+@ HSPACE: 30px @ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
 
 - CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
 - JavaScript scripts in the head of the document should be placed below the FreeDOM script.
@@ -196,9 +198,11 @@ Example document <`head`>
 <link rel="stylesheet" href="myStyle.css">
 <script src="freeDOM.js"></script>
 <link rel="stylesheet" href="myOtherStyle.css">
-<!-- v~- this must be included below the freeDOM.js file -->
+<!-- v~- you must put scripts below the freeDOM.js file -->
 <script src="myScript.js"></script>
 ```
+
+@MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
 
 ### Markdown
 
@@ -232,10 +236,10 @@ you use will determine the size of the heading.
 ###### The 6th largest heading (smallest allowed)
 ```
 
-> # The largest heading
-> ## The second largest heading
+> <h1>The largest heading</h1>
+> <h2>The second largest heading</h2>
 > ...
-> ###### The 6th largest heading (smallest allowed)
+> <h6>The 6th largest heading (smallest allowed)</h6>
 
 #### Blockquotes
 
