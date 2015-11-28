@@ -120,12 +120,14 @@ need not include icons
 **Markdown** will be used as the base of the idea.
 
 **GFM** (**G**ithub **F**lavoured **M**arkdown) is the variant of Markdown which is used by Github.
-It has these added benefits to Markdown:
 
-Difference                      | Example code                                 | Example result
---------------------------------|:--------------------------------------------:|:---------------:
-URLs automatically become links | `http://www.google.com`                      | http://www.google.com
-Strikethroughs can be added:    | `~~Went wrong~~`                             | ~~Went wrong~~
+There are some open licence JavaScript Markdown parsers.
+
+Parser       || markdown-js  | marked       | &#181;markdown | Showdown
+:-----------:||:------------:|:------------:|:--------------:|:-------:
+Size (bytes) || 16,750       | 16,528       | 10,097         | 26,423
+Speed (x1000)|| 17191ms      | 3727ms       | n/a            | 17191ms
+Supports GFM || @ICON:times@ | @ICON:check@ | @ICON:times@   | @ICON:check@
 
 ## Design
 
@@ -205,6 +207,8 @@ Example document <`head`>
 @MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
 
 ### Markdown
+
+*This guide has been adapted from https://help.github.com/articles/markdown-basics/.*
 
 #### Paragraphs
 
@@ -375,7 +379,11 @@ You may also create an image from a link to an image by putting an exclamation m
 
 ### GFM
 
-Hello :P
+Difference                              | Example code                        | Example result
+----------------------------------------|:-----------------------------------:|:---------------:
+Underscores joining words have no effect| `Change this_variable_name _now!_`  | Change this_variable_name _now!_
+URLs automatically become links         | `http://www.google.com`             | http://www.google.com
+Strikethroughs can be added:            | `~~Went wrong~~`                    | ~~Went wrong~~
 
 <script src="freeDOM.js"></script>
 </body>
