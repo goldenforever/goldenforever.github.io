@@ -683,11 +683,11 @@ body .octicon-link:before {
     content: '\f05c';
 }
 
-body>*:first-child {
+body > *:first-child {
     margin-top: 0 !important;
 }
 
-body>*:last-child {
+body > *:last-child {
     margin-bottom: 0 !important;
 }
 
@@ -830,7 +830,7 @@ body ol ul {
     margin-bottom: 0;
 }
 
-body li>p {
+body li > p {
     margin-top: 16px;
 }
 
@@ -857,11 +857,11 @@ body blockquote {
     border-left: 4px solid #ddd;
 }
 
-body blockquote>:first-child {
+body blockquote > :first-child {
     margin-top: 0;
 }
 
-body blockquote>:last-child {
+body blockquote > :last-child {
     margin-bottom: 0;
 }
 
@@ -904,7 +904,7 @@ body code {
     padding-bottom: 0.2em;
     margin: 0;
     font-size: 120%;
-    background-color: rgba(0,0,0,0.04);
+    background-color: rgba(0, 0, 0, 0.04);
     border-radius: 3px;
 }
 
@@ -914,7 +914,7 @@ body code:after {
     content: "\00a0";
 }
 
-body pre>code {
+body pre > code {
     padding: 0;
     margin: 0;
     font-size: 100%;
@@ -1095,7 +1095,7 @@ body .task-list-item {
     list-style-type: none;
 }
 
-body .task-list-item+.task-list-item {
+body .task-list-item + .task-list-item {
     margin-top: 3px;
 }
 
@@ -1104,7 +1104,7 @@ body .task-list-item input {
     vertical-align: middle;
 }
 
-body :checked+.radio-label {
+body :checked + .radio-label {
     z-index: 1;
     position: relative;
     border-color: #4078c0;
@@ -1113,7 +1113,8 @@ body :checked+.radio-label {
 /* My additions */
 
 code.hljs, code.hljs * {
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 code.hljs {
@@ -1140,21 +1141,127 @@ blockquote blockquote {
     color: #666;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .separator:before {
         content: '';
     }
+
     .separator {
         content: '';
         margin: 0;
     }
+
     nav a:before {
         content: '';
         display: block;
         margin-top: 5px;
     }
+
     nav a {
         display: block;
         margin-top: 5px;
     }
+}
+
+.hljs {
+    display:block;
+    overflow-x:auto;
+    color:#333;
+    background:#f8f8f8;
+    -webkit-text-size-adjust:none;
+    padding:.5em;
+}
+
+.hljs-setting .hljs-value,.hljs-expression .hljs-variable,.hljs-expression .hljs-begin-block,.hljs-expression .hljs-end-block,.hljs-class .hljs-params,.hljs-function .hljs-params,.hljs-at_rule .hljs-preprocessor {
+    color:#c5c8c6;
+}
+
+.hljs-comment,.hljs-output .hljs-value,.hljs-pi,.hljs-shebang,.hljs-doctype {
+    color:#707880;
+}
+
+.hljs-string,.hljs-special,.hljs-doctag,.hljs-addition,.hljs-important,.hljs-tag .hljs-value,.hljs-at.rule .hljs-keyword,.hljs-regexp,.hljs-attr_selector {
+    color:#b5bd68;
+}
+
+.hljs-variable,.hljs-property,.hljs-envar,.hljs-code,.hljs-expression,.hljs-localvars,.hljs-id,.hljs-variable .hljs-filter,.hljs-variable .hljs-filter .hljs-keyword,.hljs-template_tag .hljs-filter .hljs-keyword,.hljs-name {
+    color:#756a30;
+}
+
+.hljs-emphasis {
+    font-style:italic;
+}
+
+.hljs-strong {
+    font-weight:700;
+}
+
+.hljs-string,.hljs-tag .hljs-value,.hljs-doctag,.tex .hljs-formula {
+    color:#d14;
+}
+
+.hljs-list .hljs-keyword,.hljs-subst {
+    font-weight:400;
+}
+
+.hljs-class .hljs-title,.hljs-type,.vhdl .hljs-literal,.tex .hljs-command {
+    color:#458;
+    font-weight:700;
+}
+
+.hljs-tag,.hljs-tag .hljs-title,.hljs-rule .hljs-property,.django .hljs-tag .hljs-keyword {
+    color:navy;
+    font-weight:400;
+}
+
+.hljs-regexp {
+    color:#009926;
+}
+
+.hljs-symbol,.ruby .hljs-symbol .hljs-string,.lisp .hljs-keyword,.clojure .hljs-keyword,.scheme .hljs-keyword,.tex .hljs-special,.hljs-prompt {
+    color:#990073;
+}
+
+.hljs-built_in {
+    color:#0086b3;
+}
+
+.hljs-preprocessor,.hljs-pragma,.hljs-pi,.hljs-doctype,.hljs-shebang,.hljs-cdata {
+    color:#999;
+    font-weight:700;
+}
+
+.hljs-deletion {
+    background:#fdd;
+}
+
+.hljs-addition {
+    background:#dfd;
+}
+
+.diff .hljs-change {
+    background:#0086b3;
+}
+
+.hljs-chunk {
+    color:#aaa;
+}
+
+.hljs-title,.hljs-function .hljs-title,.hljs-keyword .hljs-common,.hljs-class .hljs-title,.hljs-decorator,.hljs-tag .hljs-title,.hljs-header,.hljs-sub,.hljs-function,.hljs-title,.hljs-id,.scss .hljs-preprocessor {
+    color:#900;
+    font-weight:700;
+}
+
+.hljs-number,.hljs-symbol,.hljs-literal,.hljs-deletion,.hljs-link_url,.hljs-symbol .hljs-string,.hljs-argument,.hljs-hexcolor,.hljs-input .hljs-prompt,.hljs-char,.hljs-pseudo,.hljs-exception,.hljs-annotation,.hljs-subst,.hljs-change,.hljs-cbracket,.hljs-operator,.hljs-horizontal_rule,.hljs-preprocessor .hljs-keyword,.hljs-typedef,.hljs-template_tag,.hljs-variable,.hljs-variable .hljs-filter .hljs-argument,.hljs-at_rule,.hljs-at_rule .hljs-string,.hljs-at_rule .hljs-keyword,.hljs-number,.hljs-hexcolor,.ruby .hljs-constant,.hljs-attribute,.hljs-variable,.lisp .hljs-body,.hljs-name {
+    color:teal;
+}
+
+.hljs-statement,.hljs-label,.hljs-keyword,.hljs-xmlDocTag,.hljs-function .hljs-keyword,.hljs-chunk,.hljs-cdata,.hljs-link_label,.hljs-bullet,.hljs-class .hljs-keyword,.hljs-smartquote,.hljs-method,.hljs-list .hljs-title,.hljs-tag,.hljs-keyword,.css .rule .hljs-keyword,.hljs-winutils,.nginx .hljs-title,.hljs-subst,.hljs-request,.hljs-status {
+    color:#333;
+    font-weight:700;
+}
+
+.hljs-type,.hljs-typename,.hljs-inheritance .hljs-parent,.hljs-constant,.hljs-built_in,.hljs-setting,.hljs-structure,.hljs-link_reference,.hljs-attribute,.hljs-blockquote,.hljs-quoted,.hljs-class,.hljs-header,.hljs-comment,.diff .hljs-header {
+    color:#998;
+    font-style:italic;
 }

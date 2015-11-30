@@ -1,1 +1,421 @@
-# goldenforever.github.io
+@VSPACE: -40px@
+
+# Simplifying Web Development
+
+@MENU: To Dos, Requirements Specification, Components, Design, Documentation, Progress Report@
+## To Dos
+- Fix top header vertical spacing
+- Fix **&amp;lt;** in code bug
+- Investigate how http://strapdownjs.com/ works
+    - Especially how the &lt;xmp&gt; tag functions
+- Change layout of html
+- Investigate possibility of an editor
+    - &lt;frame&gt; and &lt;frameset&gt; tags?
+- LESS (vs. SASS) at runtime:
+    - https://css-tricks.com/using-less-as-a-live-css-engine/
+- Investigate re-running inline compiler within page
+
+## Requirements Specification
+
+From the specification:
+
+> The method should be:
+> - fast to write (important)
+> - require little knowledge of web languages (important)
+> - further accommodate those with knowledge of web development
+> - documented
+
+> The resulting website should have:
+> - a level of consistency
+> - content-aware display
+> - basic modern styling
+> - responsive design
+> - fast to load
+> - small (file size) without compromising functionality
+
+### Targets
+
+The project aims to have a balance between 'one-size fits all'
+and aggressively context-predictive content display.
+
+I will set this balance to be that which satisfies 95% of
+the population for quantifiable metrics.
+
+![](images/normal-distribution.png)
+
+![](images/normal-distribution-both.png)
+
+ Objective          | Target
+--------------------|:-------------:
+Fast to write       | ***to be minimised***
+Little knowledge    | ***to be minimised***
+Further accommodate | Each web language could still be easily included
+Documented          | All encompassing documentation
+Consistency         | The website should have continuity of style
+Content-aware       | At minimum, looks for different 'types' of page content to match
+Modern style        | Use modern principles and generally not look dated
+Responsive design   | ***see below***
+Fast to load        | ***see below***
+Small file size     | ***see below***
+
+#### Responsive design
+* This is indented four spaces, because it's two spaces further than the item above.
+[This table](http://www.rapidtables.com/web/dev/screen-resolution-statistics.htm)
+shows popular screen resolutions.
+
+Screen resolution | Display ratio | Usage     | Screen size / type
+------------------|---------------|-----------|-----------------
+1366x768          | 16:9          | 19.1%     | 14" Notebook / 15.6" Laptop / 18.5" monitor
+1920x1080         | 16:9          | 9.4%      | 21.5" monitor / 23" monitor / 1080p TV
+1280x800          | 8:5           | 8.5%      | 14" Notebook
+320x568           | 9:16          | 6.4%      | 4" iPhone 5
+1440x900          | 8:5           | 5.7%      | 19" monitor
+1280x1024         | 5:4           | 5.5%      | 19" monitor
+320x480           | 2:3           | 5.2%      | 3.5" iPhone
+1600x900          | 16:9          | 4.6%      | 20" monitor
+768x1024          | 3:4           | 4.5%      | 9.7" iPad
+1024x768          | 4:3           | 3.9%      | 15" monitor
+1680x1050         | 8:5           | 2.8%      | 22" monitor
+360x640           | 9:16          | 2.3%      |
+1920x1200         | 8:5           | 1.7%      | 24" monitor
+720x1280          | 9:16          | 1.6%      | 4.8" Galaxy S
+480x800           | 3:5           | 1.1%      |
+1360x768          | 16:9          | 0.9%      |
+1280x720          | 16:9          | 0.9%      | 720p TV
+                  |               | **84.1%** |
+
+The 320x480 of the first three generations of the iPhone seem to provide
+a lower bound as they are responsible for over 5% of web-page loads.
+
+The 1920x1080 resolution will serve as an upper bound as larger screens are
+responsible for less than 5% of web-page loads.
+
+For the same reason, the screen will need to support resolutions between
+16:9 in landscape to 16:9 in portrait.
+
+*i.e. all of these*
+(provided the short side is at least 320px, and the long side is no more than 1920px):
+
+![](images/aspect-ratio-diagram.png)
+
+#### Fast to load / Small file size
+As part of Ofcom's duties as a regulator, they used 
+[this data](http://media.ofcom.org.uk/content/posts/news/2015/one-in-three-uk-broadband-superfast)
+from SamKnows (11/2014).
+
+The minimum average download speed for a currently offered service (and over 99.5% in use are) in the UK is
+7.5Mbit/s. Google says a website should aim to have loaded within a second and
+so = 7.5(1-x)Mbits where x is the time taken to create the website.
+
+Therefore I will sit an upper bound on 7.5Mbits as the size of the website *including* the assets.
+
+The average size of the images on a web-page is 1.4Mbits {http://httparchive.org/trends.php},
+so I will subtract the size of these assets from the upper bound to make a new
+***upper bound of 6.1Mbits***.
+
+Video would not affect the initial loading time on most modern browsers as it is part of the HTML5 standard.
+
+Adding hosted libraries (js/css/fonts) through runtime adding of links seems to
+be a very logical way to mitigate this upper bound whilst still retaining a
+wide range of output formats. For example, in the case I have no icons, then I
+need not include icons
+
+## Components
+
+**Markdown** will be used as the base of the idea.
+
+**GFM** (**G**ithub **F**lavoured **M**arkdown) is the variant of Markdown which is used by Github.
+
+There are some open licence JavaScript Markdown parsers.
+
+Parser       || markdown-js  | marked       | &#181;markdown | Showdown
+:-----------:||:------------:|:------------:|:--------------:|:-------:
+Size (bytes) || 16,750       | 16,528       | 10,097         | 26,423
+Speed (x1000)|| 17191ms      | 3727ms       | n/a            | 17191ms
+Supports GFM || @ICON:times@ | @ICON:check@ | @ICON:times@   | @ICON:check@
+
+
+
+## Design
+
+I will need to add some syntax to Markdown to allow the user to add web objects.
+
+Markdown already uses most of the unicode characters for its syntax.
+
+As there are many more objects to be added, a user would not want to learn a different
+one for each one, and few of the web objects to be added have a visually similar code
+equivalent, a general markdown web object is needed. This will be the start point of most
+objects, though if there are some objects that clearly would benefit from special syntax,
+this `,` and `|` were chosen as they would prevent `@` from being read as
+Markdown in the case that someone wanted to write an email address.
+
+A choice of three delimiters allow flexibility in the way the website
+can be written, though I would recommend making the object uppercase and 
+giving the first delimiter a different character to the others as good 
+practice, as then someone reading it could easily differentiate the object
+and its arguments.
+
+
+#### Example
+If I wanted to create a menu that opens 
+'*Home*', '*Services*', '*About Us*' and '*Contact*', I could write:
+
+```none
+@MENU:Home, "Services", About Us, Contact
+```
+
+which would become something like:
+
+@MENU:Home, "Services", About Us, Contact
+
+And if I wanted to underline some text, I could write:
+
+```none
+...@UNDERLINE:this is now underlined@...
+```
+which would become: 
+
+> ...@UNDERLINE:this is now underlined@...
+
+## Documentation
+
+Most simple elements in the language are rendered from **Markdown**.
+
+Some have been added from **GFM** - *Github Flavoured Markdown* - which is essentially Markdown with
+a few helpful changes and extensions used for project documentation on Github.
+
+The rest have been specially added to accommodate web development. Most of these are in the
+*general web object* form.
+
+HTML, CSS and JS have mixed support.
+- HTML should not be used within objects (except paragraphs or blockquotes)
+- Markdown will not be changed to HTML inside a HTML tag other than the body tag
+
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
+
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
+
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
+
+@ HSPACE: 30px @ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
+
+- CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
+- JavaScript scripts in the head of the document should be placed below the FreeDOM script.
+
+Example document <`head`>
+```html
+<link rel="stylesheet" href="myStyle.css">
+<script src="freeDOM.js"></script>
+<link rel="stylesheet" href="myOtherStyle.css">
+<!-- v~- you must put scripts below the freeDOM.js file -->
+<script src="myScript.js"></script>
+```
+
+@MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
+
+### Markdown
+
+![](images/markdown.png)
+
+*This guide has been adapted from https://help.github.com/articles/markdown-basics/.*
+
+#### Paragraphs
+
+Paragraphs in Markdown are just one or more lines of consecutive text followed by one or more blank lines.
+
+```markdown
+On July 2, an alien mothership entered Earth's orbit and deployed several dozen saucer-shaped "destroyer"
+spacecraft, each 15 miles (24 km) wide.
+
+On July 3, the Black Knights, a squadron of Marine Corps F/A-18 Hornets, participated in an assault on a destroyer
+near the city of Los Angeles.
+```
+
+> On July 2, an alien mothership entered Earth's orbit and deployed several dozen saucer-shaped "destroyer"
+> spacecraft, each 15 miles (24 km) wide.
+> 
+> On July 3, the Black Knights, a squadron of Marine Corps F/A-18 Hornets, participated in an assault on a destroyer
+> near the city of Los Angeles.
+
+#### Headings
+
+You can create a heading by adding one or more `#` symbols before your heading text. The number of `#` 
+you use will determine the size of the heading.
+
+```markdown
+# The largest heading
+## The second largest heading
+...
+###### The 6th largest heading (smallest allowed)
+```
+
+> <h1>The largest heading</h1>
+> <h2>The second largest heading</h2>
+> ...
+> <h6>The 6th largest heading (smallest allowed)</h6>
+
+#### Blockquotes
+
+You can indicate [blockquote](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) with a `&gt;`.
+
+```markdown
+In the words of Abraham Lincoln:
+
+> Pardon my french
+```
+
+> In the words of Abraham Lincoln:
+> 
+> > Pardon my french
+
+#### Styling text
+
+You can make text **[bold](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong)** or *[italic](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)*.
+
+```markdown
+*This text will be italic* and
+**this text will be bold**
+```
+
+> *This text will be italic* and
+> **this text will be bold**
+
+Both **bold** and *italic* can use either a `*` or an `_` around the text for styling
+
+This allows you to combine both bold and italic if needed.
+
+```markdown
+*Everyone __must__ attend the meeting at 5 o'clock today.*
+```
+
+> *Everyone __must__ attend the meeting at 5 o'clock today.*
+
+#### Unordered lists
+
+You can make an [unordered list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul) by preceding list items with either a `*` or a `-`.
+four
+```markdown
+* Item
+* Item
+* Item
+
+- Item
+- Item
+- Item
+```
+
+#### Ordered lists
+
+You can make an [ordered list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ol) by preceding list items with a number.
+
+```markdown
+1. Item 1
+2. Item 2
+3. Item 3
+```
+
+#### Nested lists
+
+You can create nested lists by indenting list items by four spaces.
+
+```markdown
+1. Item 1
+    1. A corollary to the above item.
+    2. Yet another point to consider.
+2. Item 2
+    * A corollary that does not need to be ordered.
+        * This is indented eight spaces, because 
+          it's four spaces further than the item above.
+    * You might want to consider making a new list.
+3. Item 3
+```
+
+> 1. Item 1
+>     1. A corollary to the above item.
+>     2. Yet another point to consider.
+> 2. Item 2
+>     * A corollary that does not need to be ordered.
+>         * This is indented eight spaces, because 
+>           it's four spaces further than the item above.
+>     * You might want to consider making a new list.
+> 3. Item 3
+
+#### Inline formats
+
+Use single backticks (`) to format text in a special monospace format. Everything within the backticks appear as-is, with no other special formatting.
+
+```markdown
+Here's an idea: why don't we take `SuperiorProject`
+and turn it into `**Reasonable**Project`.
+```
+
+> Here's an idea: why don't we take `SuperiorProject` and turn it into `**Reasonable**Project`.
+To Dos
+
+Fix top header v spacing
+Fix &lt; in code bug
+#### Multiple lines
+
+You can use triple backticks (\`\`\`) to format text as its own distinct block.
+
+Check out this neat program I wrote:
+<pre><code class="hljs markdown"
+>```
+x = 0
+x = 2 + 2
+what is x
+```
+</code></pre>
+
+> ```
+> x = 0
+> x = 2 + 2
+> what is x
+> ```
+
+#### Links
+
+You can create an inline link by wrapping link text in brackets and wrapping the link in parentheses ( `( )` ).
+
+```[Visit my GitHub!](https://www.github.com/goldenforever)```.
+
+> [Visit my GitHub!](https://www.github.com/goldenforever)
+
+#### Images
+
+You may also create an image from a link to an image by putting an exclamation mark in front of the link:
+
+```![Alt text for cat picture](images/cat.jpg)```
+
+> ![Alt text for cat picture](images/cat.jpg)
+
+#### All Together
+
+This table shows a full example 
+https://en.wikipedia.org/wiki/Markdown
+
+### GFM
+
+Difference                              | Example code                        | Example result
+----------------------------------------|:-----------------------------------:|:---------------:
+Underscores joining words have no effect| `Change this_variable_name _now!_`  | Change this_variable_name _now!_
+URLs automatically become links         | `http://www.google.com`             | http://www.google.com
+Strikethroughs can be added:            | `~~Went wrong~~`                    | ~~Went wrong~~
+
+## Progress Report
+
+- Technical content:
+    - Student is well read in the project's subject area.
+    - Effective analysis of problems and issues.
+    - Quality of design work.
+    - Good choice of methods and tools.
+- Project Management:
+    - Well conceived project
+    - Unforeseen problems well detected and overcome.
+    - Progress consistent with the project specification.
+    - All necessary research, analysis and design work completed.
+    - Work for next term is well planned out.
+- Communication Skills:
+    - Basic written language skills such as spelling and grammar.
+    - Effective composition and exposition.
+    - Report is of an appropriate length for your particular project.

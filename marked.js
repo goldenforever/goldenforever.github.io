@@ -85,6 +85,9 @@
             ],
             "hspace":[
                 '<span style="margin-left:', '', [args[0]], '', '', '"></span>'
+            ],
+            "escape":[
+                '', '', [args[0]], '', '', ''
             ]}[object];
         } catch (e) {
             new Error("Incorrect number of arguments in " + object);
