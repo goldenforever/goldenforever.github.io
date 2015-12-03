@@ -43,15 +43,17 @@
 
 
     window.changePage = function(name) {
-        if ($('body').hasClass('onepage')) {
-            var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
-            window.location.assign(window.location.href.substring(0, window.location.href.lastIndexOf('#')) + tag);
-        } else {
-            var query = $('#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, ''));
-            query.css("display","block");
-            query.siblings('.header-parent').css("display","none");
+        if (name) {
+            if ($('body').hasClass('onepage')) {
+                var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
+                window.location.assign(window.location.href.substring(0, window.location.href.lastIndexOf('#')) + tag);
+            } else {
+                var query = $('#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, ''));
+                query.css("display", "block");
+                query.siblings('.header-parent').css("display", "none");
+            }
         }
-    }
+    };
 
     /**
      * Web object values
@@ -959,7 +961,7 @@
         }
         counter[""+level] = 1;
         while (headerCloses>0) { out += "</div>"; headerCloses--; }
-        return out + '<div class="header-parent" id="' + raw.toLowerCase().replace(/[^\w]+/g, '-') + '">' +
+        return out + '<div class="header-parent" id="' + raw.toLowerCase().replace(/ *<.*?>(.*?<\/[^/]*?>)? */g, '').replace(/[^\w]+/g, '-') + '">' +
             '<h' + level  + this.options.headerPrefix + '>' + text + '</h' + level + '>\n';
     };
 

@@ -1,16 +1,12 @@
-@VSPACE: -40px@
-
 # Simplifying Web Development
 
-@MENU: To Dos, Requirements Specification, Components, Design, Documentation, Progress Report@
+@MENU: To Dos, Requirements Specification, Components, Design, Documentation, Progress Report, Editor@
+
 ## To Dos
-- Fix top header vertical spacing
-- Fix **&amp;lt;** in code bug
+
+- CodeMirror for syntax highlighting in the editor
+- Include functionality in Markdown
 - Investigate how http://strapdownjs.com/ works
-    - Especially how the &lt;xmp&gt; tag functions
-- Change layout of html
-- Investigate possibility of an editor
-    - &lt;frame&gt; and &lt;frameset&gt; tags?
 - LESS (vs. SASS) at runtime:
     - https://css-tricks.com/using-less-as-a-live-css-engine/
 - Investigate re-running inline compiler within page
@@ -41,9 +37,9 @@ and aggressively context-predictive content display.
 I will set this balance to be that which satisfies 95% of
 the population for quantifiable metrics.
 
-![](images/normal-distribution.png)
+![](http://dcs.warwick.ac.uk/~csunbg/Project/images/normal-distribution.png)
 
-![](images/normal-distribution-both.png)
+![](http://dcs.warwick.ac.uk/~csunbg/Project/images/normal-distribution-both.png)
 
  Objective          | Target
 --------------------|:-------------:
@@ -96,7 +92,7 @@ For the same reason, the screen will need to support resolutions between
 *i.e. all of these*
 (provided the short side is at least 320px, and the long side is no more than 1920px):
 
-![](images/aspect-ratio-diagram.png)
+![](http://dcs.warwick.ac.uk/~csunbg/Project/images/aspect-ratio-diagram.png)
 
 #### Fast to load / Small file size
 As part of Ofcom's duties as a regulator, they used 
@@ -126,15 +122,13 @@ need not include icons
 
 **GFM** (**G**ithub **F**lavoured **M**arkdown) is the variant of Markdown which is used by Github.
 
-There are some open licence JavaScript Markdown parsers.
+There are some open licence JavaScript Markdown compilers.
 
-Parser       || markdown-js  | marked       | &#181;markdown | Showdown
+compiler       || markdown-js  | marked       | &#181;markdown | Showdown
 :-----------:||:------------:|:------------:|:--------------:|:-------:
 Size (bytes) || 16,750       | 16,528       | 10,097         | 26,423
 Speed (x1000)|| 17191ms      | 3727ms       | n/a            | 17191ms
 Supports GFM || @ICON:times@ | @ICON:check@ | @ICON:times@   | @ICON:check@
-
-
 
 ## Design
 
@@ -146,76 +140,55 @@ As there are many more objects to be added, a user would not want to learn a dif
 one for each one, and few of the web objects to be added have a visually similar code
 equivalent, a general markdown web object is needed. This will be the start point of most
 objects, though if there are some objects that clearly would benefit from special syntax,
-this `,` and `|` were chosen as they would prevent `@` from being read as
-Markdown in the case that someone wanted to write an email address.
+they should have them added.
 
+HTML and Markdown both have block and inline elements. Therefore, it makes sense to make
+a syntax for both.
+
+#### EBNF syntax:
+
+    block   = content [close];
+    inline  = content close;
+    
+    content = open object {delim {" "} argument {" "}} ;
+    object  = char {char} ;
+    char    = upper | lower ;
+    upper   = "A" | "B" | "C" | ... | "Y" | "Z" ;
+    lower   = "a" | "b" | "c" | ... | "y" | "z" ;
+
+#### Initial choices of characters:
+
+    open  = "@" ;
+    close = "@" ;
+    delim = ":" | "," | "|" ;
+
+##### Logic
+
+`@` is not used in Markdown to describe syntax. It is also an unintimidating choice,
+as it is a common character to anyone who uses the web.
+
+`:`, `,` and `|` were chosen as they would prevent `@` from being read as
+Markdown in the case that someone wanted to write an email address.
+ 
 A choice of three delimiters allow flexibility in the way the website
 can be written, though I would recommend making the object uppercase and 
 giving the first delimiter a different character to the others as good 
 practice, as then someone reading it could easily differentiate the object
 and its arguments.
 
-
-#### Example
-If I wanted to create a menu that opens 
-'*Home*', '*Services*', '*About Us*' and '*Contact*', I could write:
-
-```none
-@MENU:Home, "Services", About Us, Contact
-```
-
-which would become something like:
-
-@MENU:Home, "Services", About Us, Contact
-
-And if I wanted to underline some text, I could write:
-
-```none
-...@UNDERLINE:this is now underlined@...
-```
-which would become: 
-
-> ...@UNDERLINE:this is now underlined@...
-
 ## Documentation
-
-Most simple elements in the language are rendered from **Markdown**.
-
-Some have been added from **GFM** - *Github Flavoured Markdown* - which is essentially Markdown with
-a few helpful changes and extensions used for project documentation on Github.
-
-The rest have been specially added to accommodate web development. Most of these are in the
-*general web object* form.
-
-HTML, CSS and JS have mixed support.
-- HTML should not be used within objects (except paragraphs or blockquotes)
-- Markdown will not be changed to HTML inside a HTML tag other than the body tag
-
-@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
-
-@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
-
-@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
-
-@ HSPACE: 30px @ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
-
-- CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
-- JavaScript scripts in the head of the document should be placed below the FreeDOM script.
-
-Example document <`head`>
-```html
-<link rel="stylesheet" href="myStyle.css">
-<script src="freeDOM.js"></script>
-<link rel="stylesheet" href="myOtherStyle.css">
-<!-- v~- you must put scripts below the freeDOM.js file -->
-<script src="myScript.js"></script>
-```
 
 @MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
 
 ### Markdown
 
-![](images/markdown.png)
+From [Wikipedia](https://en.wikipedia.org/wiki/Markdown#Example):
+
+@VSPACE: -10px@
+
+![](http://dcs.warwick.ac.uk/~csunbg/Project/images/markdown.png)
+
+@HSPACE: 20px@**Markdown** on the left - **generated HTML** in the middle - **how it might look** on the right.
 
 *This guide has been adapted from https://help.github.com/articles/markdown-basics/.*
 
@@ -385,14 +358,9 @@ You can create an inline link by wrapping link text in brackets and wrapping the
 
 You may also create an image from a link to an image by putting an exclamation mark in front of the link:
 
-```![Alt text for cat picture](images/cat.jpg)```
+```![Alt text for cat picture](http://dcs.warwick.ac.uk/~csunbg/Project/images/cat.jpg)```
 
-> ![Alt text for cat picture](images/cat.jpg)
-
-#### All Together
-
-This table shows a full example 
-https://en.wikipedia.org/wiki/Markdown
+> ![Alt text for cat picture](http://dcs.warwick.ac.uk/~csunbg/Project/images/cat.jpg)
 
 ### GFM
 
@@ -402,20 +370,218 @@ Underscores joining words have no effect| `Change this_variable_name _now!_`  | 
 URLs automatically become links         | `http://www.google.com`             | http://www.google.com
 Strikethroughs can be added:            | `~~Went wrong~~`                    | ~~Went wrong~~
 
+#### Tables
+
+GFM also includes tables. The above table was generated by this:
+
+```
+Difference                              | Example code                        | Example result
+----------------------------------------|:-----------------------------------:|:---------------------------------:
+Underscores joining words have no effect| `Change this_variable_name _now!_`  | Change this_variable_name _now!_
+URLs automatically become links         | `http://www.google.com`             | http://www.google.com
+Strikethroughs can be added:            | `~~Went wrong~~`                    | ~~Went wrong~~
+```
+
+You can use colons to align the columns:
+
+Left  |  Center |     Right
+:-----|:-------:|----------:
+align | *align* | **align**
+
+can be generated by:
+
+```markdown
+Left  |  Center |     Right
+:-----|:-------:|----------:
+align | *align* | **align**
+```
+
+Without colons, it will assume left alignment.
+
+#### Code blocks
+
+GFM adds a new way to create a code block. 
+
+Three back-ticks (the key typically found above `TAB`) open and close a code block.
+
+For example, the above code block was created by this code:
+
+	```markdown
+    Left  |  Center |     Right
+    :-----|:-------:|----------:
+    align | *align* | **align**
+    
+    Without colons, it will assume left alignment.
+	```
+
+You will also notice that `markdown` was added after the first three backticks.
+
+This is to give the appropriate **syntax highlighting**. This isn't always necessary - it will guess the language to highlight. If you would like to disable any highlighting on a block, follow the backticks with `none`.
+
 ## Progress Report
 
-- Technical content:
-    - Student is well read in the project's subject area.
-    - Effective analysis of problems and issues.
-    - Quality of design work.
-    - Good choice of methods and tools.
-- Project Management:
-    - Well conceived project
-    - Unforeseen problems well detected and overcome.
-    - Progress consistent with the project specification.
-    - All necessary research, analysis and design work completed.
-    - Work for next term is well planned out.
-- Communication Skills:
-    - Basic written language skills such as spelling and grammar.
-    - Effective composition and exposition.
-    - Report is of an appropriate length for your particular project.
+### Some Details and Links
+
+The working copy of the project is kept at http://dcs.warwick.ac.uk/~csunbg/Project/ including:
+- Requirements Specification 
+- Component Analysis 
+- Design
+- Progress Report (i.e. *this!*)
+
+In spirit of the project, the entirety of the website has been written in itself.
+
+You can see what it came from at http://dcs.warwick.ac.uk/~csunbg/Project/README.md and 
+
+The project is also kept on Github at http://goldenforever.github.io/ with regular commits at key checkpoints.
+
+#### Brief introduction to the project
+
+I am developing a quicker, easier and more accessible alternative to conventional web development.
+
+It has become increasingly apparent that the way I am going to do this is through an extension of **Markdown**.
+
+> *Markdown* is a small markup language that has had great success within the developer community, becoming the means of
+> asking a question or writing documentation on StackOverflow and Github respectively.
+> 
+> *Markdown* is a language that parses(and was designed to do so) to HTML. However, as *Markdown* was designed with
+> content production language, it is only compiled to a small subset of HTML's tags.
+> 
+> Due to Markdown's simplicity and efficiency(both to write and to compile), it could potentially make web
+> development more accessible to those who have not done it before.
+
+My project is to expand Markdown to encompass much more of web development, whilst ensuring that it
+maintains Markdown's aim to be as publishable in its plain-text format (for the benefit of those not using JavaScript).
+
+#### How will I expand Markdown
+
+Most simple elements(paragraphs, links, images) are rendered from **Markdown**.
+
+Some have been added from **GFM** - *Github Flavoured Markdown* - which is essentially Markdown with
+a few helpful changes and extensions used for project documentation on Github. These include tables.
+
+The rest have been specially added to accommodate web development. Most of these are in the
+*general web object* form.
+
+##### Example: General Web Object
+
+If I wanted to create a menu that opens 
+'*Home*', '*Services*', '*About Us*' and '*Contact*', I could write:
+
+```none
+@MENU:Home, "Services", About Us, Contact
+```
+
+which would become something like:
+
+@MENU:Home, "Services", About Us, Contact
+
+And if I wanted to underline some text, I could write:
+
+```none
+...@UNDERLINE:this is now underlined@...
+```
+which would become: 
+
+> ...@UNDERLINE:this is now underlined@...
+
+The form follows the pattern `@ OBJNAME : No spaces either side, " <- This space is included", "escaped comma -> , " @`
+
+#### Limitations of what can be added
+
+HTML, CSS and JS have mixed support.
+- HTML should not be used within objects (except paragraphs or blockquotes)
+- Markdown will not be changed to HTML inside a HTML tag other than the body tag
+
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
+
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
+
+@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
+
+@ HSPACE: 30px @ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
+
+- CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
+- JavaScript scripts in the head of the document should be placed below the FreeDOM script.
+
+The HTML document can be as simple as this:
+```html
+<!DOCTYPE html><html md="README.md"><script src="freeDOM.js"></script></html>
+```
+
+#### Background research
+
+When I was researching different Markdown compilers I discovered http://strapdownjs.com/ which had attempted a similar
+project. There are many ways that it is similar and many ways it is different to my project.
+
+They both:
+- Generate web documents from Markdown at runtime
+- Require one single .html file
+- Use marked.js as the Markdown compiler
+- They both have syntax highlighting in code blocks
+
+However after this they differ in that:
+- My project keeps the Markdown file externally
+    - HTML elements rendered when the file was included within the HTML file, causing any code blocks 
+      including any HTML tags to cause huge side-effects. This is the primary reason for keeping it externally
+- StrapdownJS makes *no effort to extend Markdown*
+- StrapdownJS keeps the Markdown enclosed in &lt;xmp&gt; tags
+    - This is supported for now, but it is marked as obsolete in HTML5
+- StrapdownJS uses Google Code Prettify
+    - In my component analysis, I concluded that the best syntax highlighter to use would be highlight.js
+- StrapdownJS includes Twitter Bootstrap
+    - Bootstrap in its entirety seems larger than necessary
+
+#### Where are you now?
+
+I have completed the Requirement Specification. I *had* also nearly completed the Design, but in the last two weeks my
+ideas for development have changed drastically. Particularly, I felt as if building the extra functionality into the
+compiler would be a much better way of rendering the page than changing it after compilation. This decision was
+partly due to the extra experience picked up in the module *'Compiler Design'* and due to noticing some performance 
+issues.
+
+An abbreviated version of the design is available on the website and is in the process of being added to.
+
+From this I have decided to amend the schedule to accommodate this happening in future; I will update the 
+design(and the component analysis) in intervals alongside the development phase of the project.
+
+The development stage is ahead of schedule, and the general conclusion seems to be that while the requirement
+modification stage is typically important in a reuse-oriented model, it is unnecessary for this one, as the scope of 
+components is so large that there is normally a few options for each component, with one having the desired feature.
+If the feature is unavailable, then I expect I should be able to add it myself; so this will now come under the design
+stage.
+
+These amendments have caused the schedule to be updated, below (the green boxes have been added to the schedule).
+
+#### What are you doing next?
+
+You may have changed your plans for Term 2. At the very least, you are likely to have a much clearer idea of how things will proceed and the timings needed to complete each stage. Outline the plans for next term and any alterations to your original ideas. 
+Provide an updated timetable with as much detail as possible.
+
+![](http://dcs.warwick.ac.uk/~csunbg/Project/images/projectplan.png)
+
+#### Ethics
+
+I will require ethical consent during the evaluation stage of my project. I have not applied for consent yet, but I will
+soon, as I plan to have a quick testing session with a few users around Week 17 (Term 2, Wk 3).
+
+#### Project management
+
+I have made the same amount of progress I said I would - I am ahead in the development stage but behind in the design 
+stage, which means I should make sure I get up to date with that in the next couple of weeks.
+
+## Editor <input style="position:relative;left:10px;bottom:5px;font-size:16px" type="button" value="Load Example" onclick="magic();">
+
+<iframe id="edit" style="border:2px solid #eee;position:relative;width:100%;height:100px" src="Editor"></iframe>
+<script>
+    function magic() {
+        var edit =$('#edit'); 
+        edit.contents().find('#markdown').val(window.markdownCode);
+        console.log(window.markdownCode);
+    }
+    function resizeEditor() {
+        $('html').css('height','100%');
+        $('#edit').css('height',($('html').height()-$('#edit').position().top-60)+'px');
+    }
+    $('body > .header-parent > nav > a:last-child').click(resizeEditor);
+    $(window).resize(resizeEditor);
+</script>
