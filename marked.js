@@ -3,7 +3,6 @@
  * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
  * https://github.com/chjj/marked
  */
-
 ;(function() {
 
     /**
@@ -12,10 +11,11 @@
 
     var block = {
         newline: /^\n+/,
+        comment: /^\/\*.*?\*\/(?=.|$)/,
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        webject: /^@([a-zA-Z]+)((?:\|(?:[^|\n])*)*)(?:\n+|$)/,
+        web: /^@ *([a-zA-Z]+) *((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -27,6 +27,75 @@
         paragraph: /^((?:[^\n]+\n?(?!hr|menu|heading|lheading|blockquote|tag|def))+)\n*/,
         text: /^[^\n]+/
     };
+
+    /**
+     * Heading Counter
+     */
+
+    var counter = {
+        "1" : 0,
+        "2" : 0,
+        "3" : 0,
+        "4" : 0,
+        "5" : 0,
+        "6" : 0
+    };
+
+
+    window.changePage = function(name) {
+        if (name) {
+            if ($('body').hasClass('onepage')) {
+                var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
+                window.location.assign(window.location.href.substring(0, window.location.href.lastIndexOf('#')) + tag);
+            } else {
+                var query = $('#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, ''));
+                query.css("display", "block");
+                query.siblings('.header-parent').css("display", "none");
+            }
+        }
+    };
+
+    /**
+     * Web object values
+     */
+
+    function loopVals(object, args) {
+        try {
+            var x = {
+            "menu": [
+                '<nav>',
+                '<a onclick="changePage(\'||p||\')">',
+                args,
+                '</a>',
+                '<span class="separator"></span>',
+                '</nav><hr>'
+            ],
+                "page":[
+                '<article>', '', [], '', '', '</article>'
+            ],
+            "icon":[
+                '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
+            ],
+            "underline":[
+                '<span style="text-decoration:underline">', '', [args.join('')], '', '', '</span>'
+            ],
+            "comment":[
+                '', '', [], '', '', ''
+            ],
+            "vspace":[
+                '<div style="margin-bottom:', '', [args[0]], '', '', '"></div>'
+            ],
+            "hspace":[
+                '<span style="margin-left:', '', [args[0]], '', '', '"></span>'
+            ],
+            "escape":[
+                '', '', [args[0]], '', '', ''
+            ]}[object];
+        } catch (e) {
+            new Error("Incorrect number of arguments in " + object);
+        }
+        return x;
+    }
 
     block.bullet = /(?:[*+-]|\d+\.)/;
     block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
@@ -149,16 +218,8 @@
      */
 
     Lexer.prototype.token = function(src, top, bq) {
-        var src = src.replace(/^ +$/gm, '')
-            , next
-            , loose
-            , cap
-            , bull
-            , b
-            , item
-            , space
-            , i
-            , l;
+        var src = src.replace(/^ +$/gm, ''),
+            next, loose, cap, bull, b, item, space, i, l;
 
         while (src) {
             // newline
@@ -258,15 +319,80 @@
                 continue;
             }
 
-            // webject
-            if (cap = this.rules.webject.exec(src)) {
+            // web
+            if (cap = this.rules.web.exec(src)) {
+                var arg = cap[2];
+                var sep;
+                if (arg) {
+                    sep = arg.substring(1);
+                    var x = sep.indexOf('|');
+                    var y = sep.indexOf(':');
+                    var z = sep.indexOf(',');
+                    if (arg.charAt(0) == ',') {
+                        if (x>=0 || y>=0) {
+                            sep = x < 0 ? y : (y < 0 ? x : Math.min(x,y));
+                        } else sep = -1;
+                    } else if (arg.charAt(0) == '|') {
+                        if (y>=0 || z>=0) {
+                            sep = y < 0 ? z : (z < 0 ? y : Math.min(y,z));
+                        } else sep = -1;
+                    } else {
+                        if (x>=0 || z>=0) {
+                            sep = x < 0 ? z : (z < 0 ? x : Math.min(x,z));
+                        } else sep = -1;
+                    }
+                    if (sep >= 0) {
+                        sep = arg.charAt(sep+1);
+
+                        arg = arg.substring(1);//.split(sep);
+
+                        var slashCount = 0;
+                        var inString = false;
+                        for (var i=0; i<arg.length; i++) {
+                            var char = arg.charAt(i);
+                            if (char == '"' && slashCount % 2 == 0) {
+                                inString = !inString;
+                            } else if (char == sep && !inString) {
+                                arg = arg.substring(0,i) + '\u0000' + arg.substring(i+1);
+                            }
+                            if (char == '\\') {
+                                slashCount++;
+                            } else {
+                                if (slashCount) {
+                                    arg = arg.substring(0,i-Math.floor((slashCount+1)/2)) + arg.substring(i);
+                                }
+                                slashCount = 0;
+                            }
+                        }
+                        arg = arg.split('\u0000');
+                        for (var i=0; i<arg.length; i++) {
+                            arg[i] = arg[i].trim();
+                            if (arg[i].length > 1 && arg[i].charAt(0) == '"' && arg[i].charAt(arg.length-1) == '"') {
+                                arg[i] = arg[i].substring(1,arg[i].length-1);
+                            }
+                        }
+                    } else {
+                        arg = [cap[2].substring(1)];
+                    }
+                }
                 src = src.substring(cap[0].length);
+                if (arg.length > 0 && arg[arg.length-1] === "") {
+                    arg.pop()
+                }
+                for (i=0; i<arg.length; i++) {
+                    arg[i] = arg[i].trim();
+                    if (arg[i].length > 1 && (
+                        (arg[i].charAt(0) == '"' && arg[i].charAt(arg[i].length-1) == '"')
+                            || (arg[i].charAt(0) == "'" && arg[i].charAt(arg[i].length-1) == "'")
+                        )) {
+                        arg[i] = arg[i].substring(1,arg[i].length-1);
+                    }
+                }
                 this.tokens.push({
-                    type: 'webject',
-                    webject: cap[1],
-                    args: a[a.length-1] ? cap[2].split("|").slice(1) : cap[2].split("|").slice(1).pop()
+                    type: 'web',
+                    web: cap[1].toLowerCase(),
+                    args: arg
                 });
-                console.log(this.tokens[this.tokens.length-1]);
                 continue;
             }
 
@@ -461,6 +587,8 @@
      */
 
     var inline = {
+        comment: /^\/\*.*?\*\/(?=.|$)/,
+        web: /^@ *([a-zA-Z]+) *((?:[|,:](?:[^|@\n])*)*)@/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -473,7 +601,7 @@
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
-        text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+        text: /^[\s\S]+?(?=[@/\\<!\[_*`]| {2,}\n|$)/
     };
 
     inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -573,17 +701,39 @@
      */
 
     InlineLexer.prototype.output = function(src) {
-        var out = '',
-            link,
-            text,
-            href,
-            cap;
+        var out = '', link, text, href, cap;
 
         while (src) {
             // escape
             if (cap = this.rules.escape.exec(src)) {
                 src = src.substring(cap[0].length);
                 out += cap[1];
+                continue;
+            }
+
+            // comment
+            if (cap = this.rules.comment.exec(src)) {
+                src = src.substring(cap[0].length);
+                continue;
+            }
+
+            // web
+            if (cap = this.rules.web.exec(src)) {
+                src = src.substring(cap[0].length);
+                var arg = cap[2].split(/[|:,]/g).slice(1);
+                if (arg.length > 0 && arg[arg.length-1] === "") {
+                    arg.pop()
+                }
+                for (i=0; i<arg.length; i++) {
+                    arg[i] = arg[i].trim();
+                    if (arg[i].length > 1 && (
+                            (arg[i].charAt(0) == '"' && arg[i].charAt(arg[i].length-1) == '"')
+                            || (arg[i].charAt(0) == "'" && arg[i].charAt(arg[i].length-1) == "'")
+                        )) {
+                        arg[i] = arg[i].substring(1,arg[i].length-1);
+                    }
+                }
+                out += this.renderer.web(cap[1].toLowerCase(), arg);
                 continue;
             }
 
@@ -750,10 +900,7 @@
 
     InlineLexer.prototype.mangle = function(text) {
         if (!this.options.mangle) return text;
-        var out = ''
-            , l = text.length
-            , i = 0
-            , ch;
+        var out = '', l = text.length, i = 0, ch;
 
         for (; i < l; i++) {
             ch = text.charCodeAt(i);
@@ -806,25 +953,25 @@
     };
 
     Renderer.prototype.heading = function(text, level, raw) {
-        return '<h'
-            + level
-            + ' id="'
-            + this.options.headerPrefix
-            + raw.toLowerCase().replace(/[^\w]+/g, '-')
-            + '">'
-            + text
-            + '</h'
-            + level
-            + '>\n';
+        var headerCloses = 0;
+        var out = "";
+        for (var i=level; i<7; i++) {
+            headerCloses += counter[""+i];
+            counter[""+i] = 0;
+        }
+        counter[""+level] = 1;
+        while (headerCloses>0) { out += "</div>"; headerCloses--; }
+        return out + '<div class="header-parent" id="' + raw.toLowerCase().replace(/ *<.*?>(.*?<\/[^/]*?>)? */g, '').replace(/[^\w]+/g, '-') + '">' +
+            '<h' + level  + this.options.headerPrefix + '>' + text + '</h' + level + '>\n';
     };
 
     Renderer.prototype.hr = function() {
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.webject = function() {
-        //console.log(arguments)
-        return '<nav></nav>\n';
+    Renderer.prototype.web = function(web, args) {
+        var val = loopVals(web, args);
+        return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
     Renderer.prototype.list = function(body, ordered) {
@@ -998,8 +1145,10 @@
             case 'hr': {
                 return this.renderer.hr();
             }
-            case 'webject': {
-                return this.renderer.webject();
+            case 'web': {
+                return this.renderer.web(
+                    this.token.web,
+                    this.token.args);
             }
             case 'heading': {
                 return this.renderer.heading(
@@ -1013,13 +1162,7 @@
                     this.token.escaped);
             }
             case 'table': {
-                var header = ''
-                    , body = ''
-                    , i
-                    , row
-                    , cell
-                    , flags
-                    , j;
+                var header = '', body = '', i, row, cell, flags, j;
 
                 // header
                 cell = '';
@@ -1105,6 +1248,18 @@
      * Helpers
      */
 
+    function loop(u,l,params,r,s,d) {
+        var newStr = u;
+        var tmp = l;
+        for (var i=0;i<params.length;i++) {
+            l = l.replace("||p||", params[i].replace('"','%22').replace(' ','%20')).replace("||i||", i);
+            newStr += l + params[i] + r;
+            if (i<params.length-1) newStr += s;
+            l = tmp;
+        }
+        return newStr + d;
+    }
+
     function escape(html, encode) {
         return html
             .replace(!encode ? /&(?!#?\w+;)/g : /&/g, '&amp;')
@@ -1173,13 +1328,10 @@
 
             opt = merge({}, marked.defaults, opt || {});
 
-            var highlight = opt.highlight
-                , tokens
-                , pending
-                , i = 0;
+            var highlight = opt.highlight, tokens, pending, i = 0;
 
             try {
-                tokens = Lexer.lex(src, opt)
+                tokens = Lexer.lex(src, opt);
             } catch (e) {
                 return callback(e);
             }
@@ -1246,7 +1398,7 @@
             }
             throw e;
         }
-    }
+    };
 
     /**
      * Options
