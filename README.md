@@ -1,11 +1,15 @@
-# Simplifying Web Development
+###### Simplifying Web Development
+
+@VSPACE: -30px@
+
+# FreeDOM
 
 @MENU: To Dos, Requirements Specification, Components, Design, Documentation, Progress Report, Editor@
 
 ## To Dos
 
 - CodeMirror for syntax highlighting in the editor
-- Include functionality in Markdown
+- Tree Include
 - Investigate how http://strapdownjs.com/ works
 - LESS (vs. SASS) at runtime:
     - https://css-tricks.com/using-less-as-a-live-css-engine/
@@ -182,7 +186,7 @@ There are many HTML tags that Markdown doesn't generate. I've been through each 
 to see which ones would make a good addition to Markdown.
 
 Tag             || Description                                                                                         | Will Add? | Syntax            | Assumption                                     
-----------------||-----------------------------------------------------------------------------------------------------|-----------|-------------------|------------------------------------------------
+----------------||-----------------------------------------------------------------------------------------------------|:---------:|:-----------------:|:----------------------------------------------:
 &lt;!--...-->   || Defines a comment                                                                                   | Yes       | `{-- Comment --}` |                                                
 &lt;!DOCTYPE>   || Defines the document type                                                                           | No        |                   | Needed on page load                                               
 &lt;abbr>       || Defines an abbreviation or an acronym                                                               | Yes       | `auto           ` |                                                
@@ -206,7 +210,7 @@ Tag             || Description                                                  
 &lt;del>        || Defines text that has been deleted from a document                                                  | No        |                   | Too specific                                   
 &lt;details>    || Defines additional details that the user can view or hide                                           | No        |                   |                                                
 &lt;dfn>        || Represents the defining instance of a term                                                          | Yes       | `auto           ` |                                                
-&lt;dialog>     || Defines a dialog box or window                                                                      | No        | `dia            ` | Compatibility                                  
+&lt;dialog>     || Defines a dialog box or window                                                                      | No        |                   | Compatibility                                  
 &lt;dl>         || Defines a description list                                                                          | Maybe     |                   |                                                
 &lt;dt>         || Defines a term/name in a description list                                                           | Maybe     |                   |                                                
 &lt;fieldset>   || Groups related elements in a form                                                                   | Yes       |                   |                                                
@@ -237,7 +241,7 @@ Tag             || Description                                                  
 &lt;output>     || Defines the result of a calculation                                                                 | No        |                   | Compatibility                                  
 &lt;param>      || Defines a parameter for an object                                                                   | Yes       |                   |                                                
 &lt;progress>   || Represents the progress of a task                                                                   | Yes       |                   |                                                
-&lt;q>          || Defines a short quotation                                                                           | Yes       | `&#124;"To be or na"&#124;` |                                                
+&lt;q>          || Defines a short quotation                                                                           | Yes       | &#124;"To be or not"&#124; |                                                
 &lt;rp>         || Defines what to show in browsers that do not support ruby annotations                               | No        |                   | For pros                                       
 &lt;rt>         || Defines an explanation/pronunciation of characters (for East Asian typography)                      | No        |                   | For pros                                       
 &lt;ruby>       || Defines a ruby annotation (for East Asian typography)                                               | No        |                   | For pros                                       
@@ -260,7 +264,7 @@ Tag             || Description                                                  
 &lt;track>      || Defines text tracks for media elements (&lt;video> and &lt;audio>)                                  | No        |                   | Too specific                                   
 &lt;u>          || Defines text that should be stylistically different from normal text                                | Yes       | `_underlined_   ` |                                                
 &lt;var>        || Defines a variable                                                                                  | No        |                   |                                                
-&lt;video>      || Defines a video or movie                                                                            | Yes       | `[[&#124;>      ` |                                                
+&lt;video>      || Defines a video or movie                                                                            | Yes       | [[&#124;>          |                                                
 &lt;wbr>        || Defines a possible line-break                                                                       | Yes       | `auto           ` |                                                
 
 ## Documentation
