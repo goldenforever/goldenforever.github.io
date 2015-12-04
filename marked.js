@@ -1,8 +1,7 @@
 /**
- * marked - a markdown parser
- * Copyright (c) 2011-2014, Christopher Jeffrey. (MIT Licensed)
- * https://github.com/chjj/marked
+ * Compiler
  */
+
 ;(function() {
 
     /**
@@ -1388,7 +1387,7 @@
         }
         try {
             if (opt) opt = merge({}, marked.defaults, opt);
-            return Parser.parse(Lexer.lex(src, opt), opt);
+            return process(Parser.parse(Lexer.lex(src, opt), opt));
         } catch (e) {
             e.message += '\nPlease report this to https://github.com/chjj/marked.';
             if ((opt || marked.defaults).silent) {
@@ -1456,3 +1455,11 @@
 }).call(function() {
     return this || (typeof window !== 'undefined' ? window : global);
 }());
+
+/**
+ * Post processing
+ */
+
+function process(str) {
+    return str;
+}
