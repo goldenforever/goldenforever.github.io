@@ -1002,10 +1002,12 @@
     };
 
     Renderer.prototype.tablecell = function(content, flags) {
-        var type = flags.header ? 'th' : 'td';
+        var type = flags.header;
+        if (flags.col < 0) console.log("> "+type + " " + content);
+        var colClass = flags.col >= 0 ? ' class="column-' + flags.col + '"' : "";
         var tag = flags.align
-            ? '<' + type + ' style="text-align:' + flags.align + '">'
-            : '<' + type + '>';
+            ? '<' + type + colClass + ' style="text-align:' + flags.align + '">'
+            : '<' + type + colClass + '>';
         return tag + content + '</' + type + '>\n';
     };
 
@@ -1161,32 +1163,47 @@
                     this.token.escaped);
             }
             case 'table': {
-                var header = '', body = '', i, row, cell, flags, j;
+                var header = '', tagName = '', body = '', cols = '', colIndices = [], i, row, cell, j;
 
                 // header
                 cell = '';
-                for (i = 0; i < this.token.header.length; i++) {
-                    flags = { header: true, align: this.token.align[i] };
-                    cell += this.renderer.tablecell(
-                        this.inline.output(this.token.header[i]),
-                        { header: true, align: this.token.align[i] }
-                    );
+                for (i = this.token.header.length-1; i>=0; i--) {
+                    cols = this.token.header[i];
+                    if (!cols) {
+                        colIndices.push(i-1);
+                        continue;
+                    }
+                    tagName = colIndices.contains(i-colIndices.length);
+                    tagName = tagName ? ('th class="double-header column-' + (i-colIndices.length) + '"') : 'th';
+                    if (colIndices.contains(i)) console.log(">> "+tagName);
+                    cell = this.renderer.tablecell(
+                        this.inline.output(cols),
+                        {header: tagName, align: this.token.align[i], col: tagName ? -1 : i-colIndices.length}
+                    ) + cell;
+
                 }
                 header += this.renderer.tablerow(cell);
 
+                console.log(colIndices);
+
+                var head;
+                // body
                 for (i = 0; i < this.token.cells.length; i++) {
                     row = this.token.cells[i];
 
                     cell = '';
                     for (j = 0; j < row.length; j++) {
+                        head = colIndices.contains(j) ? "th" : "td";
                         cell += this.renderer.tablecell(
                             this.inline.output(row[j]),
-                            { header: false, align: this.token.align[j] }
+                            { header: head, align: this.token.align[j], col: j}
                         );
                     }
-
-                    body += this.renderer.tablerow(cell);
+                    var x = this.renderer.tablerow(cell);
+                    body += x;
                 }
+
+                //header += this.renderer.tablerow(cell);
                 return this.renderer.table(header, body);
             }
             case 'blockquote_start': {

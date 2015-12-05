@@ -128,11 +128,11 @@ need not include icons
 
 There are some open licence JavaScript Markdown compilers.
 
-compiler       || markdown-js  | marked       | &#181;markdown | Showdown
-:-----------:||:------------:|:------------:|:--------------:|:-------:
-Size (bytes) || 16,750       | 16,528       | 10,097         | 26,423
-Speed (x1000)|| 17191ms      | 3727ms       | n/a            | 17191ms
-Supports GFM || @ICON:times@ | @ICON:check@ | @ICON:times@   | @ICON:check@
+Compiler     || markdown-js  | marked       | &#181;markdown | showdown
+:-----------:||:------------:|:------------:|:--------------:|:-------------:
+Size (bytes) |  16,750       | 16,528       | 10,097         | 26,423
+Speed (x1000)|  17191ms      | 3727ms       | n/a            | 17191ms
+Supports GFM |  @ICON:times@ | @ICON:check@ | @ICON:times@   | @ICON:check@
 
 ## Design
 
