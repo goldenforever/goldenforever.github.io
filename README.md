@@ -1,6 +1,6 @@
 ###### Simplifying Web Development
 
-@VSPACE: -30px@
+@VSPACE: -10px@
 
 # FreeDOM
 
@@ -125,30 +125,75 @@ need not include icons
 
 **Markdown** will be used as the base of the idea.
 
+This is an obvious choice, there is no similar language, it is very well designed and
+has plenty of JavaScript compilers 
+
 **GFM** (**G**ithub **F**lavoured **M**arkdown) is the variant of Markdown which is used by Github.
 
-There are some open licence JavaScript Markdown compilers.
+GFM will be a necessary add-on. It will provide complete compatability for people who 
+have written material on Github in the past.
 
-Compiler     | markdown-js   | marked       | &#181;markdown | showdown
-------------:|--------------:|-------------:|---------------:|--------------:
-Size (bytes) |  16,750       | 16,528       | 10,097         | 26,423
-Speed (x1000)|  17191ms      | 3727ms       | n/a            | 17191ms
-Supports GFM |  @ICON:times@ | @ICON:check@ | @ICON:times@   | @ICON:check@
+@MENU: Compiler, Framework@
+
+### Compiler
+
+There are many open licence JavaScript Markdown compilers and these are the most popular.
+
+Compiler     |  markdown-js |    marked    | &#181;markdown |   showdown
+------------:|:------------:|:------------:|:--------------:|:-------------:
+Size (bytes) |    16,750    |    16,528    |    10,097      |    26,423
+Speed (x1000)|    17191ms   |    3727ms    |     n/a        |    17191ms
+Supports GFM | @ICON:times@ | @ICON:check@ |  @ICON:times@  | @ICON:check@
+
+The most difficult part of GFM to recreate are tables. These would take a large amount of time
+to add, and as a result I will exclude *markdown-js* and *&#181;markdown* from the choices.
+
+The difference then comes down to size and speed; ***marked*** is superior to *Showdown* at both.
+
+**I will therefore choose @UNDERLINE:marked@ as my Markdown parser.**
+
+### Framework
+
+There are also a number of HTML/CSS/JS frameworks that are meant to ease web development.
+
+Here the aim is not to make this available to the end user but rather to use it as a 
+base for developing from.
+
+Consequently, I will choose one that has a small file size.
+
+I found [this link](//www.hongkiat.com/blog/bootstrap-alternatives/) useful, and decided to compare each one listed.
+
+Framework       |   Pure.css   |   Skeleton   |    Furtive   |     Min      |   RocketCSS    
+---------------:|:------------:|:------------:|:------------:|:------------:|:------------:
+Size (KB)       |     17.2     |      5.9     |     10.2     |     2.3      |     6.4      
+Grid            | @ICON:check@ | @ICON:check@ | @ICON:check@ | @ICON:check@ | @ICON:times@ 
+Grid precision\*|       7      |       5      |       4      |       5      |     n/a      
+Font-size in rem| @ICON:times@ | @ICON:check@ | @ICON:check@ | @ICON:times@ | @ICON:times@ 
+Responsive      | @ICON:check@ | @ICON:check@ | @ICON:check@ | @ICON:times@ | @ICON:times@ 
+Appearance\*\*  |       2      |      1       |      3       |      5       |      4
+
+> \*Grid precision is here defined as the minimum number such that you cannot use the framework
+to generate a grid of columns with equal size.
+> 
+> \*\*Appearance is subjective but is included as it will reduce the amount of work later. Ranked 1(best) to 5.
+
+Whilst Min offers good support, responsive design is a requirement is needed. Equally RocketCSS has
+the same disadvantage. Therefore neither would be suitable.
+
+Skeleton is equal or better in the remaining categories (with the exception of grid precision, which can
+be fixed manually) and is much smaller and more attractive, it seems to be the best choice.
+
+**I will therefore choose @UNDERLINE:Skeleton@ as my design framework.**
 
 ## Design
 
-I will need to add some syntax to Markdown to allow the user to add web objects.
-
-Markdown already uses most of the unicode characters for its syntax.
-
-As there are many more objects to be added, a user would not want to learn a different
-one for each one, and few of the web objects to be added have a visually similar code
-equivalent, a general markdown web object is needed. This will be the start point of most
-objects, though if there are some objects that clearly would benefit from special syntax,
-they should have them added.
-
-HTML and Markdown both have block and inline elements. Therefore, it makes sense to make
-a syntax for both.
+> ![](images/diagram.png)
+>
+> **The code in the four files** (on the left) **should generate the website** bottom-right
+> using freeDOM.js (top-right).
+>
+> The top file on the left is the same for all pages - the content is from the other three
+> (markdown) files, which are linked together.
 
 #### EBNF syntax:
 
@@ -166,6 +211,7 @@ a syntax for both.
     open  = "@" ;
     close = "@" ;
     delim = ":" | "," | "|" ;
+
 
 ##### Logic
 

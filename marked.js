@@ -49,7 +49,7 @@
             } else {
                 var query = $('#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, ''));
                 query.css("display", "block");
-                query.siblings('.header-parent').css("display", "none");
+                query.siblings('.section').css("display", "none");
             }
         }
     };
@@ -960,7 +960,7 @@
         }
         counter[""+level] = 1;
         while (headerCloses>0) { out += "</div>"; headerCloses--; }
-        return out + '<div class="header-parent" id="' + raw.toLowerCase().replace(/ *<.*?>(.*?<\/[^/]*?>)? */g, '').replace(/[^\w]+/g, '-') + '">' +
+        return out + '<div class="section" id="' + raw.toLowerCase().replace(/ *<.*?>(.*?<\/[^/]*?>)? */g, '').replace(/[^\w]+/g, '-') + '">' +
             '<h' + level  + this.options.headerPrefix + '>' + text + '</h' + level + '>\n';
     };
 
