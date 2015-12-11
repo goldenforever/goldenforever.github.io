@@ -31,7 +31,7 @@
 .container {
     position: relative;
     width: 100%;
-    max-width: 960px;
+    max-width: 960px !important;
     margin: 0 auto;
     padding: 0 20px;
     box-sizing: border-box; }
@@ -426,14 +426,41 @@ there.
 ------------------------------------------------------*/
 
 .separator {
-    margin-right: 18px;
+    margin-right: 1.8rem;
 }
 
 body {
-    padding: 20px;
+    /*padding: 20px;*/
+    background-color: #fff;
+}
+
+nav {
+    background-color: #f6f6f6;
+    padding: 1rem 1.5rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 1rem;
+    border: 0.1rem solid #ccc;
+}
+
+nav a {
+    color: #2c8fdb;
+}
+
+nav a:hover {
+    color: #54b6ff;
 }
 
 a {
     cursor: pointer;
     cursor: hand;
+}
+
+address, article, aside, blockquote, canvas, dd, div, dl,
+iframe, fieldset, figcaption, figure, footer, form, header, hgroup,
+hr, img, li, main, nav, noscript, ol, output, p, pre, section,
+table, tfoot, ul, video {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
 }

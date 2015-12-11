@@ -1,6 +1,8 @@
+@VSPACE: 1rem@
+
 ###### Simplifying Web Development
 
-@VSPACE: -10px@
+@VSPACE: -2.5rem@
 
 # FreeDOM
 
@@ -12,6 +14,8 @@
 - Design Tree Include
 - Design Tables
 - Design Layout
+- Better transforms for elements that are too large
+- Less.js is big. Check for scripts before getting the script.
 - Investigate how http://strapdownjs.com/ works
 - LESS (vs. SASS) at runtime:
     - https://css-tricks.com/using-less-as-a-live-css-engine/
@@ -187,7 +191,7 @@ be fixed manually) and is much smaller and more attractive, it seems to be the b
 
 ## Design
 
-> ![](images/diagram.png)
+> ![](http://dcs.warwick.ac.uk/~csunbg/Project/images/diagram.png)
 >
 > **The code in the four files** (on the left) **should generate the website** bottom-right
 > using freeDOM.js (top-right).
@@ -231,6 +235,13 @@ and its arguments.
 
 There are many HTML tags that Markdown doesn't generate. I've been through each and every tag
 to see which ones would make a good addition to Markdown.
+
+> Filter 'Will Add?' column:
+@HSPACE: 10px@Yes <input type="radio" name="filter" value="Yes" onclick="tagFilter(this)">
+@HSPACE: 10px@Maybe <input type="radio" name="filter" value="Maybe" onclick="tagFilter(this)"> 
+@HSPACE: 10px@No <input type="radio" name="filter" value="No" onclick="tagFilter(this)">
+ 
+@VSPACE: -40px@
 
 Tag             | Description                                                                                         | Will Add? | Syntax            | Assumption                                     
 ----------------|-----------------------------------------------------------------------------------------------------|:---------:|:-----------------:|:----------------------------------------------:
@@ -314,6 +325,20 @@ Tag             | Description                                                   
 &lt;video>      | Defines a video or movie                                                                            | Yes       | [[&#124;>          |                                                
 &lt;wbr>        | Defines a possible line-break                                                                       | Yes       | `auto           ` |                                                
 
+<script>
+function tagFilter(element) {
+    var tmp = $('#html-tags tr :nth-child(3)');
+    for (var i=1; i<tmp.length; i++) {
+        if ($(tmp[i]).html() === element.value) {
+            console.log($(tmp[i]).siblings().first().html());
+            $(tmp[i]).parent().css('display', 'table-row');
+        } else {
+            $(tmp[i]).parent().css('display', 'none');
+        }
+    }
+}
+</script>
+
 ## Documentation
 
 @MENU: Markdown, GFM, Web Objects, Complete Cheatsheet
@@ -367,7 +392,7 @@ you use will determine the size of the heading.
 
 #### Blockquotes
 
-You can indicate [blockquote](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) with a `&gt;`.
+You can indicate [blockquote](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote) with a `>`.
 
 ```markdown
 In the words of Abraham Lincoln:
@@ -404,7 +429,7 @@ This allows you to combine both bold and italic if needed.
 #### Unordered lists
 
 You can make an [unordered list](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ul) by preceding list items with either a `*` or a `-`.
-four
+
 ```markdown
 * Item
 * Item
@@ -717,7 +742,7 @@ stage, which means I should make sure I get up to date with that in the next cou
 
 ## Editor <input style="position:relative;left:10px;bottom:5px;font-size:16px" type="button" value="Load Example" onclick="magic();">
 
-<iframe id="edit" style="border:2px solid #eee;position:relative;width:100%;height:100px" src="Editor"></iframe>
+<iframe id="edit" style="border:2px solid #eee;position:relative;width:95%;height:100px" src="Editor"></iframe>
 <script>
     function magic() {
         var edit =$('#edit'); 
@@ -727,7 +752,10 @@ stage, which means I should make sure I get up to date with that in the next cou
     function resizeEditor() {
         $('html').css('height','100%');
         $('#edit').css('height',($('html').height()-$('#edit').position().top-60)+'px');
+        console.log(($('html').height()-$('#edit').position().top-60));
     }
-    $('body > .header-parent > nav > a:last-child').click(resizeEditor);
+    $('body > .section > nav > a:last-child').click(function(){
+        setTimeout(resizeEditor,10);
+    });
     $(window).resize(resizeEditor);
 </script>

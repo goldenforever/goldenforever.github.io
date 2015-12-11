@@ -62,12 +62,12 @@
         try {
             var x = {
             "menu": [
-                '<nav>',
+                '<nav style="margin-top:-1rem;margin-bottom:1rem">',
                 '<a onclick="changePage(\'||p||\')">',
                 args,
                 '</a>',
                 '<span class="separator"></span>',
-                '</nav><hr>'
+                '</nav>'
             ],
                 "page":[
                 '<article>', '', [], '', '', '</article>'
