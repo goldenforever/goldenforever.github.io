@@ -55,11 +55,16 @@
     };
 
     window.toggleMenu = function(toggle) {
-        var isset = $(toggle).parent().css('max-height');
-        if (isset === null || isset.length < 5)
-            $(toggle).parent().css('max-height','10000rem');
+        var menu = $(toggle).parent();
+        //console.log(menu);
+        var height = menu.height();
+        //console.log(height);
+        var links = menu.children('.link-container').length;
+        //console.log(links);
+        if (false)
+            $(toggle).parent().css('height','10000rem');
         else
-            $(toggle).parent().css('max-height','2.4rem');
+            $(toggle).parent().css('height','2.4rem');
     };
 
     /**
@@ -70,12 +75,12 @@
         try {
             var x = {
             "menu": [
-                '<nav><span onclick="toggleMenu(this);" class="toggle-container left">&raquo;</span>',
+                '<nav>',
                 '<span class="link-container"><a onclick="changePage(\'||p||\');$(this).css(\'color\',\'#2c8fdb\');$(this).parent().siblings().children().css(\'color\',\'\');">',
                 args,
                 '</a></span>',
                 '<span class="separator"></span>',
-                '<span onclick="toggleMenu(this);" class="toggle-container right">&laquo;</span></nav>'
+                '</nav>'
             ],
                 "page":[
                 '<article>', '', [], '', '', '</article>'
