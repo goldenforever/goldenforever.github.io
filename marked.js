@@ -54,6 +54,14 @@
         }
     };
 
+    window.toggleMenu = function(toggle) {
+        var isset = $(toggle).parent().css('max-height');
+        if (isset === null || isset.length < 5)
+            $(toggle).parent().css('max-height','10000rem');
+        else
+            $(toggle).parent().css('max-height','2.4rem');
+    };
+
     /**
      * Web object values
      */
@@ -62,12 +70,12 @@
         try {
             var x = {
             "menu": [
-                '<nav style="margin-top:-1rem;margin-bottom:1rem">',
-                '<a onclick="changePage(\'||p||\')">',
+                '<nav><span onclick="toggleMenu(this);" class="toggle-container left">&raquo;</span>',
+                '<span class="link-container"><a onclick="changePage(\'||p||\');$(this).css(\'color\',\'#2c8fdb\');$(this).parent().siblings().children().css(\'color\',\'\');">',
                 args,
-                '</a>',
+                '</a></span>',
                 '<span class="separator"></span>',
-                '</nav>'
+                '<span onclick="toggleMenu(this);" class="toggle-container right">&laquo;</span></nav>'
             ],
                 "page":[
                 '<article>', '', [], '', '', '</article>'
@@ -987,14 +995,16 @@
     };
 
     Renderer.prototype.table = function(header, body) {
-        return '<table>\n'
+        return '<div class="table-wrapper">\n'
+            + '<table>\n'
             + '<thead>\n'
             + header
             + '</thead>\n'
             + '<tbody>\n'
             + body
             + '</tbody>\n'
-            + '</table>\n';
+            + '</table>\n'
+            + '</div>\n';
     };
 
     Renderer.prototype.tablerow = function(content) {

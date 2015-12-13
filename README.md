@@ -329,12 +329,8 @@ Tag             | Description                                                   
 function tagFilter(element) {
     var tmp = $('#html-tags tr :nth-child(3)');
     for (var i=1; i<tmp.length; i++) {
-        if ($(tmp[i]).html() === element.value) {
-            console.log($(tmp[i]).siblings().first().html());
-            $(tmp[i]).parent().css('display', 'table-row');
-        } else {
-            $(tmp[i]).parent().css('display', 'none');
-        }
+        if ($(tmp[i]).html() === element.value) $(tmp[i]).parent().css('display', 'table-row');
+        else $(tmp[i]).parent().css('display', 'none');
     }
 }
 </script>
@@ -747,12 +743,10 @@ stage, which means I should make sure I get up to date with that in the next cou
     function magic() {
         var edit =$('#edit'); 
         edit.contents().find('#markdown').val(window.markdownCode);
-        console.log(window.markdownCode);
     }
     function resizeEditor() {
         $('html').css('height','100%');
         $('#edit').css('height',($('html').height()-$('#edit').position().top-60)+'px');
-        console.log(($('html').height()-$('#edit').position().top-60));
     }
     $('body > .section > nav > a:last-child').click(function(){
         setTimeout(resizeEditor,10);
