@@ -1,8 +1,8 @@
 @VSPACE: 1rem@
 
-###### Simplifying Web Development
+###### @HSPACE: -0.01rem@Simplifying Web Development
 
-@VSPACE: -2.5rem@
+@VSPACE: -2.9rem@
 
 # FreeDOM
 

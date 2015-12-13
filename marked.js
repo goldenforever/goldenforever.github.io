@@ -40,16 +40,31 @@
         "6" : 0
     };
 
-
     window.changePage = function(name) {
+        //$(this).css('color','#2c8fdb');
+
+        var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
         if (name) {
             if ($('body').hasClass('onepage')) {
-                var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
-                window.location.assign(window.location.href.substring(0, window.location.href.lastIndexOf('#')) + tag);
+                window.location.hash = tag;
             } else {
-                var query = $('#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, ''));
-                query.css("display", "block");
-                query.siblings('.section').css("display", "none");
+                var query = $(tag);
+                if (query.length) {
+                    query.css("display", "block");
+                    query.siblings('.section').css("display", "none");
+                    query = query.siblings('nav').first().find('.link-container a');
+                    query.css('color', '');
+                    for (var i=0; i<query.length; i++) {
+                        if (query[i].innerHTML.toLowerCase()
+                                .replace(/ /g, '-').replace(/[^a-z\d\-]/g, '')
+                            === tag.substring(1)) {
+                            console.log("Yup")
+                            $(query[i]).css('color', '#2c8fdb');
+                            break;
+                        }
+                    }
+                    //window.location.hash = tag;
+                }
             }
         }
     };
@@ -76,7 +91,7 @@
             var x = {
             "menu": [
                 '<nav>',
-                '<span class="link-container"><a onclick="changePage(\'||p||\');$(this).css(\'color\',\'#2c8fdb\');$(this).parent().siblings().children().css(\'color\',\'\');">',
+                '<span class="link-container"><a onclick="changePage(\'||p||\');">',
                 args,
                 '</a></span>',
                 '<span class="separator"></span>',
