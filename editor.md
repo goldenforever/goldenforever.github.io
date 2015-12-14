@@ -1,17 +1,46 @@
 ## Editor <input style="position:relative;left:10px;bottom:5px;font-size:16px" type="button" value="Load Example" onclick="magic();">
 
-<iframe id="edit" style="border:2px solid #eee;position:relative;width:95%;height:100px" src="Editor"></iframe>
+<style>
+    .cm-s-neo .CodeMirror-gutters {
+        border-right: 0.1rem solid #ccc;
+        padding-right: 0.2rem;
+        margin-right: 0.3rem;
+    }
+    .CodeMirror.cm-s-neo {
+        border: 0.1rem solid #ccc;
+    }
+    .cm-s-neo .CodeMirror-linenumber {
+        color: #ccc;
+    }
+    #outp {
+        border: 0.1rem solid #ccc;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<div id="hello" style="height:100%;resize:vertical;position:relative">
+<div id="edit" style="height:100%;width:30%"></div>
+<div id="outp" style="position:absolute;left:30%;width:70%;overflow:auto;"></div>
+</div>
+
 <script>
-    function magic() {
-        var edit =$('#edit'); 
-        edit.contents().find('#markdown').val(window.markdownCode);
-    }
-    function resizeEditor() {
-        $('html').css('height','100%');
-        $('#edit').css('height',($('html').height()-$('#edit').position().top-60)+'px');
-    }
-    $('body > .section > nav > a:last-child').click(function(){
-        setTimeout(resizeEditor,10);
-    });
-    $(window).resize(resizeEditor);
+    window.defer(function(){
+        var cm = CodeMirror(document.getElementById('edit'), {
+          theme: "neo",
+          lineWrapping: true,
+          mode: "markdown",
+          lineNumbers: true
+        });
+        
+        cm.on("change", function(cm, change) {
+          document.getElementById("outp").innerHTML = '<div class="container">' + marked(cm.getValue()) + '</div>';
+        });
+        
+        document.getElementById('edit').children[0].style.height = "100%";
+        document.getElementById('hello').style.height = window.innerHeight + "px";
+    }, "window.markdownHighlighting");
 </script>

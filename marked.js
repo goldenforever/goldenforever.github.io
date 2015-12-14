@@ -58,7 +58,6 @@
                         if (query[i].innerHTML.toLowerCase()
                                 .replace(/ /g, '-').replace(/[^a-z\d\-]/g, '')
                             === tag.substring(1)) {
-                            console.log("Yup")
                             $(query[i]).css('color', '#2c8fdb');
                             break;
                         }

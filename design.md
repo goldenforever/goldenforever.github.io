@@ -48,8 +48,6 @@ to see which ones would make a good addition to Markdown.
 @HSPACE: 10px@Yes <input type="radio" name="filter" value="Yes" onclick="tagFilter(this)">
 @HSPACE: 10px@Maybe <input type="radio" name="filter" value="Maybe" onclick="tagFilter(this)"> 
 @HSPACE: 10px@No <input type="radio" name="filter" value="No" onclick="tagFilter(this)">
- 
-@VSPACE: -40px@
 
 Tag             | Description                                                                                         | Will Add? | Syntax            | Assumption                                     
 ----------------|-----------------------------------------------------------------------------------------------------|:---------:|:-----------------:|:----------------------------------------------:

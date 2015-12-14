@@ -52,7 +52,7 @@ Appearance\*\*  |       2      |      1       |      3       |      5       |   
 > \*Grid precision is here defined as the minimum number such that you cannot use the framework
 to generate a grid of columns with equal size.
 > 
-> \*\*Appearance is subjective but is included as it will reduce the amount of work later. Ranked 1(best) to 5.
+> \*\*Appearance is subjective but is included as it will reduce the amount of changes I will need to make. Ranked 1(best) to 5.
 
 Whilst Min offers good support, responsive design is a requirement is needed. Equally RocketCSS has
 the same disadvantage. Therefore neither would be suitable.

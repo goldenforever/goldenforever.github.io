@@ -504,8 +504,6 @@ img, .table-wrapper {
 body {
     overflow-x: hidden;
     overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar * {

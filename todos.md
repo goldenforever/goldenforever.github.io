@@ -1,11 +1,15 @@
 ## To Dos
 
-- CodeMirror for syntax highlighting in the editor
-- Design Tree Include
-- Design Tables
-- Design Layout
+- Code review
+- Remake editor using CodeMirror
+- Design, add:
+    - Tree Include
+    - Tables
+    - Layout
+- Fix Menu starting as blocks
+- Make Tree Include work for trees with depth > 1
 - Better transforms for elements that are too large
 - Less.js is big. Check for scripts before getting the script.
-- Investigate how http://strapdownjs.com/ works
-- LESS (vs. SASS) at runtime:
-    - https://css-tricks.com/using-less-as-a-live-css-engine/
+    - Generalise this method
+- Req Spec, add:
+    - LESS (vs. SASS) at runtime - https://css-tricks.com/using-less-as-a-live-css-engine/
