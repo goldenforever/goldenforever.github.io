@@ -3,10 +3,9 @@
 - Code review
 - Remake editor using CodeMirror
 - Design, add:
-    - Tree Include
-    - Tables
-    - Layout
-- Fix Menu starting as blocks
+    - [ ] Tree Include
+    - [ ] Tables
+    - [ ] Layout
 - Make Tree Include work for trees with depth > 1
 - Better transforms for elements that are too large
 - Less.js is big. Check for scripts before getting the script.

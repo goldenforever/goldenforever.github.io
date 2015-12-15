@@ -8,16 +8,16 @@
 
 @MENU: To Dos, Requirements Specification, Components, Design, Documentation, Progress Report, Editor@
 
-{todos.md}
+{Markdown/todos.md}
 
-{reqs.md}
+{Markdown/reqs.md}
 
-{comp.md}
+{Markdown/comp.md}
 
-{design.md}
+{Markdown/design.md}
 
-{docs.md}
+{Markdown/docs.md}
 
-{report.md}
+{Markdown/report.md}
 
-{editor.md}
+{Markdown/editor.md}

@@ -1009,6 +1009,10 @@
         return '<li>' + text + '</li>\n';
     };
 
+    Renderer.prototype.checkbox = function(text, checked) {
+        return '<input disabled type="checkbox"' + (checked ? ' checked' : '') + '></input> ' + text + '<br>\n';
+    };
+
     Renderer.prototype.paragraph = function(text) {
         return '<p>' + text + '</p>\n';
     };
@@ -1244,6 +1248,11 @@
                     body += this.token.type === 'text'
                         ? this.parseText()
                         : this.tok();
+                }
+
+                console.log(body);
+                if (body.match(/^\[[ x]]/)) {
+                    return this.renderer.checkbox(body.substring(3).trim(), body.charAt(1) === 'x');
                 }
 
                 return this.renderer.listitem(body);

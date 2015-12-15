@@ -29,18 +29,19 @@
 
 <script>
     window.defer(function(){
-        var cm = CodeMirror(document.getElementById('edit'), {
-          theme: "neo",
-          lineWrapping: true,
-          mode: "markdown",
-          lineNumbers: true
-        });
-        
-        cm.on("change", function(cm, change) {
-          document.getElementById("outp").innerHTML = '<div class="container">' + marked(cm.getValue()) + '</div>';
-        });
-        
-        document.getElementById('edit').children[0].style.height = "100%";
-        document.getElementById('hello').style.height = window.innerHeight + "px";
-    }, "window.markdownHighlighting");
+        setTimeout(function() {
+            var cm = CodeMirror(document.getElementById('edit'), {
+              theme: 'neo',
+              lineWrapping: true,
+              lineNumbers: true
+            });
+            
+            cm.on("change", function(cm, change) {
+              document.getElementById("outp").innerHTML = '<div class="container">' + marked(cm.getValue()) + '</div>';
+            });
+            
+            document.getElementById('edit').children[0].style.height = "100%";
+            document.getElementById('hello').style.height = window.innerHeight + "px";
+        }, 100);
+    }, "typeof CodeMirror !== 'undefined'");
 </script>

@@ -5,6 +5,6 @@
 ## Home
 Welcome to my very easy Markdown website.
 
-{about.md}
+{Markdown/about.md}
 
-{contact.md}
+{Markdown/contact.md}
