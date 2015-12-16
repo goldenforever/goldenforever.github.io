@@ -1,23 +1,25 @@
-@VSPACE: 1rem@
+{vspace{-0.5rem}}
 
-###### @HSPACE: -0.01rem@Simplifying Web Development
+###### Simplifying Web Development
 
-@VSPACE: -2.9rem@
+{vspace{-3.2rem}}
 
 # FreeDOM
 
-@MENU: To Dos, Requirements Specification, Components, Design, Documentation, Progress Report, Editor@
+{menu{}To Dos{}Requirements Specification{}Components{}Design{}Documentation{}Progress Report{}Editor}
 
-{Markdown/todos.md}
+{{Markdown/todos.md}}
 
-{Markdown/reqs.md}
+{{Markdown/syntax.md}}
 
-{Markdown/comp.md}
+{{Markdown/reqs.md}}
 
-{Markdown/design.md}
+{{Markdown/comp.md}}
 
-{Markdown/docs.md}
+{{Markdown/design.md}}
 
-{Markdown/report.md}
+{{Markdown/docs.md}}
 
-{Markdown/editor.md}
+{{Markdown/report.md}}
+
+{{Markdown/editor.md}}

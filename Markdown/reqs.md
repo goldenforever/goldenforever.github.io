@@ -30,19 +30,19 @@ the population for quantifiable metrics.
 
  Objective          | Target
 --------------------|:-------------:
-Fast to write       | ***to be minimised***
-Little knowledge    | ***to be minimised***
+Fast to write       | *//to be minimised//*
+Little knowledge    | *//to be minimised//*
 Further accommodate | Each web language could still be easily included
 Documented          | All encompassing documentation
 Consistency         | The website should have continuity of style
 Content-aware       | At minimum, looks for different 'types' of page content to match
 Modern style        | Use modern principles and generally not look dated
-Responsive design   | ***see below***
-Fast to load        | ***see below***
-Small file size     | ***see below***
+Responsive design   | *//see below//*
+Fast to load        | *//see below//*
+Small file size     | *//see below//*
 
 #### Responsive design
-* This is indented four spaces, because it's two spaces further than the item above.
+
 [This table](http://www.rapidtables.com/web/dev/screen-resolution-statistics.htm)
 shows popular screen resolutions.
 
@@ -76,7 +76,7 @@ responsible for less than 5% of web-page loads.
 For the same reason, the screen will need to support resolutions between
 16:9 in landscape to 16:9 in portrait.
 
-*i.e. all of these*
+//i.e. all of these//
 (provided the short side is at least 320px, and the long side is no more than 1920px):
 
 ![](http://dcs.warwick.ac.uk/~csunbg/Project/images/aspect-ratio-diagram.png)
@@ -94,11 +94,10 @@ Therefore I will sit an upper bound on 7.5Mbits as the size of the website *incl
 
 The average size of the images on a web-page is 1.4Mbits (http://httparchive.org/trends.php),
 so I will subtract the size of these assets from the upper bound to make a new
-***upper bound of 6.1Mbits***.
+*//upper bound of 6.1Mbits//*.
 
 Video would not affect the initial loading time on most modern browsers as it is part of the HTML5 standard.
 
 Adding hosted libraries (js/css/fonts) through runtime adding of links seems to
 be a very logical way to mitigate this upper bound whilst still retaining a
-wide range of output formats. For example, in the case I have no icons, then I
-need not include icons
+wide range of output formats.

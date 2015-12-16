@@ -2,52 +2,35 @@
 
 > ![](http://dcs.warwick.ac.uk/~csunbg/Project/images/diagram.png)
 >
-> **The code in the four files** (on the left) **should generate the website** bottom-right
+> //The code in the four files// (on the left) //should generate the website// bottom-right
 > using freeDOM.js (top-right).
 >
 > The top file on the left is the same for all pages - the content is from the other three
 > (markdown) files, which are linked together.
 
-#### EBNF syntax:
+{menu{}Structure{}Concepts{}Old Concepts}
 
-    block   = content [close];
-    inline  = content close;
-    
-    content = open object { delim {" "} argument {" "} } ;
-    object  = char { char } ;
-    char    = upper | lower ;
-    upper   = "A" | "B" | "C" | ... | "Y" | "Z" ;
-    lower   = "a" | "b" | "c" | ... | "y" | "z" ;
+### Structure
 
-#### Initial choices of characters:
+#### Beginning
 
-    open  = "@" ;
-    close = "@" ;
-    delim = ":" | "," | "|" ;
+#### Middle
 
-##### Logic
+#### End
 
-`@` is not used in Markdown to describe syntax. It is also an unintimidating choice,
-as it is a common character to anyone who uses the web.
+### Concepts
 
-`:`, `,` and `|` were chosen as they would prevent `@` from being read as
-Markdown in the case that someone wanted to write an email address.
- 
-A choice of three delimiters allow flexibility in the way the website
-can be written, though I would recommend making the object uppercase and 
-giving the first delimiter a different character to the others as good 
-practice, as then someone reading it could easily differentiate the object
-and its arguments.
-
-### HTML Tags
+#### HTML Tags
 
 There are many HTML tags that Markdown doesn't generate. I've been through each and every tag
 to see which ones would make a good addition to Markdown.
 
-> Filter 'Will Add?' column:
-@HSPACE: 10px@Yes <input type="radio" name="filter" value="Yes" onclick="tagFilter(this)">
-@HSPACE: 10px@Maybe <input type="radio" name="filter" value="Maybe" onclick="tagFilter(this)"> 
-@HSPACE: 10px@No <input type="radio" name="filter" value="No" onclick="tagFilter(this)">
+Filter 'Will Add?' column:
+{hspace{10px}} Yes <input type="radio" name="filter" value="Yes" onclick="tagFilter(this)">
+{hspace{10px}} Maybe <input type="radio" name="filter" value="Maybe" onclick="tagFilter(this)"> 
+{hspace{10px}} No <input type="radio" name="filter" value="No" onclick="tagFilter(this)">
+
+{vspace{-2rem}}
 
 Tag             | Description                                                                                         | Will Add? | Syntax            | Assumption                                     
 ----------------|-----------------------------------------------------------------------------------------------------|:---------:|:-----------------:|:----------------------------------------------:
@@ -109,7 +92,6 @@ Tag             | Description                                                   
 &lt;rp>         | Defines what to show in browsers that do not support ruby annotations                               | No        |                   | For pros                                       
 &lt;rt>         | Defines an explanation/pronunciation of characters (for East Asian typography)                      | No        |                   | For pros                                       
 &lt;ruby>       | Defines a ruby annotation (for East Asian typography)                                               | No        |                   | For pros                                       
-&lt;s>          | Defines text that is no longer correct                                                              | Yes       | `~~bye~~        ` |                                                
 &lt;samp>       | Defines sample output from a computer program                                                       | No        |                   |                                                
 &lt;script>     | Defines a client-side script                                                                        | Yes       |                   |                                                
 &lt;section>    | Defines a section in a document                                                                     | Yes       |                   |                                                
@@ -128,7 +110,7 @@ Tag             | Description                                                   
 &lt;track>      | Defines text tracks for media elements (&lt;video> and &lt;audio>)                                  | No        |                   | Too specific                                   
 &lt;u>          | Defines text that should be stylistically different from normal text                                | Yes       | `_underlined_   ` |                                                
 &lt;var>        | Defines a variable                                                                                  | No        |                   |                                                
-&lt;video>      | Defines a video or movie                                                                            | Yes       | [[&#124;>          |                                                
+&lt;video>      | Defines a video or movie                                                                            | Yes       | [[&#124;>         |                                                
 &lt;wbr>        | Defines a possible line-break                                                                       | Yes       | `auto           ` |                                                
 
 <script>
@@ -140,3 +122,38 @@ function tagFilter(element) {
     }
 }
 </script>
+
+### Old Concepts
+
+#### General Web Objects
+
+##### EBNF syntax:
+
+    block   = content [close];
+    inline  = content close;
+    
+    content = open object { delim {" "} argument {" "} } ;
+    object  = char { char } ;
+    char    = upper | lower ;
+    upper   = "A" | "B" | "C" | ... | "Y" | "Z" ;
+    lower   = "a" | "b" | "c" | ... | "y" | "z" ;
+
+##### Initial choices of characters:
+
+    open  = "@" ;
+    close = "@" ;
+    delim = ":" | "," | "|" ;
+
+###### Logic
+
+`@` is not used in Markdown to describe syntax. It is also an unintimidating choice,
+as it is a common character to anyone who uses the web.
+
+`:`, `,` and `|` were chosen as they would prevent `@` from being read as
+Markdown in the case that someone wanted to write an email address.
+ 
+A choice of three delimiters allow flexibility in the way the website
+can be written, though I would recommend making the object uppercase and 
+giving the first delimiter a different character to the others as good 
+practice, as then someone reading it could easily differentiate the object
+and its arguments.

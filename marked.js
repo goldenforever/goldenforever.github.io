@@ -1,6 +1,10 @@
 /**
  * Compiler
  */
+String.prototype.regexIndexOf = function(regex, startpos) {
+    var indexOf = this.substring(startpos || 0).search(regex);
+    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
+}
 
 ;(function() {
 
@@ -14,7 +18,7 @@
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        web: /^@ *([a-zA-Z]+) *((?:[|,:](?:[^|@\n])*)*)@?(?:\n+|$)/,
+        obj: /^\{[a-z\-]+\{.*?}.*?(?:}(\n+|$))}/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -43,7 +47,7 @@
     window.changePage = function(name) {
         //$(this).css('color','#2c8fdb');
 
-        var tag = '#' + name.toLowerCase().replace(/%20/g, '-').replace(/%22|[^a-z\d\-]]/g, '');
+        var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
         if (name) {
             if ($('body').hasClass('onepage')) {
                 window.location.hash = tag;
@@ -82,28 +86,28 @@
     };
 
     /**
-     * Web object values
+     * Object values
      */
 
-    function loopVals(object, args) {
+    function loopVals(object, args, content) {
         try {
             var x = {
             "menu": [
                 '<nav>',
                 '<span class="link-container"><a onclick="changePage(\'||p||\');">',
-                args,
+                content,
                 '</a></span>',
                 '<span class="separator"></span>',
                 '</nav>'
-            ],
-                "page":[
-                '<article>', '', [], '', '', '</article>'
             ],
             "icon":[
                 '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
             ],
             "underline":[
-                '<span style="text-decoration:underline">', '', [args.join('')], '', '', '</span>'
+                '<span style="text-decoration:underline">', '', content, '', '', '</span>'
+            ],
+            "color":[
+                '<span style="color:' + args[0] + '">', '', content, '', '', '</span>'
             ],
             "comment":[
                 '', '', [], '', '', ''
@@ -115,7 +119,7 @@
                 '<span style="margin-left:', '', [args[0]], '', '', '"></span>'
             ],
             "escape":[
-                '', '', [args[0]], '', '', ''
+                '', '', content, '', '', ''
             ]}[object];
         } catch (e) {
             new Error("Incorrect number of arguments in " + object);
@@ -345,79 +349,11 @@
                 continue;
             }
 
-            // web
-            if (cap = this.rules.web.exec(src)) {
-                var arg = cap[2];
-                var sep;
-                if (arg) {
-                    sep = arg.substring(1);
-                    var x = sep.indexOf('|');
-                    var y = sep.indexOf(':');
-                    var z = sep.indexOf(',');
-                    if (arg.charAt(0) == ',') {
-                        if (x>=0 || y>=0) {
-                            sep = x < 0 ? y : (y < 0 ? x : Math.min(x,y));
-                        } else sep = -1;
-                    } else if (arg.charAt(0) == '|') {
-                        if (y>=0 || z>=0) {
-                            sep = y < 0 ? z : (z < 0 ? y : Math.min(y,z));
-                        } else sep = -1;
-                    } else {
-                        if (x>=0 || z>=0) {
-                            sep = x < 0 ? z : (z < 0 ? x : Math.min(x,z));
-                        } else sep = -1;
-                    }
-                    if (sep >= 0) {
-                        sep = arg.charAt(sep+1);
-
-                        arg = arg.substring(1);//.split(sep);
-
-                        var slashCount = 0;
-                        var inString = false;
-                        for (var i=0; i<arg.length; i++) {
-                            var char = arg.charAt(i);
-                            if (char == '"' && slashCount % 2 == 0) {
-                                inString = !inString;
-                            } else if (char == sep && !inString) {
-                                arg = arg.substring(0,i) + '\u0000' + arg.substring(i+1);
-                            }
-                            if (char == '\\') {
-                                slashCount++;
-                            } else {
-                                if (slashCount) {
-                                    arg = arg.substring(0,i-Math.floor((slashCount+1)/2)) + arg.substring(i);
-                                }
-                                slashCount = 0;
-                            }
-                        }
-                        arg = arg.split('\u0000');
-                        for (var i=0; i<arg.length; i++) {
-                            arg[i] = arg[i].trim();
-                            if (arg[i].length > 1 && arg[i].charAt(0) == '"' && arg[i].charAt(arg.length-1) == '"') {
-                                arg[i] = arg[i].substring(1,arg[i].length-1);
-                            }
-                        }
-                    } else {
-                        arg = [cap[2].substring(1)];
-                    }
-                }
+            // obj
+            if (cap = this.rules.obj.exec(src)) {
                 src = src.substring(cap[0].length);
-                if (arg.length > 0 && arg[arg.length-1] === "") {
-                    arg.pop()
-                }
-                for (i=0; i<arg.length; i++) {
-                    arg[i] = arg[i].trim();
-                    if (arg[i].length > 1 && (
-                        (arg[i].charAt(0) == '"' && arg[i].charAt(arg[i].length-1) == '"')
-                            || (arg[i].charAt(0) == "'" && arg[i].charAt(arg[i].length-1) == "'")
-                        )) {
-                        arg[i] = arg[i].substring(1,arg[i].length-1);
-                    }
-                }
                 this.tokens.push({
-                    type: 'web',
-                    web: cap[1].toLowerCase(),
-                    args: arg
+                    type: 'obj'
                 });
                 continue;
             }
@@ -614,20 +550,21 @@
 
     var inline = {
         comment: /^\/\*.*?\*\/(?=.|$)/,
-        web: /^@ *([a-zA-Z]+) *((?:[|,:](?:[^|@\n])*)*)@/,
-        escape: /^\\([\\`*{}\[\]()#+\-.!_>])/,
+        obj: /^\{[a-z\-]+\{.*?}.*?(?=}[ \n]|}$)}/,
+        escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
         tag: /^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,
         link: /^!?\[(inside)\]\(href\)/,
         reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
         nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
-        strong: /^__([\s\S]+?)__(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,
-        em: /^\b_((?:[^_]|__)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+        underline: /^\b_((?:[^_]|__)+?)_\b/,
+        strong: /^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+        em: /^\/\/(.*?[^:])\/\//,
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
-        text: /^[\s\S]+?(?=[@/\\<!\[_*`]| {2,}\n|$)/
+        text: /^[\s\S]+?(?=[@/\\<!\{\[_*`]| {2,}\n|$)/
     };
 
     inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -743,23 +680,61 @@
                 continue;
             }
 
-            // web
-            if (cap = this.rules.web.exec(src)) {
+            // obj
+            if (cap = this.rules.obj.exec(src)) {
                 src = src.substring(cap[0].length);
-                var arg = cap[2].split(/[|:,]/g).slice(1);
-                if (arg.length > 0 && arg[arg.length-1] === "") {
-                    arg.pop()
-                }
-                for (i=0; i<arg.length; i++) {
-                    arg[i] = arg[i].trim();
-                    if (arg[i].length > 1 && (
-                            (arg[i].charAt(0) == '"' && arg[i].charAt(arg[i].length-1) == '"')
-                            || (arg[i].charAt(0) == "'" && arg[i].charAt(arg[i].length-1) == "'")
-                        )) {
-                        arg[i] = arg[i].substring(1,arg[i].length-1);
+                var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
+                name = cap[0].substring(1,cap[0].length-1)
+                        .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~');
+                firstArgIndex = name.indexOf('{');
+                for (var i=1+firstArgIndex; i<name.length; i++) {
+                    char = name.charAt(i);
+                    if (char === '{') count++;
+                    else if (char === '}') {
+                        count--;
+                        if (count < 1) {
+                            lastArgIndex = i;
+                            break;
+                        }
                     }
                 }
-                out += this.renderer.web(cap[1].toLowerCase(), arg);
+
+                content = '[' + name.substring(lastArgIndex+1)
+                        .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
+                args = '[' + name.substring(firstArgIndex+1,lastArgIndex)
+                        .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
+                name = name.substring(0,firstArgIndex);
+
+                for (var i=1; i<args.length; i++) {
+                    char = args.charAt(i);
+                    punc = char === '[' || char === ']' || char === ',';
+                    if (punc !== lastPunc) {
+                        args = args.substring(0,i) + '"' + args.substring(i++);
+                    }
+                    lastPunc = punc;
+                }
+                for (var i=1; i<content.length; i++) {
+                    char = content.charAt(i);
+                    punc = char === '[' || char === ']' || char === ',';
+                    if (punc !== lastPunc) {
+                        content = content.substring(0,i) + '"' + content.substring(i++);
+                    }
+                    lastPunc = punc;
+                }
+
+                function unescape(arr) {
+                    if (typeof arr === 'string') return arr.replace(/~!7!~/g, '\\')
+                                                           .replace(/~!8!~/g, '{')
+                                                           .replace(/~!9!~/g, '}');
+                    for (var i=arr.length-1; i>=0; i--) {
+                        arr[i] = typeof arr[i] === 'string' ? arr[i].replace(/~!7!~/g, '\\')
+                                                                    .replace(/~!8!~/g, '{')
+                                                                    .replace(/~!9!~/g, '}') : unescape(arr[i]);
+                    }
+                    return arr;
+                }
+
+                out += this.renderer.obj(name, unescape(JSON.parse(args)), unescape(JSON.parse(content)));
                 continue;
             }
 
@@ -837,6 +812,13 @@
             if (cap = this.rules.strong.exec(src)) {
                 src = src.substring(cap[0].length);
                 out += this.renderer.strong(this.output(cap[2] || cap[1]));
+                continue;
+            }
+
+            // underline
+            if (cap = this.rules.underline.exec(src)) {
+                src = src.substring(cap[0].length);
+                out += this.renderer.underline(this.output(cap[2] || cap[1]));
                 continue;
             }
 
@@ -995,8 +977,8 @@
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.web = function(web, args) {
-        var val = loopVals(web, args);
+    Renderer.prototype.obj = function(name, args, content) {
+        var val = loopVals(name.toLowerCase(), args, content);
         return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
     };
 
@@ -1010,7 +992,7 @@
     };
 
     Renderer.prototype.checkbox = function(text, checked) {
-        return '<input disabled type="checkbox"' + (checked ? ' checked' : '') + '></input> ' + text + '<br>\n';
+        return '<div><input disabled type="checkbox"' + (checked ? ' checked' : '') + '></input>' + text + '</div>\n';
     };
 
     Renderer.prototype.paragraph = function(text) {
@@ -1047,6 +1029,10 @@
         return '<strong>' + text + '</strong>';
     };
 
+    Renderer.prototype.underline = function(text) {
+        return '<span class="underline">' + text + '</span>';
+    };
+
     Renderer.prototype.em = function(text) {
         return '<em>' + text + '</em>';
     };
@@ -1060,7 +1046,7 @@
     };
 
     Renderer.prototype.del = function(text) {
-        return '<del>' + text + '</del>';
+        return '<s>' + text + '</s>';
     };
 
     Renderer.prototype.link = function(href, title, text) {
@@ -1177,10 +1163,8 @@
             case 'hr': {
                 return this.renderer.hr();
             }
-            case 'web': {
-                return this.renderer.web(
-                    this.token.web,
-                    this.token.args);
+            case 'obj': {
+                return this.renderer.obj();
             }
             case 'heading': {
                 return this.renderer.heading(
@@ -1250,7 +1234,6 @@
                         : this.tok();
                 }
 
-                console.log(body);
                 if (body.match(/^\[[ x]]/)) {
                     return this.renderer.checkbox(body.substring(3).trim(), body.charAt(1) === 'x');
                 }
@@ -1289,7 +1272,7 @@
         var newStr = u;
         var tmp = l;
         for (var i=0;i<params.length;i++) {
-            l = l.replace("||p||", params[i].replace('"','%22').replace(' ','%20')).replace("||i||", i);
+            l = l.replace("||p||", params[i].replace(/"/g,'%22').replace(/ /g,'%20')).replace(/\|\|i\|\|/g, i);
             newStr += l + params[i] + r;
             if (i<params.length-1) newStr += s;
             l = tmp;
@@ -1425,7 +1408,7 @@
         }
         try {
             if (opt) opt = merge({}, marked.defaults, opt);
-            return process(Parser.parse(Lexer.lex(src, opt), opt));
+            return Parser.parse(Lexer.lex(src, opt), opt);
         } catch (e) {
             e.message += '\nPlease report this to https://github.com/chjj/marked.';
             if ((opt || marked.defaults).silent) {
@@ -1493,11 +1476,3 @@
 }).call(function() {
     return this || (typeof window !== 'undefined' ? window : global);
 }());
-
-/**
- * Post processing
- */
-
-function process(str) {
-    return str;
-}

@@ -6,7 +6,7 @@ The working copy of the project is kept at http://dcs.warwick.ac.uk/~csunbg/Proj
 - Requirements Specification 
 - Component Analysis 
 - Design
-- Progress Report (i.e. *this!*)
+- Progress Report (i.e. //this!//)
 
 In spirit of the project, the entirety of the website has been written in itself.
 
@@ -20,10 +20,10 @@ I am developing a quicker, easier and more accessible alternative to conventiona
 
 It has become increasingly apparent that the way I am going to do this is through an extension of **Markdown**.
 
-> *Markdown* is a small markup language that has had great success within the developer community, becoming the means of
+> //Markdown// is a small markup language that has had great success within the developer community, becoming the means of
 > asking a question or writing documentation on StackOverflow and Github respectively.
 > 
-> *Markdown* is a language that parses(and was designed to do so) to HTML. However, as *Markdown* was designed with
+> //Markdown// is a language that parses(and was designed to do so) to HTML. However, as //Markdown// was designed with
 > content production language, it is only compiled to a small subset of HTML's tags.
 > 
 > Due to Markdown's simplicity and efficiency(both to write and to compile), it could potentially make web
@@ -36,16 +36,16 @@ maintains Markdown's aim to be as publishable in its plain-text format (for the 
 
 Most simple elements(paragraphs, links, images) are rendered from **Markdown**.
 
-Some have been added from **GFM** - *Github Flavoured Markdown* - which is essentially Markdown with
+Some have been added from **GFM** - //Github Flavoured Markdown// - which is essentially Markdown with
 a few helpful changes and extensions used for project documentation on Github. These include tables.
 
 The rest have been specially added to accommodate web development. Most of these are in the
-*general web object* form.
+//general web object// form.
 
 ##### Example: General Web Object
 
 If I wanted to create a menu that opens 
-'*Home*', '*Services*', '*About Us*' and '*Contact*', I could write:
+'//Home//', '//Services//', '//About Us//' and '//Contact//', I could write:
 
 ```none
 @MENU:Home, "Services", About Us, Contact
@@ -58,11 +58,11 @@ which would become something like:
 And if I wanted to underline some text, I could write:
 
 ```none
-...@UNDERLINE:this is now underlined@...
+... @UNDERLINE:this is now underlined@ ...
 ```
 which would become: 
 
-> ...@UNDERLINE:this is now underlined@...
+> ... _this is now underlined_ ...
 
 The form follows the pattern `@ OBJNAME : No spaces either side, " <- This space is included", "escaped comma -> , " @`
 
@@ -72,13 +72,13 @@ HTML, CSS and JS have mixed support.
 - HTML should not be used within objects (except paragraphs or blockquotes)
 - Markdown will not be changed to HTML inside a HTML tag other than the body tag
 
-@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `<span>Hello!</span>`
+{hspace{30px}} <span style="color:green">{icon{thumbs-up}} </span> `<span>Hello!</span>`
 
-@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `> <span>Hello!</span>`
+{hspace{30px}} <span style="color:green">{icon{thumbs-up}} </span> `> <span>Hello!</span>`
 
-@ HSPACE: 30px @ <span style="color:green">@ICON:thumbs-up@</span> `I'd like to say "<span>Hello!</span>"`
+{hspace{30px}} <span style="color:green">{icon{thumbs-up}} </span> `I'd like to say "<span>Hello!</span>"`
 
-@ HSPACE: 30px @ <span style="color:red">@ICON:thumbs-down@</span> `## <span>Hello!</span>`
+{hspace{30px}} <span style="color:red">{icon{thumbs-down}} </span> `## <span>Hello!</span>`
 
 - CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
 - JavaScript scripts in the head of the document should be placed below the FreeDOM script.
@@ -103,7 +103,7 @@ However after this they differ in that:
 - My project keeps the Markdown file externally
     - HTML elements rendered when the file was included within the HTML file, causing any code blocks 
       including any HTML tags to cause huge side-effects. This is the primary reason for keeping it externally
-- StrapdownJS makes *no effort to extend Markdown*
+- StrapdownJS makes //no effort to extend Markdown//
 - StrapdownJS keeps the Markdown enclosed in &lt;xmp&gt; tags
     - This is supported for now, but it is marked as obsolete in HTML5
 - StrapdownJS uses Google Code Prettify
@@ -113,10 +113,10 @@ However after this they differ in that:
 
 #### Where are you now?
 
-I have completed the Requirement Specification. I *had* also nearly completed the Design, but in the last two weeks my
+I have completed the Requirement Specification. I //had// also nearly completed the Design, but in the last two weeks my
 ideas for development have changed drastically. Particularly, I felt as if building the extra functionality into the
 compiler would be a much better way of rendering the page than changing it after compilation. This decision was
-partly due to the extra experience picked up in the module *'Compiler Design'* and due to noticing some performance 
+partly due to the extra experience picked up in the module //'Compiler Design'// and due to noticing some performance 
 issues.
 
 An abbreviated version of the design is available on the website and is in the process of being added to.

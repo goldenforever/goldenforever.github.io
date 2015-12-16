@@ -1,5 +1,5 @@
 ## Contact
 
-> Tom Golden <br>
-> University of Warwick <br>
+> Tom Golden  
+> University of Warwick  
 > Coventry, UK

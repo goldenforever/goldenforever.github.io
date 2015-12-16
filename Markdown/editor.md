@@ -1,4 +1,4 @@
-## Editor <input style="position:relative;left:10px;bottom:5px;font-size:16px" type="button" value="Load Example" onclick="magic();">
+## Editor
 
 <style>
     .cm-s-neo .CodeMirror-gutters {
@@ -12,7 +12,7 @@
     .cm-s-neo .CodeMirror-linenumber {
         color: #ccc;
     }
-    #outp {
+    #out {
         border: 0.1rem solid #ccc;
         position: absolute;
         top: 0;
@@ -20,28 +20,31 @@
         width: 100%;
         height: 100%;
     }
+    #edit {
+        border: 0.1rem solid #ccc;
+    }
 </style>
 
-<div id="hello" style="height:100%;resize:vertical;position:relative">
-<div id="edit" style="height:100%;width:30%"></div>
-<div id="outp" style="position:absolute;left:30%;width:70%;overflow:auto;"></div>
+<div id="hello" style="height:100%;resize:vertical;position:relative;margin-left:-10%;margin-right:-10%;">
+    <div id="edit" style="height:100%;width:30%"></div>
+    <div id="out" style="position:absolute;left:30%;width:70%;overflow:auto;">
+        <div id="outp" class="container"></div> 
+    </div>
 </div>
 
 <script>
     window.defer(function(){
-        setTimeout(function() {
-            var cm = CodeMirror(document.getElementById('edit'), {
-              theme: 'neo',
-              lineWrapping: true,
-              lineNumbers: true
-            });
-            
-            cm.on("change", function(cm, change) {
-              document.getElementById("outp").innerHTML = '<div class="container">' + marked(cm.getValue()) + '</div>';
-            });
-            
-            document.getElementById('edit').children[0].style.height = "100%";
-            document.getElementById('hello').style.height = window.innerHeight + "px";
-        }, 100);
+        var cm = CodeMirror(document.getElementById('edit'), {
+          //theme: 'neo',
+          lineWrapping: true,
+          lineNumbers: true
+        });
+        
+        document.getElementById('edit').children[0].style.height = "100%";
+        document.getElementById('hello').style.height = window.innerHeight + "px";
+        
+        cm.on("change", function(cm, change) {
+          document.getElementById("outp").innerHTML = '<div class="container">' + marked(cm.getValue()) + '</div>';
+        });
     }, "typeof CodeMirror !== 'undefined'");
 </script>
