@@ -45,10 +45,8 @@ String.prototype.regexIndexOf = function(regex, startpos) {
     };
 
     window.changePage = function(name) {
-        //$(this).css('color','#2c8fdb');
-
-        var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
         if (name) {
+            var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
             if ($('body').hasClass('onepage')) {
                 window.location.hash = tag;
             } else {
