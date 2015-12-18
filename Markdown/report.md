@@ -85,7 +85,7 @@ HTML, CSS and JS have mixed support.
 
 The HTML document can be as simple as this:
 ```html
-<!DOCTYPE html><html md="README.md"><script src="freeDOM.js"></script></html>
+<!DOCTYPE html><html md="README.md"><script src="root.js"></script></html>
 ```
 
 #### Background research

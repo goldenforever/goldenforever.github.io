@@ -1,10 +1,6 @@
-{vspace{-0.5rem}}
-
-###### Simplifying Web Development
-
-{vspace{-3.2rem}}
-
 # FreeDOM
+
+{tagline{}Simplifying Web Development}
 
 {menu{}To Dos{}Requirements Specification{}Components{}Design{}Documentation{}Progress Report{}Editor{}Concept Drawings}
 

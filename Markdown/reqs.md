@@ -101,3 +101,26 @@ Video would not affect the initial loading time on most modern browsers as it is
 Adding hosted libraries (js/css/fonts) through runtime adding of links seems to
 be a very logical way to mitigate this upper bound whilst still retaining a
 wide range of output formats.
+
+---
+
+As of 17/12/15 the single JavaScript file size is about 50KB in raw size (unminifed, uncompressed).
+
+In combination of the raw assets, this size increases to 171.1KB ~ 2.8% of maximum allowed.
+
+Interestingly, this website benefitted greatly from Markdown being a smaller file than the HTML equivalent.
+
+The Markdown files that generate this website are approximately 44KB in total - the minimised HTML equivalent
+is 64KB and the unminimised HTML equivalent is approximately 104KB.
+
+This means an approximate 20KB saving in file size, which is almost half the size of the 
+unminimised Markdown compiler itself!
+
+If the file is gzipped (compressed), you can expect the Markdown file size to be reduced by 70-75% as
+it is not far from plaintext. If the markdown files used to generate this website's content were gzipped
+they would only be approximately 13.2KB. //This would suggest websites that have a large amount of text
+content would be require a smaller total file transfer using a Markdown runtime compiler//, which is an
+interesting but beneficial byproduct of the project.
+
+If the Markdown compiler JavaScript file was cached, the smaller total file transfer would no longer be offset by
+the size of the compiler and therefore it would provide a smaller total file transfer for almost all websites.

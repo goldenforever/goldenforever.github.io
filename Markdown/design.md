@@ -3,7 +3,7 @@
 > ![](http://dcs.warwick.ac.uk/~csunbg/Project/images/diagram.png)
 >
 > //The code in the four files// (on the left) //should generate the website// bottom-right
-> using freeDOM.js (top-right).
+> using root.js (top-right).
 >
 > The top file on the left is the same for all pages - the content is from the other three
 > (markdown) files, which are linked together.

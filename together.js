@@ -1,10 +1,8 @@
+window.parsed = false;
+
 /**
  * Compiler
  */
-String.prototype.regexIndexOf = function(regex, startpos) {
-    var indexOf = this.substring(startpos || 0).search(regex);
-    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
-}
 
 ;(function() {
 
@@ -18,7 +16,7 @@ String.prototype.regexIndexOf = function(regex, startpos) {
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        obj: /^\{[a-z\-]+\{.*?}.*?(?:}(\n+|$))}/,
+        obj: /^\{[a-zA-Z\-]+\{.*?}.*?(?:}(\n+|$))}/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -70,59 +68,65 @@ String.prototype.regexIndexOf = function(regex, startpos) {
         }
     };
 
-    window.toggleMenu = function(toggle) {
-        var menu = $(toggle).parent();
-        //console.log(menu);
-        var height = menu.height();
-        //console.log(height);
-        var links = menu.children('.link-container').length;
-        //console.log(links);
-        if (false)
-            $(toggle).parent().css('height','10000rem');
-        else
-            $(toggle).parent().css('height','2.4rem');
-    };
-
     /**
      * Object values
      */
 
-    function loopVals(object, args, content) {
+    function toObject(object, args, content) {
         try {
             var x = {
-            "menu": [
-                '<nav>',
-                '<span class="link-container"><a onclick="changePage(\'||p||\');">',
-                content,
-                '</a></span>',
-                '<span class="separator"></span>',
-                '</nav>'
-            ],
-            "icon":[
-                '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
-            ],
-            "underline":[
-                '<span style="text-decoration:underline">', '', content, '', '', '</span>'
-            ],
-            "color":[
-                '<span style="color:' + args[0] + '">', '', content, '', '', '</span>'
-            ],
-            "comment":[
-                '', '', [], '', '', ''
-            ],
-            "vspace":[
-                '<div style="margin-bottom:', '', [args[0]], '', '', '"></div>'
-            ],
-            "hspace":[
-                '<span style="margin-left:', '', [args[0]], '', '', '"></span>'
-            ],
-            "escape":[
-                '', '', content, '', '', ''
-            ]}[object];
+                "menu": [
+                    '<nav>',
+                    '<span class="link-container"><a onclick="changePage(\'||p||\');">',
+                    content,
+                    '</a></span>',
+                    '<span class="separator"></span>',
+                    '</nav>'
+                ],
+                "icon":[
+                    '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
+                ],
+                "header":[
+                    '<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'
+                ],
+                "tagline":[
+                    '<span class="tagline'
+                    +(content[0]?(content[0].split(" ").length+2<6?content[0].split(" ").length+2:6):'')
+                    +'">',
+                    '',
+                    content,
+                    '',
+                    '',
+                    '</span>'
+                ],
+                "underline":[
+                    '<span style="text-decoration:underline">', '', content, '', '', '</span>'
+                ],
+                "color":[
+                    '<span style="color:' + args[0] + '">', '', content, '', '', '</span>'
+                ],
+                "comment":[
+                    '', '', [], '', '', ''
+                ],
+                "vspace":[
+                    '<div style="margin-bottom:'+args[0], '', content, '', '', '"></div>'
+                ],
+                "hspace":[
+                    '<span style="margin-left:'+args[0], '', content, '', '', '"></span>'
+                ],
+                "escape":[
+                    '', '', content, '', '', ''
+                ]}[object];
         } catch (e) {
-            new Error("Incorrect number of arguments in " + object);
+            console.log("----------");
+            console.log(arguments);
+            console.log(x);
+            throw new Error("Incorrect number of arguments in " + object);
         }
-        return x;
+        console.log("----------");
+        console.log(arguments);
+        console.log(x);
+        return loop(x[0],x[1],x[2],x[3],x[4],x[5],x[6]);
     }
 
     block.bullet = /(?:[*+-]|\d+\.)/;
@@ -548,7 +552,7 @@ String.prototype.regexIndexOf = function(regex, startpos) {
 
     var inline = {
         comment: /^\/\*.*?\*\/(?=.|$)/,
-        obj: /^\{[a-z\-]+\{.*?}.*?(?=}[ \n]|}$)}/,
+        obj: /^\{[a-zA-Z\-]+\{.*?}.*?(?=}[ \n]|}$)}/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -683,7 +687,7 @@ String.prototype.regexIndexOf = function(regex, startpos) {
                 src = src.substring(cap[0].length);
                 var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
                 name = cap[0].substring(1,cap[0].length-1)
-                        .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~');
+                    .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~');
                 firstArgIndex = name.indexOf('{');
                 for (var i=1+firstArgIndex; i<name.length; i++) {
                     char = name.charAt(i);
@@ -722,12 +726,12 @@ String.prototype.regexIndexOf = function(regex, startpos) {
 
                 function unescape(arr) {
                     if (typeof arr === 'string') return arr.replace(/~!7!~/g, '\\')
-                                                           .replace(/~!8!~/g, '{')
-                                                           .replace(/~!9!~/g, '}');
+                        .replace(/~!8!~/g, '{')
+                        .replace(/~!9!~/g, '}');
                     for (var i=arr.length-1; i>=0; i--) {
                         arr[i] = typeof arr[i] === 'string' ? arr[i].replace(/~!7!~/g, '\\')
-                                                                    .replace(/~!8!~/g, '{')
-                                                                    .replace(/~!9!~/g, '}') : unescape(arr[i]);
+                            .replace(/~!8!~/g, '{')
+                            .replace(/~!9!~/g, '}') : unescape(arr[i]);
                     }
                     return arr;
                 }
@@ -976,8 +980,7 @@ String.prototype.regexIndexOf = function(regex, startpos) {
     };
 
     Renderer.prototype.obj = function(name, args, content) {
-        var val = loopVals(name.toLowerCase(), args, content);
-        return loop(val[0], val[1], val[2], val[3], val[4], val[5]) + "\n";
+        return toObject(name.toLowerCase(), args, content) + "\n";
     };
 
     Renderer.prototype.list = function(body, ordered) {
@@ -1404,18 +1407,18 @@ String.prototype.regexIndexOf = function(regex, startpos) {
 
             return;
         }
-        try {
-            if (opt) opt = merge({}, marked.defaults, opt);
-            return Parser.parse(Lexer.lex(src, opt), opt);
-        } catch (e) {
-            e.message += '\nPlease report this to https://github.com/chjj/marked.';
-            if ((opt || marked.defaults).silent) {
-                return '<p>An error occured:</p><pre>'
-                    + escape(e.message + '', true)
-                    + '</pre>';
-            }
-            throw e;
-        }
+        //try {
+        if (opt) opt = merge({}, marked.defaults, opt);
+        return Parser.parse(Lexer.lex(src, opt), opt);
+        /*} catch (e) {
+         e.message += '\nPlease report this to https://github.com/chjj/marked.';
+         if ((opt || marked.defaults).silent) {
+         return '<p>An error occured:</p><pre>'
+         + escape(e.message + '', true)
+         + '</pre>';
+         }
+         throw e;
+         }*/
     };
 
     /**
@@ -1474,3 +1477,191 @@ String.prototype.regexIndexOf = function(regex, startpos) {
 }).call(function() {
     return this || (typeof window !== 'undefined' ? window : global);
 }());
+
+/**
+ * On Load
+ */
+
+document.addEventListener("DOMContentLoaded", function() {
+    // set character set
+    var charset = document.createElement("meta");
+    charset.setAttribute("charset", "UTF-8");
+    document.head.insertBefore(charset, document.head.firstChild);
+
+    // defines source types
+    var tagTypes = [
+        { // 0 = external js
+            0: "script",
+            "type": "text/javascript",
+            "src": ""
+        },
+        { // 1 = external css
+            0: "link",
+            "rel": "stylesheet",
+            "type": "text/css",
+            "href": ""
+        },
+        { // 2 = meta tagTypes
+            0: "meta",
+            "name": "",
+            "content": ""
+        }
+    ];
+
+    // load an array of sources
+    function loadSources(sources) {
+        var tagToAdd, args, tagInfo, tagKeys, val, count, prevNode;
+        for (var i=0; i<sources.length; i++) {
+            count = 0;
+            args = sources[i];
+            tagInfo = tagTypes[args[0]];
+            tagToAdd = document.createElement(tagInfo[0]);
+            tagKeys = Object.getOwnPropertyNames(tagInfo);
+            for (var j=0; j<tagKeys.length; j++) {
+                if (tagKeys[j] != 0) {
+                    val = tagInfo[tagKeys[j]];
+                    tagToAdd[tagKeys[j]] = val ? val : args[1+(count++)];
+                }
+            }
+            prevNode = document.head.firstChild;
+            for (var j=i; j>0; j--) {
+                prevNode = prevNode.nextSibling;
+            }
+            document.head.insertBefore(tagToAdd, prevNode);
+        }
+    }
+
+    var style = ".container{position:relative;width:100%;max-width:960px!important;margin:0 auto;padding:0 20px;overflow-wrap:break-word;box-sizing:border-box}.column,.columns{width:100%;float:left;box-sizing:border-box}@media (min-width: 400px){.container{width:85%;padding:0}}@media (min-width: 550px){.container{width:80%}.column,.columns{margin-left:4%}.column:first-child,.columns:first-child{margin-left:0}.one.column,.one.columns{width:4.66666666667%}.two.columns{width:13.3333333333%}.three.columns{width:22%}.four.columns{width:30.6666666667%}.five.columns{width:39.3333333333%}.six.columns{width:48%}.seven.columns{width:56.6666666667%}.eight.columns{width:65.3333333333%}.nine.columns{width:74%}.ten.columns{width:82.6666666667%}.eleven.columns{width:91.3333333333%}.twelve.columns{width:100%;margin-left:0}.one-third.column{width:30.6666666667%}.two-thirds.column{width:65.3333333333%}.one-half.column{width:48%}.offset-by-one.column,.offset-by-one.columns{margin-left:8.66666666667%}.offset-by-two.column,.offset-by-two.columns{margin-left:17.3333333333%}.offset-by-three.column,.offset-by-three.columns{margin-left:26%}.offset-by-four.column,.offset-by-four.columns{margin-left:34.6666666667%}.offset-by-five.column,.offset-by-five.columns{margin-left:43.3333333333%}.offset-by-six.column,.offset-by-six.columns{margin-left:52%}.offset-by-seven.column,.offset-by-seven.columns{margin-left:60.6666666667%}.offset-by-eight.column,.offset-by-eight.columns{margin-left:69.3333333333%}.offset-by-nine.column,.offset-by-nine.columns{margin-left:78%}.offset-by-ten.column,.offset-by-ten.columns{margin-left:86.6666666667%}.offset-by-eleven.column,.offset-by-eleven.columns{margin-left:95.3333333333%}.offset-by-one-third.column,.offset-by-one-third.columns{margin-left:34.6666666667%}.offset-by-two-thirds.column,.offset-by-two-thirds.columns{margin-left:69.3333333333%}.offset-by-one-half.column,.offset-by-one-half.columns{margin-left:52%}}html{font-size:62.5%}body{font-size:1.5em;line-height:1.6;font-weight:400;font-family:\"Raleway\",\"Open Sans\",\"HelveticaNeue\",\"Helvetica Neue\",Helvetica,Arial,sans-serif;color:#222}h1,h2,h3,h4,h5,h6{margin-top:-.5rem;padding-top:1rem;margin-bottom:2rem;font-weight:300}h1{font-size:5rem;line-height:1.2;letter-spacing:-.1rem}h2{font-size:3.6rem;line-height:1.25;letter-spacing:-.1rem}h3,.tagline3{font-size:3rem;line-height:1.3;letter-spacing:-.1rem}h4,.tagline4{font-size:2.4rem;line-height:1.35;letter-spacing:-.08rem}h5,.tagline5{font-size:1.8rem;line-height:1.5;letter-spacing:-.05rem}h6,.tagline6{font-size:1.5rem;line-height:1.6;letter-spacing:0}@media (min-width: 550px){h2{font-size:4.2rem}h3,.tagline3{font-size:3.6rem}h4,.tagline4{font-size:3rem}h5,.tagline5{font-size:2.4rem}}p{margin-top:0}a{color:#1EAEDB}a:hover{color:#0FA0CE}.button,button,input[type=\"submit\"],input[type=\"reset\"],input[type=\"button\"]{display:inline-block;height:38px;padding:0 30px;color:#555;text-align:center;font-size:11px;font-weight:600;line-height:38px;letter-spacing:.1rem;text-transform:uppercase;text-decoration:none;white-space:nowrap;background-color:transparent;border:1px solid #bbb;cursor:pointer;box-sizing:border-box}.button:hover,button:hover,input[type=\"submit\"]:hover,input[type=\"reset\"]:hover,input[type=\"button\"]:hover,.button:focus,button:focus,input[type=\"submit\"]:focus,input[type=\"reset\"]:focus,input[type=\"button\"]:focus{color:#333;border-color:#888;outline:0}.button.button-primary,button.button-primary,input[type=\"submit\"].button-primary,input[type=\"reset\"].button-primary,input[type=\"button\"].button-primary{color:#FFF;background-color:#33C3F0;border-color:#33C3F0}.button.button-primary:hover,button.button-primary:hover,input[type=\"submit\"].button-primary:hover,input[type=\"reset\"].button-primary:hover,input[type=\"button\"].button-primary:hover,.button.button-primary:focus,button.button-primary:focus,input[type=\"submit\"].button-primary:focus,input[type=\"reset\"].button-primary:focus,input[type=\"button\"].button-primary:focus{color:#FFF;background-color:#1EAEDB;border-color:#1EAEDB}input[type=\"email\"],input[type=\"number\"],input[type=\"search\"],input[type=\"text\"],input[type=\"tel\"],input[type=\"url\"],input[type=\"password\"],textarea,select{height:38px;padding:6px 10px;background-color:#fff;border:1px solid #D1D1D1;box-shadow:none;box-sizing:border-box}input[type=\"email\"],input[type=\"number\"],input[type=\"search\"],input[type=\"text\"],input[type=\"tel\"],input[type=\"url\"],input[type=\"password\"],textarea{-webkit-appearance:none;-moz-appearance:none;appearance:none}textarea{min-height:65px;padding-top:6px;padding-bottom:6px}input[type=\"email\"]:focus,input[type=\"number\"]:focus,input[type=\"search\"]:focus,input[type=\"text\"]:focus,input[type=\"tel\"]:focus,input[type=\"url\"]:focus,input[type=\"password\"]:focus,textarea:focus,select:focus{border:1px solid #33C3F0;outline:0}label,legend{display:block;margin-bottom:.5rem;font-weight:600}fieldset{padding:0;border-width:0}input[type=\"checkbox\"],input[type=\"radio\"]{margin-bottom:0;position:relative;top:.2rem;display:inline}ul > div > input[type=\"checkbox\"]{right:.4rem}label > .label-body{display:inline-block;margin-left:.5rem;font-weight:400}ul{list-style:circle inside}ol{list-style:decimal inside}ol,ul{padding-left:0;margin-top:0}ul ul,ul ol,ol ol,ol ul{margin:1.5rem 0 1.5rem 3rem;font-size:90%}li,ul > *{margin-bottom:1rem}code{padding:.2rem .5rem;margin:0 .2rem;font-size:90%;white-space:nowrap;background:#F1F1F1;border:1px solid #E1E1E1}pre > code{display:block;padding:2rem 1.5rem 1rem;white-space:pre;overflow-x:scroll;overflow-wrap:normal}th,td{padding:12px 15px;text-align:left}th:first-child,td:first-child{padding-left:0}th:last-child,td:last-child{padding-right:0}tr{border-bottom:1px solid #E1E1E1}table :last-child tr:last-child{border-bottom:0}button,.button{margin-bottom:1rem}input,textarea,select,fieldset{margin-bottom:1.5rem}pre,blockquote,dl,figure,p,ul,ol,.table-wrapper,form{margin-bottom:2.5rem}hr{margin-top:3rem;margin-bottom:3.5rem;border-width:0;border-top:1px solid #E1E1E1}.container:after,.row:after,.u-cf{content:\"\";display:table;clear:both}.separator{margin-right:1.8rem}span.underline{text-decoration:underline}body{background-color:#fff}blockquote{border-left:2px solid #ccc;padding:0 2rem;margin:0 0 2.5rem;color:#666}nav{background-color:#f6f6f6;padding:1rem 1.5rem;margin:-1rem -1rem 1rem;border:.1rem solid #ccc;position:relative;transition:height 1s ease-in-out;overflow:hidden}nav:first-of-type{margin-bottom:2rem}nav:first-of-type ~ .section{padding:0 2rem}nav > .link-container > a{white-space:nowrap;color:#999}nav > .link-container > a:hover{color:#666}a{cursor:pointer;cursor:hand}img,.table-wrapper{max-width:100%!important}.table-wrapper{overflow-x:auto;border-bottom:1px solid #E1E1E1;display:inline-block}.toggle-container{color:#999;position:absolute;bottom:-.4rem;font-size:2rem;padding:.5rem 1.5rem}.toggle-container:hover{color:#333;cursor:pointer;cursor:hand}.toggle-container.left{left:0;transform:rotate(90deg)}.toggle-container.right{right:0;transform:rotate(270deg)}::-webkit-scrollbar{position:absolute;z-index:9999;width:1%;height:1%;min-width:1rem;min-height:1rem}body{overflow-x:hidden;overflow-y:scroll}.container > nav:first-child{position:fixed;top:1rem;left:0;width:100%;z-index:999}::-webkit-scrollbar *{background:transparent}::-webkit-scrollbar-thumb{border:.1rem solid rgba(0,0,0,0.22)!important;background:rgba(0,0,0,0.04)!important}code,kbd,samp{font-family:\'Roboto Mono\',\"Lucida Console\",Monaco,monospace}.section h1:first-child + p{margin-top:-2rem}.tagline3,.tagline4,.tagline5,.tagline6{opacity:.6}";
+    document.head.innerHTML = '<style rel="stylesheet" type="text/css">' + style + '</style>' + document.head.innerHTML;
+
+
+    // Essential sources
+    loadSources([
+        [0,'https://cdn.jsdelivr.net/jquery/3.0.0-alpha1/jquery.min.js'],
+        [1,'https://cdn.jsdelivr.net/normalize/3.0.3/normalize.min.css'],
+        [2,'viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no']
+    ]);
+
+    // Defer module
+    window.defer = function(method, str) {
+        if (eval(str)) return method(); else setTimeout(function() { window.defer(method, str) }, 1);
+    };
+
+    window.defer(function() {
+        window.defer(function() {
+            window.onhashchange = changePage(window.location.hash.replace("#",""));
+            var pageCodeAddress = document.getElementsByTagName("html")[0].getAttribute("md").trim();
+            $.get(pageCodeAddress, function (data) {
+                loadSources([
+                    [0,'https://cdn.jsdelivr.net/highlight.js/8.9.1/highlight.min.js'],
+                    [0,'https://cdn.jsdelivr.net/less/2.5.3/less.min.js'],
+                    [0,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.min.js'],
+                    [1,'https://fonts.googleapis.com/css?family=Raleway'],
+                    [1,'https://fonts.googleapis.com/css?family=Roboto+Mono:400,700'],
+                    [1,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css'],
+                    [1,'https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css'],
+                    [1,'https://cdn.jsdelivr.net/codemirror/4.5.0/theme/neo.css']
+                ]);
+
+                window.markdownHighlighting = false;
+
+                // Get Markdown highlighting
+                window.defer(function() {
+                    loadSources([
+                        [0,'https://cdn.jsdelivr.net/codemirror/4.5.0/mode/markdown/markdown.js']
+                    ]);
+                    window.markdownHighlighting = true;
+                }, "typeof CodeMirror !== 'undefined'");
+
+                // Loop to retrieve all Markdown sources
+                window.documents = [];
+                function findFiles(inp) {
+                    var regex;
+                    regex = (/\{\{(?! )(?:https?:\/\/)?(?:(?:[\da-z\.-]+)\.(?:[a-z\.]{2,6}))?(?:[\/\w\.-]*)*\/?}}/g).exec(inp);
+                    if (regex) {
+                        if (regex[0].length>2) {
+                            window.documents.push([regex[0].substring(2,regex[0].length-2),""]);
+                        }
+                        findFiles(inp.substring(regex.index + regex[0].length))
+                    }
+                }
+                findFiles(data);
+
+                for (var i=0; i<window.documents.length; i++) {
+                    getFile(window.documents[i][0], i);
+                }
+
+                function getFile(file, index) {
+                    $.get(file, function(content) {
+                        window.documents[index][1] = content ? content : " ";
+                    });
+                }
+
+                window.defer(function() {
+                    for (var i=0; i<window.documents.length; i++) {
+                        data = data.replace('{{'+window.documents[i][0]+'}}', window.documents[i][1]);
+                    }
+                    var hash = window.location.hash;
+                    //-------------Parse and insert data----------------
+                    $('body').html('<div class="container">' + marked(data) + '</div>');
+                    window.parsed = true;
+                    // If a menu is too long, make inline
+                    var menus = $('nav'), menu;
+                    var retrieved = false, breakLengths = [];
+                    var adjustMenus = function () {
+                        for (var i = 0; i < menus.length; i++) {
+                            menu = $(menus[i]);
+                            if (!retrieved) {
+                                var total = 0, menuChildren = menu.children();
+                                for (var j = 0; j < menuChildren.length; j += 2) {
+                                    total += $(menuChildren[j]).width() + 18;
+                                }
+                                breakLengths[i] = total - 18;
+                            }
+                            if (menu.height() > 25 || $(menu).width() < breakLengths[i]) {
+                                $(menu).children().css('display', 'block').css('margin', '0.25rem 0');
+                                if ($(menu).width() > breakLengths[i]) {
+                                    $(menu).children().css('display', 'inline').css('text-align', '').css('margin', '');
+                                    $(menu).css('height', '').css('overflow-y', '');
+                                }
+                            }
+                        }
+                        retrieved = true;
+                    };
+                    adjustMenus();
+                    // Set listeners to switch back and forth
+                    $(window).resize(adjustMenus);
+                    // Menus pre-set to first one
+                    $('nav :first-child :first-child').trigger("click");
+                    // If there's a hash, open it
+                    if (hash.length > 1) changePage(hash.replace(/^#/,""));
+                    // Check if images are too large
+                    /*defer(function() {
+                        var imgs = $("img"), img, native;
+                        for (var i = 0; i < imgs.length; i++) {
+                            img = imgs[i];
+                            native = new Image();
+                            native.src = img.src;
+                            alert("Width:         " + img.clientWidth
+                                + "\nHeight:        " + img.clientHeight
+                                + "\nNative width:  " + native.width
+                                + "\nNative height: " + native.height);
+                        }
+                    }, "window.parsed && (function(){var im = $('img');" +
+                        "for (var i=0;i<im.length; i++) {if (!im[i].complete) return false}return true;})()");*/
+
+                    // Code block highlighting
+                    window.defer(function () {
+                        var date1, date2;
+                        date1 = new Date();
+                        $('pre code').each(function (i, block) {
+                            hljs.highlightBlock(block);
+                        });
+                        date2 = new Date();
+                        //console.log("HLJS: " + (date2.getTime() - date1.getTime()));
+                    }, "window.hljs");
+                }, "(function(){for (var i=0;i<window.documents.length;i++) {if (!window.documents[i][1]) return false;} return true;})()");
+            });
+        }, "window.marked");
+    }, "window.jQuery");
+});
