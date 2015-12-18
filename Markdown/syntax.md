@@ -1,17 +1,17 @@
 ### Syntax
 
-| **Key:**                                                |
-|:-------------------------------------------------------:|
-| <code>{color{red}this input has been removed}</code>    |
-| <code>{color{orange}this input has been changed}</code> |
-| *{color{green}this input has been added}*               |
+| **Key:**                                     |
+|:--------------------------------------------:|
+| {color{red}`this input has been removed`}    |
+| {color{orange}`this input has been changed`} |
+| {color{green}*this input has been added*}    |
 
-{vspace{-1rem}}
+{vspace{-2rem}}
 
 Input         | HTML Output                 | Visual      | Before
 --------------|-----------------------------|-------------|:-----------:
-`*bold text*` | `<strong>bold text</strong>`| *bold text* | {color{orange}<code>em</code>}
-`//italics//` | `<em>italics</em>`          | //italics// | {color{green}<strong>n/a</strong>}
-`_underline_` | `<u>underline</u>`          | _underline_ | {color{orange}<code>em</code>}
-`**was bold**`|                             |             | {color{red}<code>strong</code>}
-`__was bold__`|                             |             | {color{red}<code>strong</code>}
+`*bold text*` | `<strong>bold text</strong>`| *bold text* | {color{orange}`em`}
+`//italics//` | `<em>italics</em>`          | //italics// | {color{green}*n/a*}
+`_underline_` | `<u>underline</u>`          | _underline_ | {color{orange}`em`}
+`**was bold**`|                             |             | {color{red}`strong`}
+`__was bold__`|                             |             | {color{red}`strong`}

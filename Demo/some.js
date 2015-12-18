@@ -1559,8 +1559,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     [1,'https://fonts.googleapis.com/css?family=Raleway'],
                     [1,'https://fonts.googleapis.com/css?family=Roboto+Mono:400,700'],
                     [1,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css'],
-                    [1,'https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css'],
-                    [1,'https://cdn.jsdelivr.net/codemirror/4.5.0/theme/neo.css']
+                    [1,'https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css']
                 ]);
 
                 window.markdownHighlighting = false;
@@ -1652,13 +1651,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     // Code block highlighting
                     window.defer(function () {
-                        var date1, date2;
-                        date1 = new Date();
                         $('pre code').each(function (i, block) {
                             hljs.highlightBlock(block);
                         });
-                        date2 = new Date();
-                        //console.log("HLJS: " + (date2.getTime() - date1.getTime()));
                     }, "window.hljs");
                 }, "(function(){for (var i=0;i<window.documents.length;i++) {if (!window.documents[i][1]) return false;} return true;})()");
             });

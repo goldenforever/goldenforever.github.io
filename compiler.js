@@ -4,33 +4,6 @@
 
 ;(function() {
 
-    /**
-     * Block-Level Grammar
-     */
-
-    var block = {
-        newline: /^\n+/,
-        comment: /^\/\*.*?\*\/(?=.|$)/,
-        code: /^( {4}[^\n]+\n*)+/,
-        fences: noop,
-        hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        obj: /^\{[a-zA-Z\-]+\{.*?}.*?(?:}(\n+|$))}/,
-        heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
-        nptable: noop,
-        lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
-        blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
-        list: /^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
-        html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
-        def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
-        table: noop,
-        paragraph: /^((?:[^\n]+\n?(?!hr|menu|heading|lheading|blockquote|tag|def))+)\n*/,
-        text: /^[^\n]+/
-    };
-
-    /**
-     * Heading Counter
-     */
-
     var counter = {
         "1" : 0,
         "2" : 0,
@@ -67,65 +40,143 @@
     };
 
     /**
-     * Object values
+     * Object functions
      */
 
-    function toObject(object, args, content) {
+    function valsToHTML(object, args, content) {
         try {
             var x = {
-            "menu": [
-                '<nav>',
-                '<span class="link-container"><a onclick="changePage(\'||p||\');">',
-                content,
-                '</a></span>',
-                '<span class="separator"></span>',
-                '</nav>'
-            ],
-            "icon":[
-                '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
-            ],
-            "header":[
-                '<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'
-            ],
-            "tagline":[
-                '<span class="tagline'
-                +(content[0]?(content[0].split(" ").length+2<6?content[0].split(" ").length+2:6):'')
-                +'">',
-                '',
-                content,
-                '',
-                '',
-                '</span>'
-            ],
-            "underline":[
-                '<span style="text-decoration:underline">', '', content, '', '', '</span>'
-            ],
-            "color":[
-                '<span style="color:' + args[0] + '">', '', content, '', '', '</span>'
-            ],
-            "comment":[
-                '', '', [], '', '', ''
-            ],
-            "vspace":[
-                '<div style="margin-bottom:'+args[0], '', content, '', '', '"></div>'
-            ],
-            "hspace":[
-                '<span style="margin-left:'+args[0], '', content, '', '', '"></span>'
-            ],
-            "escape":[
-                '', '', content, '', '', ''
-            ]}[object];
+                "menu": [
+                    '<nav>',
+                    '<span class="link-container"><a onclick="changePage(\'||p||\');">',
+                    content,
+                    '</a></span>',
+                    '<span class="separator"></span>',
+                    '</nav>'
+                ],
+                "icon":[
+                    '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
+                ],
+                "font":[
+                    '<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'
+                ],
+                "header":[
+                    '<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'
+                ],
+                "tagline":[
+                    '<div class="tagline t'
+                    +(content[0]?(content[0].split(" ").length+2<6?content[0].split(" ").length+2:6):'" class="')
+                    +'">',
+                    '',
+                    content,
+                    '',
+                    '',
+                    '</div>'
+                ],
+                "underline":[
+                    '<span style="text-decoration:underline">', '', content, '', '', '</span>'
+                ],
+                "color":[
+                    '<span style="color:' + args[0] + '">', '', content, '', '', '</span>'
+                ],
+                "comment":[
+                    '', '', [], '', '', ''
+                ],
+                "vspace":[
+                    '<div style="margin-bottom:'+args[0], '', content, '', '', '"></div>'
+                ],
+                "hspace":[
+                    '<span style="margin-left:'+args[0], '', content, '', '', '"></span>'
+                ],
+                "escape":[
+                    '', '', content, '', '', ''
+                ]}[object];
         } catch (e) {
-            console.log("----------");
+            console.log("Bad input");
             console.log(arguments);
-            console.log(x);
-            throw new Error("Incorrect number of arguments in " + object);
+            throw new Error("Error in " + object + " object.");
         }
-        console.log("----------");
-        console.log(arguments);
-        console.log(x);
         return loop(x[0],x[1],x[2],x[3],x[4],x[5],x[6]);
     }
+
+    function stringToValues(str) {
+        /* Split string into parts */
+        var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
+        name = str.substring(1,str.length-1)
+            .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~');
+        firstArgIndex = name.indexOf('{');
+        for (var i=1+firstArgIndex; i<name.length; i++) {
+            char = name.charAt(i);
+            if (char === '{') count++;
+            else if (char === '}') {
+                count--;
+                if (count < 1) {
+                    lastArgIndex = i;
+                    break;
+                }
+            }
+        }
+
+        content = '[' + name.substring(lastArgIndex+1)
+                .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
+        args = '[' + name.substring(firstArgIndex+1,lastArgIndex)
+                .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
+        name = name.substring(0,firstArgIndex);
+
+        for (var i=1; i<args.length; i++) {
+            char = args.charAt(i);
+            punc = char === '[' || char === ']' || char === ',';
+            if (punc !== lastPunc) {
+                args = args.substring(0,i) + '"' + args.substring(i++);
+            }
+            lastPunc = punc;
+        }
+        for (var i=1; i<content.length; i++) {
+            char = content.charAt(i);
+            punc = char === '[' || char === ']' || char === ',';
+            if (punc !== lastPunc) {
+                content = content.substring(0,i) + '"' + content.substring(i++);
+            }
+            lastPunc = punc;
+        }
+
+        return [name.toLowerCase(), unescapeObject(JSON.parse(args)), unescapeObject(JSON.parse(content))];
+    }
+
+    function unescapeObject(arr) {
+        if (typeof arr === 'string') return arr.replace(/~!7!~/g, '\\')
+            .replace(/~!8!~/g, '{')
+            .replace(/~!9!~/g, '}');
+        for (var i=arr.length-1; i>=0; i--) {
+            arr[i] = typeof arr[i] === 'string' ? arr[i].replace(/~!7!~/g, '\\')
+                .replace(/~!8!~/g, '{')
+                .replace(/~!9!~/g, '}') : unescapeObject(arr[i]);
+        }
+        return arr;
+    }
+
+    /**
+     * Block-Level Grammar
+     */
+
+    var block = {
+        newline: /^\n+/,
+        comment: /^\/\*.*?\*\/(?=.|$)/,
+        code: /^( {4}[^\n]+\n*)+/,
+        fences: noop,
+        hr: /^( *[-*_]){3,} *(?:\n+|$)/,
+        obj: /^\{[a-zA-Z\-]+\{.*?}.*?(?:}(\n+|$))}/,
+        heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
+        nptable: noop,
+        lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
+        blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
+        list: /^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
+        html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
+        def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
+        table: noop,
+        paragraph: /^((?:[^\n]+\n?(?!hr|menu|heading|lheading|blockquote|tag|def))+)\n*/,
+        text: /^[^\n]+/
+    };
 
     block.bullet = /(?:[*+-]|\d+\.)/;
     block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
@@ -352,8 +403,12 @@
             // obj
             if (cap = this.rules.obj.exec(src)) {
                 src = src.substring(cap[0].length);
+                var values = stringToValues(cap[0]);
                 this.tokens.push({
-                    type: 'obj'
+                    type: 'obj',
+                    object: values[0],
+                    args: values[1],
+                    content: values[2]
                 });
                 continue;
             }
@@ -683,58 +738,8 @@
             // obj
             if (cap = this.rules.obj.exec(src)) {
                 src = src.substring(cap[0].length);
-                var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
-                name = cap[0].substring(1,cap[0].length-1)
-                        .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~');
-                firstArgIndex = name.indexOf('{');
-                for (var i=1+firstArgIndex; i<name.length; i++) {
-                    char = name.charAt(i);
-                    if (char === '{') count++;
-                    else if (char === '}') {
-                        count--;
-                        if (count < 1) {
-                            lastArgIndex = i;
-                            break;
-                        }
-                    }
-                }
-
-                content = '[' + name.substring(lastArgIndex+1)
-                        .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
-                args = '[' + name.substring(firstArgIndex+1,lastArgIndex)
-                        .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
-                name = name.substring(0,firstArgIndex);
-
-                for (var i=1; i<args.length; i++) {
-                    char = args.charAt(i);
-                    punc = char === '[' || char === ']' || char === ',';
-                    if (punc !== lastPunc) {
-                        args = args.substring(0,i) + '"' + args.substring(i++);
-                    }
-                    lastPunc = punc;
-                }
-                for (var i=1; i<content.length; i++) {
-                    char = content.charAt(i);
-                    punc = char === '[' || char === ']' || char === ',';
-                    if (punc !== lastPunc) {
-                        content = content.substring(0,i) + '"' + content.substring(i++);
-                    }
-                    lastPunc = punc;
-                }
-
-                function unescape(arr) {
-                    if (typeof arr === 'string') return arr.replace(/~!7!~/g, '\\')
-                                                           .replace(/~!8!~/g, '{')
-                                                           .replace(/~!9!~/g, '}');
-                    for (var i=arr.length-1; i>=0; i--) {
-                        arr[i] = typeof arr[i] === 'string' ? arr[i].replace(/~!7!~/g, '\\')
-                                                                    .replace(/~!8!~/g, '{')
-                                                                    .replace(/~!9!~/g, '}') : unescape(arr[i]);
-                    }
-                    return arr;
-                }
-
-                out += this.renderer.obj(name, unescape(JSON.parse(args)), unescape(JSON.parse(content)));
+                var values = stringToValues(cap[0]);
+                out += this.renderer.obj(values[0], values[1], values[2]);
                 continue;
             }
 
@@ -977,8 +982,11 @@
         return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
     };
 
-    Renderer.prototype.obj = function(name, args, content) {
-        return toObject(name.toLowerCase(), args, content) + "\n";
+    Renderer.prototype.obj = function(object, args, content) {
+        for (var i=0; i<content.length; i++)
+            content[i] = marked.inlineLexer.output(content[i]);
+
+        return valsToHTML(object, args, content);
     };
 
     Renderer.prototype.list = function(body, ordered) {
@@ -1110,6 +1118,7 @@
 
     Parser.prototype.parse = function(src) {
         this.inline = new InlineLexer(src.links, this.options, this.renderer);
+        marked.inlineLexer = this.inline;
         this.tokens = src.reverse();
 
         var out = '';
@@ -1163,7 +1172,10 @@
                 return this.renderer.hr();
             }
             case 'obj': {
-                return this.renderer.obj();
+                return this.renderer.obj(
+                    this.token.object,
+                    this.token.args,
+                    this.token.content);
             }
             case 'heading': {
                 return this.renderer.heading(

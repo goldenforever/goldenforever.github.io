@@ -1,6 +1,6 @@
-# FreeDOM
+# some-js
 
-{tagline{}Simplifying Web Development}
+{tagline{}\{color\{red\}simple web development\}}
 
 {menu{}To Dos{}Requirements Specification{}Components{}Design{}Documentation{}Progress Report{}Editor{}Concept Drawings}
 

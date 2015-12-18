@@ -7,8 +7,9 @@
         - [ ] Tree Include
         - [ ] Tables
         - [ ] Layout
-
 - Coding
+    - Better chaining of objects
+    - Fix only inline objects?
     - Better transforms for elements that are too large
     - Things to generalise:
         - event -> single deferred
@@ -19,10 +20,8 @@
     - Inline parser to work within bracket objs
     - Add sanity checking
     - Make Tree Include work for trees with depth > 1
-        
 - Debugging
     - Remove syntax highlighting
-
 - Review
     - Doc review
     - Code review
