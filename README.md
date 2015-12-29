@@ -11,4 +11,4 @@ In this case the homepage is generated from these files:
   - http://goldenforever.github.io/Markdown/todos.md
 
 Pictures are much easier to understand than words, so here's one:
-![](http://goldenforever.github.io/images/design.md)
+![](http://some-website.com/Project/images/diagram.png)
