@@ -1,8 +1,8 @@
 # some-js
 
-{tagline{}\{color\{red\}simple web development\}}
+{tagline{}simple web development}
 
-{menu{}To Dos{}Requirements Specification{}Components{}Design{}Documentation{}Progress Report{}Editor{}Concept Drawings}
+{menu{}To Dos,Requirements Specification,Components,Design,Documentation,Progress Report,Editor,Concept Drawings}
 
 {{Markdown/todos.md}}
 

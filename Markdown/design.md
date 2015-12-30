@@ -8,7 +8,7 @@
 > The top file on the left is the same for all pages - the content is from the other three
 > (markdown) files, which are linked together.
 
-{menu{}Structure{}Concepts{}Old Concepts}
+{menu{}Structure,Concepts,Old Concepts}
 
 ### Structure
 

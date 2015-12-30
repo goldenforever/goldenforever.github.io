@@ -44,7 +44,7 @@
      */
 
     function valsToHTML(object, args, content) {
-        try {
+        //try {
             var x = {
                 "menu": [
                     '<nav>',
@@ -55,7 +55,7 @@
                     '</nav>'
                 ],
                 "icon":[
-                    '<i class="fa fa-', '', [args[0]], '', '', '"></i>'
+                    '<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'
                 ],
                 "font":[
                     '<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'
@@ -77,33 +77,32 @@
                     '<span style="text-decoration:underline">', '', content, '', '', '</span>'
                 ],
                 "color":[
-                    '<span style="color:' + args[0] + '">', '', content, '', '', '</span>'
+                    '<span style="color:'+args[0]+'">', '', content, '', '', '</span>'
                 ],
                 "comment":[
                     '', '', [], '', '', ''
                 ],
                 "vspace":[
-                    '<div style="margin-bottom:'+args[0], '', content, '', '', '"></div>'
+                    '<div style="margin-bottom:'+args[0]+'">', '', [''], '', '', '</div>'
                 ],
                 "hspace":[
-                    '<span style="margin-left:'+args[0], '', content, '', '', '"></span>'
+                    '<span style="margin-left:'+args[0]+'">', '', [''], '', '', '</span>'
                 ],
                 "escape":[
                     '', '', content, '', '', ''
                 ]}[object];
-        } catch (e) {
-            console.log("Bad input");
-            console.log(arguments);
-            throw new Error("Error in " + object + " object.");
-        }
+        //} catch (e) {
+        //    console.log("Bad input");
+        //    console.log(arguments);
+        //    throw new Error("Error in " + object + " object.");
+        //}
         return loop(x[0],x[1],x[2],x[3],x[4],x[5],x[6]);
     }
 
     function stringToValues(str) {
         /* Split string into parts */
         var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
-        name = str.substring(1,str.length-1)
-            .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~');
+        name = str.substring(1,str.length-1);
         firstArgIndex = name.indexOf('{');
         for (var i=1+firstArgIndex; i<name.length; i++) {
             char = name.charAt(i);
@@ -117,42 +116,51 @@
             }
         }
 
-        content = '[' + name.substring(lastArgIndex+1)
-                .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
+        content = name.substring(lastArgIndex+1);
         args = '[' + name.substring(firstArgIndex+1,lastArgIndex)
+                .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~')
                 .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
         name = name.substring(0,firstArgIndex);
 
-        for (var i=1; i<args.length; i++) {
-            char = args.charAt(i);
-            punc = char === '[' || char === ']' || char === ',';
-            if (punc !== lastPunc) {
-                args = args.substring(0,i) + '"' + args.substring(i++);
-            }
-            lastPunc = punc;
-        }
-        for (var i=1; i<content.length; i++) {
-            char = content.charAt(i);
-            punc = char === '[' || char === ']' || char === ',';
-            if (punc !== lastPunc) {
-                content = content.substring(0,i) + '"' + content.substring(i++);
-            }
-            lastPunc = punc;
-        }
-
-        return [name.toLowerCase(), unescapeObject(JSON.parse(args)), unescapeObject(JSON.parse(content))];
+        return [name.toLowerCase(), unescapeObject(JSON.parse(jsonify(args))), parseCLN(content)];
     }
 
     function unescapeObject(arr) {
-        if (typeof arr === 'string') return arr.replace(/~!7!~/g, '\\')
+        if (typeof arr === 'string') return arr
+            .replace(/~!4!~/g, ",")
+            .replace(/~!5!~/g, "[")
+            .replace(/~!6!~/g, "]")
+            .replace(/~!7!~/g, '\\')
             .replace(/~!8!~/g, '{')
             .replace(/~!9!~/g, '}');
         for (var i=arr.length-1; i>=0; i--) {
-            arr[i] = typeof arr[i] === 'string' ? arr[i].replace(/~!7!~/g, '\\')
-                .replace(/~!8!~/g, '{')
-                .replace(/~!9!~/g, '}') : unescapeObject(arr[i]);
+            arr[i] = unescapeObject(arr[i]);
         }
         return arr;
+    }
+
+    function jsonify(str) {
+        var lastPunc = true, punc, char;
+        for (var i=1; i<str.length; i++) {
+            char = str.charAt(i);
+            punc = char === '[' || char === ']' || char === ',';
+            if (punc !== lastPunc) {
+                str = str.substring(0,i) + '"' + str.substring(i++);
+            }
+            lastPunc = punc;
+        }
+        return str;
+    }
+
+    function parseCLN(string) {
+        // CLN = Comma List Notation
+        // ([)Variable depth list,[notation,for,content],like,menus(])
+        string = string.replace(/\\\\/g, "~!7!~").replace(/\\,/g, "~!4!~")
+            .replace(/\\\[/g, "~!5!~").replace(/\\]/g, "~!6!~");
+        string = string && string.charAt(0)==='[' && string.charAt(string.length-1)===']' ?
+            string : '[' + string + ']';
+
+        return unescapeObject(JSON.parse(jsonify(string)));
     }
 
     /**

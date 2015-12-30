@@ -1,6 +1,6 @@
 ## Documentation
 
-{menu{}Markdown{}GFM{}Web Objects{}Complete Cheatsheet}
+{menu{}Markdown,GFM,Web Objects,Complete Cheatsheet}
 
 ### Markdown
 

@@ -10,7 +10,7 @@ has plenty of JavaScript compilers.
 GFM will be a necessary add-on. It will provide complete compatibility for people who 
 have written material on Github in the past.
 
-{menu{}Compiler{}Framework}
+{menu{}Compiler,Framework}
 
 ### Compiler
 
