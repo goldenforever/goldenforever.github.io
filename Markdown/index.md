@@ -2,7 +2,9 @@
 
 {tagline{}simple web development}
 
-{menu{}To Dos,Requirements Specification,Components,Design,Documentation,Progress Report,Editor,Concept Drawings}
+{menu{}Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor,Concept Drawings}
+
+{{Markdown/design.md}}
 
 {{Markdown/todos.md}}
 
@@ -11,8 +13,6 @@
 {{Markdown/reqs.md}}
 
 {{Markdown/comp.md}}
-
-{{Markdown/design.md}}
 
 {{Markdown/docs.md}}
 

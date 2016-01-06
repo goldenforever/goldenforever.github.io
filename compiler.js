@@ -4,37 +4,26 @@
 
 ;(function() {
 
-    var counter = {
-        "1" : 0,
-        "2" : 0,
-        "3" : 0,
-        "4" : 0,
-        "5" : 0,
-        "6" : 0
-    };
+    var counter = {"1":0,"2":0,"3":0,"4":0,"5":0,"6":0};
 
     window.changePage = function(name) {
         if (name) {
             var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
-            if ($('body').hasClass('onepage')) {
-                window.location.hash = tag;
-            } else {
-                var query = $(tag);
-                if (query.length) {
-                    query.css("display", "block");
-                    query.siblings('.section').css("display", "none");
-                    query = query.siblings('nav').first().find('.link-container a');
-                    query.css('color', '');
-                    for (var i=0; i<query.length; i++) {
-                        if (query[i].innerHTML.toLowerCase()
-                                .replace(/ /g, '-').replace(/[^a-z\d\-]/g, '')
-                            === tag.substring(1)) {
-                            $(query[i]).css('color', '#2c8fdb');
-                            break;
-                        }
+            var query = $(tag);
+            if (query.length) {
+                query.css("display", "block");
+                query.siblings('.section').css("display", "none");
+                query = query.siblings('nav').first().find('.link-container a');
+                query.css('color', '');
+                for (var i=0; i<query.length; i++) {
+                    if (query[i].innerHTML.toLowerCase()
+                            .replace(/ /g, '-').replace(/[^a-z\d\-]/g, '')
+                        === tag.substring(1)) {
+                        $(query[i]).css('color', '#2c8fdb');
+                        break;
                     }
-                    //window.location.hash = tag;
                 }
+                //window.location.hash = tag;
             }
         }
     };
@@ -44,59 +33,49 @@
      */
 
     function valsToHTML(object, args, content) {
-        //try {
-            var x = {
-                "menu": [
-                    '<nav>',
-                    '<span class="link-container"><a onclick="changePage(\'||p||\');">',
-                    content,
-                    '</a></span>',
-                    '<span class="separator"></span>',
-                    '</nav>'
-                ],
-                "icon":[
-                    '<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'
-                ],
-                "font":[
-                    '<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'
-                ],
-                "header":[
-                    '<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'
-                ],
-                "tagline":[
-                    '<div class="tagline t'
-                    +(content[0]?(content[0].split(" ").length+2<6?content[0].split(" ").length+2:6):'" class="')
-                    +'">',
-                    '',
-                    content,
-                    '',
-                    '',
-                    '</div>'
-                ],
-                "underline":[
-                    '<span style="text-decoration:underline">', '', content, '', '', '</span>'
-                ],
-                "color":[
-                    '<span style="color:'+args[0]+'">', '', content, '', '', '</span>'
-                ],
-                "comment":[
-                    '', '', [], '', '', ''
-                ],
-                "vspace":[
-                    '<div style="margin-bottom:'+args[0]+'">', '', [''], '', '', '</div>'
-                ],
-                "hspace":[
-                    '<span style="margin-left:'+args[0]+'">', '', [''], '', '', '</span>'
-                ],
-                "escape":[
-                    '', '', content, '', '', ''
-                ]}[object];
-        //} catch (e) {
-        //    console.log("Bad input");
-        //    console.log(arguments);
-        //    throw new Error("Error in " + object + " object.");
-        //}
-        return loop(x[0],x[1],x[2],x[3],x[4],x[5],x[6]);
+        if (object === "tagline") {
+            if (args.length < 0) {
+                args[1] = content[0].split(" ");
+                args[0] = args[1].length<4 ? args[1].length+2 : 6;
+            }
+        }
+        var x = {
+            "menu": [
+                '<nav>',
+                '<span class="link-container"><a onclick="changePage(\'||p||\');">',
+                content,
+                '</a></span>',
+                '<span class="separator"></span>',
+                '</nav>'
+            ],
+            "tagline":[
+                '<div class="tagline t' + args[0] + '">',
+                '',
+                content,
+                '',
+                '',
+                '</div>'
+            ],
+            "icon":['<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'],
+            "font":['<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'],
+            "header":['<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'],
+            "underline":['<span style="text-decoration:underline">', '', content, '', '', '</span>'],
+            "color":['<span style="color:'+args[0]+'">', '', content, '', '', '</span>'],
+            "comment":['', '', [], '', '', ''],
+            "vspace":['<div style="margin-bottom:'+args[0]+'">', '', [''], '', '', '</div>'],
+            "hspace":['<span style="margin-left:'+args[0]+'">', '', [''], '', '', '</span>'],
+            "escape":['', '', content, '', '', '']
+        }[object];
+
+        /* Loop */
+        var tmp = x[1];
+        for (var i=0;i<x[2].length;i++) {
+            x[1] = x[1].replace("||p||", x[2][i].replace(/"/g,'%22').replace(/ /g,'%20')).replace(/\|\|i\|\|/g, i);
+            x[0] += x[1] + x[2][i] + x[3];
+            if (i<x[2].length-1) x[0] += x[4];
+            x[1] = tmp;
+        }
+        return x[0] + x[5];
     }
 
     function stringToValues(str) {
@@ -109,28 +88,45 @@
             if (char === '{') count++;
             else if (char === '}') {
                 count--;
-                if (count < 1) {
-                    lastArgIndex = i;
-                    break;
-                }
+                if (count < 1) { lastArgIndex = i; break; }
             }
         }
 
         content = name.substring(lastArgIndex+1);
-        args = '[' + name.substring(firstArgIndex+1,lastArgIndex)
-                .replace(/\\\\/g, '~!7!~').replace(/\\\{/g, '~!8!~').replace(/\\}/g, '~!9!~')
-                .replace(/\{}/g, ',').replace(/\{/g, '[').replace(/}/g, ']') + ']';
+        args = name.substring(firstArgIndex+1,lastArgIndex);
         name = name.substring(0,firstArgIndex);
 
-        return [name.toLowerCase(), unescapeObject(JSON.parse(jsonify(args))), parseCLN(content)];
+        return [name.toLowerCase(), toObject(args, false), toObject(content, true)];
+    }
+    function toObject(str, cln) {
+        return unescapeObject(JSON.parse(jsonify(escapeObject(str, cln))));
+    }
+
+    function escapeObject(str, cln) {
+        var r0 = [
+            [/\\\\/g, '~!4!~'],
+            [/\\\[/g, '~!5!~'],
+            [/\\]/g,  '~!6!~'],
+            [/\\,/g,  '~!7!~'],
+            [/\\\{/g, '~!8!~'],
+            [/\\}/g,  '~!9!~']
+        ];
+        var r1 = [
+            [/\{}/g, ','],
+            [/\{/g,  '['],
+            [/}/g,   ']']
+        ];
+        for (var i=0; i<r0.length; i++) str = str.replace(r0[i][0],r0[i][1]);
+        if (!cln) for (var i=0;i<r1.length;i++) str=str.replace(r1[i][0],r1[i][1]);
+        return '[' + str + ']';
     }
 
     function unescapeObject(arr) {
         if (typeof arr === 'string') return arr
-            .replace(/~!4!~/g, ",")
+            .replace(/~!4!~/g, '\\')
             .replace(/~!5!~/g, "[")
             .replace(/~!6!~/g, "]")
-            .replace(/~!7!~/g, '\\')
+            .replace(/~!7!~/g, ",")
             .replace(/~!8!~/g, '{')
             .replace(/~!9!~/g, '}');
         for (var i=arr.length-1; i>=0; i--) {
@@ -150,17 +146,6 @@
             lastPunc = punc;
         }
         return str;
-    }
-
-    function parseCLN(string) {
-        // CLN = Comma List Notation
-        // ([)Variable depth list,[notation,for,content],like,menus(])
-        string = string.replace(/\\\\/g, "~!7!~").replace(/\\,/g, "~!4!~")
-            .replace(/\\\[/g, "~!5!~").replace(/\\]/g, "~!6!~");
-        string = string && string.charAt(0)==='[' && string.charAt(string.length-1)===']' ?
-            string : '[' + string + ']';
-
-        return unescapeObject(JSON.parse(jsonify(string)));
     }
 
     /**
@@ -1286,18 +1271,6 @@
     /**
      * Helpers
      */
-
-    function loop(u,l,params,r,s,d) {
-        var newStr = u;
-        var tmp = l;
-        for (var i=0;i<params.length;i++) {
-            l = l.replace("||p||", params[i].replace(/"/g,'%22').replace(/ /g,'%20')).replace(/\|\|i\|\|/g, i);
-            newStr += l + params[i] + r;
-            if (i<params.length-1) newStr += s;
-            l = tmp;
-        }
-        return newStr + d;
-    }
 
     function escape(html, encode) {
         return html

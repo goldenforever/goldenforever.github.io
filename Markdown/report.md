@@ -2,7 +2,7 @@
 
 ### Some Details and Links
 
-The working copy of the project is kept at http://dcs.warwick.ac.uk/~csunbg/Project/ including:
+The working copy of the project is kept at http://dcs.warwick.ac.uk/~csunbg/some-js/ including:
 - Requirements Specification 
 - Component Analysis 
 - Design
@@ -10,7 +10,7 @@ The working copy of the project is kept at http://dcs.warwick.ac.uk/~csunbg/Proj
 
 In spirit of the project, the entirety of the website has been written in itself.
 
-You can see what it came from at http://dcs.warwick.ac.uk/~csunbg/Project/README.md and 
+You can see what it came from at http://dcs.warwick.ac.uk/~csunbg/some-js/README.md and 
 
 The project is also kept on Github at http://goldenforever.github.io/ with regular commits at key checkpoints.
 
@@ -137,7 +137,7 @@ These amendments have caused the schedule to be updated, below (the green boxes 
 You may have changed your plans for Term 2. At the very least, you are likely to have a much clearer idea of how things will proceed and the timings needed to complete each stage. Outline the plans for next term and any alterations to your original ideas. 
 Provide an updated timetable with as much detail as possible.
 
-![](http://dcs.warwick.ac.uk/~csunbg/Project/images/projectplan.png)
+![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/projectplan.png)
 
 #### Ethics
 

@@ -24,9 +24,9 @@ and aggressively context-predictive content display.
 I will set this balance to be that which satisfies 95% of
 the population for quantifiable metrics.
 
-![](http://dcs.warwick.ac.uk/~csunbg/Project/images/normal-distribution.png)
+![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/normal-distribution.png)
 
-![](http://dcs.warwick.ac.uk/~csunbg/Project/images/normal-distribution-both.png)
+![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/normal-distribution-both.png)
 
  Objective          | Target
 --------------------|:-------------:
@@ -79,7 +79,7 @@ For the same reason, the screen will need to support resolutions between
 //i.e. all of these//
 (provided the short side is at least 320px, and the long side is no more than 1920px):
 
-![](http://dcs.warwick.ac.uk/~csunbg/Project/images/aspect-ratio-diagram.png)
+![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/aspect-ratio-diagram.png)
 
 #### Fast to load / Small file size
 As part of Ofcom's duties as a regulator, they used 

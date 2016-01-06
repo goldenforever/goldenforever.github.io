@@ -8,7 +8,7 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Markdown#Example):
 
 {vspace{-10px}}
 
-![](http://dcs.warwick.ac.uk/~csunbg/Project/images/markdown.png)
+![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/markdown.png)
 
 {hspace{20px}} **Markdown** on the left - **generated HTML** in the middle - **how it might look** on the right.
 
@@ -178,9 +178,9 @@ You can create an inline link by wrapping link text in brackets ( `[ ]` ) and wr
 
 You may also create an image from a link to an image by putting an exclamation mark in front of the link:
 
-```![Alt text for cat picture](http://dcs.warwick.ac.uk/~csunbg/Project/images/cat.jpg)```
+```![Alt text for cat picture](http://dcs.warwick.ac.uk/~csunbg/some-js/images/cat.jpg)```
 
-> ![Alt text for cat picture](http://dcs.warwick.ac.uk/~csunbg/Project/images/cat.jpg)
+> ![Alt text for cat picture](http://dcs.warwick.ac.uk/~csunbg/some-js/images/cat.jpg)
 
 ### GFM
 

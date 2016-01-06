@@ -1,6 +1,6 @@
 ## Design
 
-> ![](http://dcs.warwick.ac.uk/~csunbg/Project/images/diagram.png)
+> ![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/diagram.png)
 >
 > //The code in the four files// (on the left) //should generate the website// bottom-right
 > using root.js (top-right).
@@ -12,11 +12,18 @@
 
 ### Structure
 
-#### Beginning
+#### Pre-process file
+- Make non-regexable content regexable
 
-#### Middle
+#### Interpret file
+- Single pass through file using regex
 
-#### End
+#### Post-process file
+- Remove side-effects
+
+#### Process DOM
+- Contextualise document
+- Add listeners based on this context
 
 ### Concepts
 
