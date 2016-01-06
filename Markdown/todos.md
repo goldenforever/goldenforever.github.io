@@ -20,6 +20,9 @@
     - Inline parser to work within bracket objs
     - Add sanity checking
     - Make Tree Include work for trees with depth > 1
+    - Add Modernizr
+    - Have a look at Google Fonts and use as inspiration
+    - Have global count for sources so they add in order
 - Debugging
     - Remove syntax highlighting
 - Review

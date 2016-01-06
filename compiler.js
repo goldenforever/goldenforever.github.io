@@ -1,32 +1,24 @@
-/**
- * Compiler
+ /**
+ * Generate function
  */
 
-;(function() {
+function generate(str) {
+    return addListeners(contextualise(postprocess(interpret(preprocess(str)))));
+}
 
+/**
+ * Pre-process
+ */
+
+function preprocess(str) {
+    return str;
+}
+
+/**
+ * Interpret
+ */
+(function() {
     var counter = {"1":0,"2":0,"3":0,"4":0,"5":0,"6":0};
-
-    window.changePage = function(name) {
-        if (name) {
-            var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
-            var query = $(tag);
-            if (query.length) {
-                query.css("display", "block");
-                query.siblings('.section').css("display", "none");
-                query = query.siblings('nav').first().find('.link-container a');
-                query.css('color', '');
-                for (var i=0; i<query.length; i++) {
-                    if (query[i].innerHTML.toLowerCase()
-                            .replace(/ /g, '-').replace(/[^a-z\d\-]/g, '')
-                        === tag.substring(1)) {
-                        $(query[i]).css('color', '#2c8fdb');
-                        break;
-                    }
-                }
-                //window.location.hash = tag;
-            }
-        }
-    };
 
     /**
      * Object functions
@@ -246,7 +238,7 @@
     function Lexer(options) {
         this.tokens = [];
         this.tokens.links = {};
-        this.options = options || marked.defaults;
+        this.options = options || interpret.defaults;
         this.rules = block.normal;
 
         if (this.options.gfm) {
@@ -670,7 +662,7 @@
      */
 
     function InlineLexer(links, options) {
-        this.options = options || marked.defaults;
+        this.options = options || interpret.defaults;
         this.links = links;
         this.rules = inline.normal;
         this.renderer = this.options.renderer || new Renderer;
@@ -977,7 +969,7 @@
 
     Renderer.prototype.obj = function(object, args, content) {
         for (var i=0; i<content.length; i++)
-            content[i] = marked.inlineLexer.output(content[i]);
+            content[i] = interpret.inlineLexer.output(content[i]);
 
         return valsToHTML(object, args, content);
     };
@@ -1090,7 +1082,7 @@
     function Parser(options) {
         this.tokens = [];
         this.token = null;
-        this.options = options || marked.defaults;
+        this.options = options || interpret.defaults;
         this.options.renderer = this.options.renderer || new Renderer;
         this.renderer = this.options.renderer;
         this.renderer.options = this.options;
@@ -1111,7 +1103,7 @@
 
     Parser.prototype.parse = function(src) {
         this.inline = new InlineLexer(src.links, this.options, this.renderer);
-        marked.inlineLexer = this.inline;
+        interpret.inlineLexer = this.inline;
         this.tokens = src.reverse();
 
         var out = '';
@@ -1328,17 +1320,17 @@
 
 
     /**
-     * Marked
+     * Interpret function
      */
 
-    window.marked = function (src, opt, callback) {
+    window.interpret = function (src, opt, callback) {
         if (callback || typeof opt === 'function') {
             if (!callback) {
                 callback = opt;
                 opt = null;
             }
 
-            opt = merge({}, marked.defaults, opt || {});
+            opt = merge({}, interpret.defaults, opt || {});
 
             var highlight = opt.highlight, tokens, pending, i = 0;
 
@@ -1399,11 +1391,11 @@
             return;
         }
         //try {
-            if (opt) opt = merge({}, marked.defaults, opt);
+            if (opt) opt = merge({}, interpret.defaults, opt);
             return Parser.parse(Lexer.lex(src, opt), opt);
         /*} catch (e) {
-            e.message += '\nPlease report this to https://github.com/chjj/marked.';
-            if ((opt || marked.defaults).silent) {
+            e.message += '\nPlease report this to https://github.com/chjj/interpret.';
+            if ((opt || interpret.defaults).silent) {
                 return '<p>An error occured:</p><pre>'
                     + escape(e.message + '', true)
                     + '</pre>';
@@ -1416,13 +1408,13 @@
      * Options
      */
 
-    marked.options =
-        marked.setOptions = function(opt) {
-            merge(marked.defaults, opt);
-            return marked;
+    interpret.options =
+        interpret.setOptions = function(opt) {
+            merge(interpret.defaults, opt);
+            return interpret;
         };
 
-    marked.defaults = {
+    interpret.defaults = {
         gfm: true,
         tables: true,
         breaks: false,
@@ -1444,27 +1436,77 @@
      * Expose
      */
 
-    marked.Parser = Parser;
-    marked.parser = Parser.parse;
+    interpret.Parser = Parser;
+    interpret.parser = Parser.parse;
 
-    marked.Renderer = Renderer;
+    interpret.Renderer = Renderer;
 
-    marked.Lexer = Lexer;
-    marked.lexer = Lexer.lex;
+    interpret.Lexer = Lexer;
+    interpret.lexer = Lexer.lex;
 
-    marked.InlineLexer = InlineLexer;
-    marked.inlineLexer = InlineLexer.output;
+    interpret.InlineLexer = InlineLexer;
+    interpret.inlineLexer = InlineLexer.output;
 
-    marked.parse = marked;
+    interpret.parse = interpret;
 
     if (typeof module !== 'undefined' && typeof exports === 'object') {
-        module.exports = marked;
+        module.exports = interpret;
     } else if (typeof define === 'function' && define.amd) {
-        define(function() { return marked; });
+        define(function() { return interpret; });
     } else {
-        this.marked = marked;
+        this.interpret = interpret;
     }
 
 }).call(function() {
     return this || (typeof window !== 'undefined' ? window : global);
 }());
+
+/**
+ * Post-process
+ */
+
+function postprocess(str) {
+    return '<div class="container"' + str + '</div>';
+}
+
+/**
+ * Contextualise
+ */
+
+function contextualise(str) {
+    return str;
+}
+
+/**
+ * Add listeners
+ */
+
+function addListeners(str) {
+    return str;
+}
+
+/**
+ * Helper functions
+ */
+
+window.changePage = function(name) {
+    if (name) {
+        var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
+        var query = $(tag);
+        if (query.length) {
+            query.css("display", "block");
+            query.siblings('.section').css("display", "none");
+            query = query.siblings('nav').first().find('.link-container a');
+            query.css('color', '');
+            for (var i=0; i<query.length; i++) {
+                if (query[i].innerHTML.toLowerCase()
+                        .replace(/ /g, '-').replace(/[^a-z\d\-]/g, '')
+                    === tag.substring(1)) {
+                    $(query[i]).css('color', '#2c8fdb');
+                    break;
+                }
+            }
+            //window.location.hash = tag;
+        }
+    }
+};
