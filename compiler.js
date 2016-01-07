@@ -3,7 +3,7 @@
  */
 
 function generate(str) {
-    return addListeners(contextualise(postprocess(interpret(preprocess(str)))));
+    return postprocess(interpret(preprocess(str)));
 }
 
 /**
@@ -11,6 +11,29 @@ function generate(str) {
  */
 
 function preprocess(str) {
+    var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
+    var indices = [], match = re.exec(str), count = 1, cont = false, i= 3, c;
+    while (match) {
+        indices[indices.length] = match.index;
+        match = re.exec(str);
+    }
+    while (count > 0) {
+        c = str.charAt(indices[0]+i);
+        if (!cont) {
+            if (c === ')') {
+                cont = true;
+            }
+        } else {
+            if (c === '{') {
+                count++;
+            } else if (c === '}') {
+                count--;
+                if (count > 0)
+                    str = str.substring(0,indices[0]+i+1)+'<'+count+'>'+str.substring(indices[0]+i+1);
+            }
+        }
+        i++;
+    }
     return str;
 }
 
@@ -26,7 +49,7 @@ function preprocess(str) {
 
     function valsToHTML(object, args, content) {
         if (object === "tagline") {
-            if (args.length < 0) {
+            if (args.length < 1) {
                 args[1] = content[0].split(" ");
                 args[0] = args[1].length<4 ? args[1].length+2 : 6;
             }
@@ -73,20 +96,32 @@ function preprocess(str) {
     function stringToValues(str) {
         /* Split string into parts */
         var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
+        var match, matches = [], re = /<[0-9]+>/g;
         name = str.substring(1,str.length-1);
-        firstArgIndex = name.indexOf('{');
+        firstArgIndex = name.indexOf('(');
         for (var i=1+firstArgIndex; i<name.length; i++) {
             char = name.charAt(i);
-            if (char === '{') count++;
-            else if (char === '}') {
+            if (char === '(') count++;
+            else if (char === ')') {
                 count--;
                 if (count < 1) { lastArgIndex = i; break; }
             }
         }
 
-        content = name.substring(lastArgIndex+1);
+        content = name.substring(lastArgIndex+1).replace(/<1>/g, "");
         args = name.substring(firstArgIndex+1,lastArgIndex);
         name = name.substring(0,firstArgIndex);
+
+        match = re.exec(content);
+        while (match) {
+            matches[matches.length] = match;
+            match = re.exec(content);
+        }
+        for (var i=matches.length-1; i>=0; i--) {
+            content = content.substring(0, matches[i].index) +
+                '<' + (parseInt(matches[i][0].substring(1, matches[i][0].length - 1)) - 1) + '>' +
+                content.substring(matches[i].index + matches[i][0].length);
+        }
 
         return [name.toLowerCase(), toObject(args, false), toObject(content, true)];
     }
@@ -100,13 +135,12 @@ function preprocess(str) {
             [/\\\[/g, '~!5!~'],
             [/\\]/g,  '~!6!~'],
             [/\\,/g,  '~!7!~'],
-            [/\\\{/g, '~!8!~'],
-            [/\\}/g,  '~!9!~']
+            [/\\\(/g, '~!8!~'],
+            [/\\\)/g, '~!9!~']
         ];
         var r1 = [
-            [/\{}/g, ','],
-            [/\{/g,  '['],
-            [/}/g,   ']']
+            [/\(/g, '['],
+            [/\)/g, ']']
         ];
         for (var i=0; i<r0.length; i++) str = str.replace(r0[i][0],r0[i][1]);
         if (!cln) for (var i=0;i<r1.length;i++) str=str.replace(r1[i][0],r1[i][1]);
@@ -119,8 +153,8 @@ function preprocess(str) {
             .replace(/~!5!~/g, "[")
             .replace(/~!6!~/g, "]")
             .replace(/~!7!~/g, ",")
-            .replace(/~!8!~/g, '{')
-            .replace(/~!9!~/g, '}');
+            .replace(/~!8!~/g, '(')
+            .replace(/~!9!~/g, ')');
         for (var i=arr.length-1; i>=0; i--) {
             arr[i] = unescapeObject(arr[i]);
         }
@@ -150,7 +184,7 @@ function preprocess(str) {
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
-        obj: /^\{[a-zA-Z\-]+\{.*?}.*?(?:}(\n+|$))}/,
+        obj: /^\{[a-zA-Z\-]+\(.*?\).*?(?:}(\n+|$))}/,
         heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
         nptable: noop,
         lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
@@ -590,7 +624,7 @@ function preprocess(str) {
 
     var inline = {
         comment: /^\/\*.*?\*\/(?=.|$)/,
-        obj: /^\{[a-zA-Z\-]+\{.*?}.*?(?=}[ \n]|}$)}/,
+        obj: /^\{[a-zA-Z\-]+\(.*?\).*?}(?!<[0-9]+>)/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -598,9 +632,9 @@ function preprocess(str) {
         link: /^!?\[(inside)\]\(href\)/,
         reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
         nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
-        underline: /^\b_((?:[^_]|__)+?)_\b/,
-        strong: /^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
-        em: /^\/\/(.*?[^:])\/\//,
+        underline: /^\b_((?:.|\n)+?)_\b/,
+        strong: /^\*((?:.|\n)+?)\*/,
+        em: /^\/\/((?:.|\n)*?[^:])\/\//,
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
@@ -1466,24 +1500,22 @@ function preprocess(str) {
  */
 
 function postprocess(str) {
-    return '<div class="container"' + str + '</div>';
+    return '<div class="container">' + str + '</div>';
 }
 
 /**
  * Contextualise
  */
 
-function contextualise(str) {
-    return str;
+function contextualise() {
+    $('p:empty').remove();
 }
 
 /**
  * Add listeners
  */
 
-function addListeners(str) {
-    return str;
-}
+function addListeners() {}
 
 /**
  * Helper functions

@@ -1,16 +1,16 @@
 ## Documentation
 
-{menu{}Markdown,GFM,Web Objects,Complete Cheatsheet}
+{menu()Markdown,GFM,Web Objects,Cheatsheet}
 
 ### Markdown
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Markdown#Example):
 
-{vspace{-10px}}
+{vspace(-10px)}
 
 ![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/markdown.png)
 
-{hspace{20px}} **Markdown** on the left - **generated HTML** in the middle - **how it might look** on the right.
+{hspace(20px)} **Markdown** on the left - **generated HTML** in the middle - **how it might look** on the right.
 
 //This guide has been adapted from https://help.github.com/articles/markdown-basics/.//
 
@@ -240,7 +240,9 @@ If you would like to disable any highlighting on a block, follow the backticks w
 
 ### Cheatsheet
 
-I'll do this at some point.
+Differences from Markdown:
+
+{{Markdown/syntax.md}}
 
 ### Tutorial
 

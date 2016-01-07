@@ -1,10 +1,10 @@
 # Hello World
 
-{menu{}Home,About,Contact}
+{menu()Home,About,Contact}
 
 ## Home
 Welcome to my very easy Markdown website.
 
-{{../Markdown/about.md}}
+{{Markdown/about.md}}
 
-{{../Markdown/contact.md}}
+{{Markdown/contact.md}}

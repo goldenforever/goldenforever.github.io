@@ -441,7 +441,7 @@ blockquote {
 nav {
     background-color: #f6f6f6;
     padding: 1rem 1.5rem;
-    margin: -1rem -1rem 1rem -1rem;
+    margin: 0 -1rem 1rem -1rem;
     border: 0.1rem solid #ccc;
     position: relative;
     transition: height 1s ease-in-out;
@@ -501,12 +501,11 @@ body {
 }
 
 ::-webkit-scrollbar * {
-    background:transparent; /*manage scrollbar background color here*/
+    background:transparent;
 }
 ::-webkit-scrollbar-thumb {
     border: 0.1rem solid rgba(0,0,0,0.22) !important;
-    /*border-radius: 0.5rem !important;*/
-    background:rgba(0,0,0,0.04) !important; /*manage scrollbar thumb background color here*/
+    background:rgba(0,0,0,0.04) !important;
 }
 
 code, kbd, samp {
@@ -516,5 +515,12 @@ code, kbd, samp {
 .tagline {
     opacity: 0.6;
     position: relative;
-    margin: -2.5rem 0 -1rem;
+}
+
+.section > .tagline:nth-child(2) {
+    margin: -2rem 0 2rem;
+}
+
+.section {
+    padding-top: 1rem;
 }

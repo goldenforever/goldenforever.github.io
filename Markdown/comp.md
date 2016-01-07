@@ -10,7 +10,7 @@ has plenty of JavaScript compilers.
 GFM will be a necessary add-on. It will provide complete compatibility for people who 
 have written material on Github in the past.
 
-{menu{}Compiler,Framework}
+{menu()Compiler,Framework}
 
 ### Compiler
 
@@ -20,7 +20,7 @@ Compiler     |  markdown-js |    marked    | &#181;markdown |   showdown
 ------------:|:------------:|:------------:|:--------------:|:-------------:
 Size (bytes) |    16,750    |    16,528    |    10,097      |    26,423
 Speed (x1000)|    17191ms   |    3727ms    |     n/a        |    17191ms
-Supports GFM | {icon{times}}| {icon{check}}| {icon{times}}  | {icon{check}}
+Supports GFM | {icon(times)}| {icon(check)}| {icon(times)}  | {icon(check)}
 
 The most difficult part of GFM to recreate are tables. These would take a large amount of time
 to add, and as a result I will exclude //markdown-js// and //&#181;markdown// from the choices.
@@ -43,10 +43,10 @@ I found [this link](//www.hongkiat.com/blog/bootstrap-alternatives/) useful, and
 Framework       |   Pure.css   |   Skeleton   |    Furtive   |     Min      |   RocketCSS    
 ---------------:|:------------:|:------------:|:------------:|:------------:|:------------:
 Size (KB)       |     17.2     |      5.9     |     10.2     |     2.3      |     6.4      
-Grid            | {icon{check}}| {icon{check}}| {icon{check}}| {icon{check}}| {icon{times}} 
+Grid            | {icon(check)}| {icon(check)}| {icon(check)}| {icon(check)}| {icon(times)} 
 Grid precision\*|       7      |       5      |       4      |       5      |     n/a      
-Font-size in rem| {icon{times}}| {icon{check}}| {icon{check}}| {icon{times}}| {icon{times}} 
-Responsive      | {icon{check}}| {icon{check}}| {icon{check}}| {icon{times}}| {icon{times}}
+Font-size in rem| {icon(times)}| {icon(check)}| {icon(check)}| {icon(times)}| {icon(times)} 
+Responsive      | {icon(check)}| {icon(check)}| {icon(check)}| {icon(times)}| {icon(times)}
 Appearance\*\*  |       2      |      1       |      3       |      5       |      4
 
 > \*Grid precision is here defined as the minimum number such that you cannot use the framework

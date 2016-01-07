@@ -72,13 +72,13 @@ HTML, CSS and JS have mixed support.
 - HTML should not be used within objects (except paragraphs or blockquotes)
 - Markdown will not be changed to HTML inside a HTML tag other than the body tag
 
-{hspace{30px}} <span style="color:green">{icon{thumbs-up}} </span> `<span>Hello!</span>`
+{hspace(30px)} <span style="color:green">{icon(thumbs-up)} </span> `<span>Hello!</span>`
 
-{hspace{30px}} <span style="color:green">{icon{thumbs-up}} </span> `> <span>Hello!</span>`
+{hspace(30px)} <span style="color:green">{icon(thumbs-up)} </span> `> <span>Hello!</span>`
 
-{hspace{30px}} <span style="color:green">{icon{thumbs-up}} </span> `I'd like to say "<span>Hello!</span>"`
+{hspace(30px)} <span style="color:green">{icon(thumbs-up)} </span> `I'd like to say "<span>Hello!</span>"`
 
-{hspace{30px}} <span style="color:red">{icon{thumbs-down}} </span> `## <span>Hello!</span>`
+{hspace(30px)} <span style="color:red">{icon(thumbs-down)} </span> `## <span>Hello!</span>`
 
 - CSS and JS are fully supported externally, internally and (where HTML is supported) inline.
 - JavaScript scripts in the head of the document should be placed below the FreeDOM script.

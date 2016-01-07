@@ -1,14 +1,12 @@
 # some-js
 
-{tagline{}simple web development}
+{tagline()simple web development}
 
-{menu{}Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor,Concept Drawings}
+{menu()Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor}
 
 {{Markdown/design.md}}
 
 {{Markdown/todos.md}}
-
-{{Markdown/syntax.md}}
 
 {{Markdown/reqs.md}}
 
@@ -19,9 +17,3 @@
 {{Markdown/report.md}}
 
 {{Markdown/editor.md}}
-
-## Concept Drawings
-
-```none
-{{Designs/tables.txt}}
-```

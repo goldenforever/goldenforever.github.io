@@ -28,14 +28,18 @@
 <div id="hello" style="height:100%;resize:vertical;position:relative;margin-left:-10%;margin-right:-10%;">
     <div id="edit" style="height:100%;width:30%"></div>
     <div id="out" style="position:absolute;left:30%;width:70%;overflow:auto;">
-        <div id="outp" class="container"></div> 
+        <div id="outp" class="container"></div>
     </div>
 </div>
 
 <script>
+    loadSources([
+        [0,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.min.js'],
+        [1,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css']
+    ]);
+
     window.defer(function(){
         var cm = CodeMirror(document.getElementById('edit'), {
-          //theme: 'neo',
           lineWrapping: true,
           lineNumbers: true
         });
@@ -44,7 +48,8 @@
         document.getElementById('hello').style.height = window.innerHeight + "px";
         
         cm.on("change", function(cm, change) {
-          document.getElementById("outp").innerHTML = '<div class="container">' + marked(cm.getValue()) + '</div>';
+          document.getElementById("outp").innerHTML = '<div class="container">' + generate(cm.getValue()) + '</div>';
+          contextualise();
         });
     }, "typeof CodeMirror !== 'undefined'");
 </script>
