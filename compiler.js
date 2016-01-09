@@ -12,28 +12,29 @@ function generate(str) {
 
 function preprocess(str) {
     var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
-    var indices = [], match = re.exec(str), count = 1, cont = false, i= 3, c;
+    var indices = [], match = re.exec(str), count = 1, cont = false, i=3, c;
     while (match) {
         indices[indices.length] = match.index;
         match = re.exec(str);
     }
-    while (count > 0) {
-        c = str.charAt(indices[0]+i);
-        if (!cont) {
-            if (c === ')') {
-                cont = true;
+    for (var j=indices.length-1; j>=0; j--)
+        while (count > 0) {
+            c = str.charAt(indices[j]+i);
+            if (!cont) {
+                if (c === ')') {
+                    cont = true;
+                }
+            } else {
+                if (c === '{') {
+                    count++;
+                } else if (c === '}') {
+                    count--;
+                    if (count > 0)
+                        str = str.substring(0,indices[j]+i+1)+'<'+count+'>'+str.substring(indices[j]+i+1);
+                }
             }
-        } else {
-            if (c === '{') {
-                count++;
-            } else if (c === '}') {
-                count--;
-                if (count > 0)
-                    str = str.substring(0,indices[0]+i+1)+'<'+count+'>'+str.substring(indices[0]+i+1);
-            }
+            i++;
         }
-        i++;
-    }
     return str;
 }
 
@@ -97,7 +98,7 @@ function preprocess(str) {
         /* Split string into parts */
         var name, args, content, firstArgIndex, lastArgIndex, count = 1, char, lastPunc = true, punc;
         var match, matches = [], re = /<[0-9]+>/g;
-        name = str.substring(1,str.length-1);
+        name = str.substring(1);
         firstArgIndex = name.indexOf('(');
         for (var i=1+firstArgIndex; i<name.length; i++) {
             char = name.charAt(i);
@@ -109,6 +110,7 @@ function preprocess(str) {
         }
 
         content = name.substring(lastArgIndex+1).replace(/<1>/g, "");
+        if (content && content.charAt(content.length-1)==='}') content = content.substring(0,content.length-1);
         args = name.substring(firstArgIndex+1,lastArgIndex);
         name = name.substring(0,firstArgIndex);
 
@@ -624,7 +626,7 @@ function preprocess(str) {
 
     var inline = {
         comment: /^\/\*.*?\*\/(?=.|$)/,
-        obj: /^\{[a-zA-Z\-]+\(.*?\).*?}(?!<[0-9]+>)/,
+        obj: /^\{[a-zA-Z\-]+\(.*?\).*?(?:}(?!<[0-9]+>)|$)/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
