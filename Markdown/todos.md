@@ -13,6 +13,10 @@
         - Generalise this method
     - Add sanity checking
     - Have a look at Google Fonts and use as inspiration
+- Future ideas
+    - Centering/colouring objects
+    - Tables
+    - Landing layout/other layouts
 - Debug
     - Why only inline objects?
     - Are the tonne of empty <p> tags a bad thing?

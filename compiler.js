@@ -19,21 +19,24 @@ function preprocess(str) {
     }
     for (var j=indices.length-1; j>=0; j--)
         while (count > 0) {
-            c = str.charAt(indices[j]+i);
-            if (!cont) {
-                if (c === ')') {
-                    cont = true;
+            if (indices[j]+i<str.length) {
+                c = str.charAt(indices[j] + i);
+                if (!cont) {
+                    if (c === ')')
+                        cont = true;
+                } else {
+                    if (c === '{') {
+                        count++;
+                    } else if (c === '}') {
+                        count--;
+                        if (count > 0)
+                            str = str.substring(0, indices[j] + i + 1) + '<' + count + '>' + str.substring(indices[j] + i + 1);
+                    }
                 }
+                i++;
             } else {
-                if (c === '{') {
-                    count++;
-                } else if (c === '}') {
-                    count--;
-                    if (count > 0)
-                        str = str.substring(0,indices[j]+i+1)+'<'+count+'>'+str.substring(indices[j]+i+1);
-                }
+                break;
             }
-            i++;
         }
     return str;
 }
@@ -306,11 +309,7 @@ function preprocess(str) {
      */
 
     Lexer.prototype.lex = function(src) {
-        src = src
-            .replace(/\r\n|\r/g, '\n')
-            .replace(/\t/g, '    ')
-            .replace(/\u00a0/g, ' ')
-            .replace(/\u2424/g, '\n');
+        src = src.replace(/\r\n|\r/g, '\n').replace(/\t/g, '    ').replace(/\u00a0/g, ' ').replace(/\u2424/g, '\n');
 
         return this.token(src, true);
     };
