@@ -81,12 +81,11 @@ function preprocess(str) {
                 content,
                 '',
                 '',
-                '$("#this").parent().css("'+args[0]+'","'+args[1]+'");/*Remove #thiss*/</script>'
+                '$("#this").parent().css("'+args[0]+'","'+args[1]+'");$("#this").attr("id","");</script>'
             ],
             "icon":['<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'],
             "font":['<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'],
             "header":['<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'],
-            "underline":['<span style="text-decoration:underline">', '', content, '', '', '</span>'],
             "color":['<span style="color:'+args[0]+'">', '', content, '', '', '</span>'],
             "comment":['', '', [], '', '', ''],
             "vspace":['<div style="margin-bottom:'+args[0]+'">', '', [''], '', '', '</div>'],

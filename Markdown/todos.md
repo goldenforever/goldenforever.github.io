@@ -18,6 +18,7 @@
 - Debug
     - Menus collapse when window resized
     - Why only inline objects?
+    - Fix bug when header not at start 
 - Review
     - Doc review
     - Code review

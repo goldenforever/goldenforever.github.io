@@ -1,6 +1,6 @@
-# some-js
+# <img src="images/diamond.svg" style="margin:-1rem -0.5rem;position:relative;top:0.6rem;"> some-js
 
-{tagline()simple web development}
+{tagline()&nbsp;&nbsp;&nbsp;&nbsp;simple web development}
 
 {menu()Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor}
 
