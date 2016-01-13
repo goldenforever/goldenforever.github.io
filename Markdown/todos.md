@@ -1,8 +1,6 @@
 ## To Dos
 
 - Writing
-    - Components
-        - LESS (vs. SASS) at runtime - https://css-tricks.com/using-less-as-a-live-css-engine/
     - Design, add:
         - [ ] Tree Include
         - [ ] Tables
@@ -14,12 +12,13 @@
     - Add sanity checking
     - Have a look at Google Fonts and use as inspiration
 - Future ideas
-    - Centering/colouring objects
+    - Centering/bg-colouring objects
     - Tables
     - Landing layout/other layouts
 - Debug
+    - Menus collapse when window resized
     - Why only inline objects?
-    - Are the tonne of empty <p> tags a bad thing?
 - Review
     - Doc review
     - Code review
+        - Are the tonne of empty <p> tags a bad thing?

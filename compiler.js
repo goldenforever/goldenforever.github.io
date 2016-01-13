@@ -75,6 +75,14 @@ function preprocess(str) {
                 '',
                 '</div>'
             ],
+            "modify":[
+                '<script type="text/javascript" id="this">',
+                '',
+                content,
+                '',
+                '',
+                '$("#this").parent().css("'+args[0]+'","'+args[1]+'");/*Remove #thiss*/</script>'
+            ],
             "icon":['<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'],
             "font":['<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'],
             "header":['<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'],
