@@ -11,6 +11,9 @@
         - Generalise this method
     - Add sanity checking
     - Have a look at Google Fonts and use as inspiration
+- Natural language
+    - Most common words
+    - Use headers to add value to phrases/words
 - Future ideas
     - Centering/bg-colouring objects
     - Tables

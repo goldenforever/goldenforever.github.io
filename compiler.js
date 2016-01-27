@@ -11,6 +11,8 @@ function generate(str) {
  */
 
 function preprocess(str) {
+    str = str.replace(/\{--(.|\n)*?--}/g, "");
+
     var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
     var indices = [], match = re.exec(str), count = 1, cont = false, i=3, c;
     while (match) {
@@ -81,13 +83,12 @@ function preprocess(str) {
                 content,
                 '',
                 '',
-                '$("#this").parent().css("'+args[0]+'","'+args[1]+'");$("#this").attr("id","");</script>'
+                '$("#this").parent().css("'+args[0]+'","'+args[1]+'");$("#this").remove();</script>'
             ],
             "icon":['<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'],
             "font":['<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'],
             "header":['<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'],
             "color":['<span style="color:'+args[0]+'">', '', content, '', '', '</span>'],
-            "comment":['', '', [], '', '', ''],
             "vspace":['<div style="margin-bottom:'+args[0]+'">', '', [''], '', '', '</div>'],
             "hspace":['<span style="margin-left:'+args[0]+'">', '', [''], '', '', '</span>'],
             "escape":['', '', content, '', '', '']
@@ -192,7 +193,6 @@ function preprocess(str) {
 
     var block = {
         newline: /^\n+/,
-        comment: /^\/\*.*?\*\/(?=.|$)/,
         code: /^( {4}[^\n]+\n*)+/,
         fences: noop,
         hr: /^( *[-*_]){3,} *(?:\n+|$)/,
@@ -631,7 +631,6 @@ function preprocess(str) {
      */
 
     var inline = {
-        comment: /^\/\*.*?\*\/(?=.|$)/,
         obj: /^\{[a-zA-Z\-]+\(.*?\).*?(?:}(?!<[0-9]+>)|$)/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
@@ -753,12 +752,6 @@ function preprocess(str) {
             if (cap = this.rules.escape.exec(src)) {
                 src = src.substring(cap[0].length);
                 out += cap[1];
-                continue;
-            }
-
-            // comment
-            if (cap = this.rules.comment.exec(src)) {
-                src = src.substring(cap[0].length);
                 continue;
             }
 
