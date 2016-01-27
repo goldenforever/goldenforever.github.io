@@ -11,7 +11,7 @@ function generate(str) {
  */
 
 function preprocess(str) {
-    str = str.replace(/\{--(.|\n)*?--}/g, "");
+    str = str.replace(/\{--(.|\n)*?--}/g, "").replace(/\{--.*/g, "");
 
     var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
     var indices = [], match = re.exec(str), count = 1, cont = false, i=3, c;
@@ -632,6 +632,7 @@ function preprocess(str) {
 
     var inline = {
         obj: /^\{[a-zA-Z\-]+\(.*?\).*?(?:}(?!<[0-9]+>)|$)/,
+        group: /^\(\((.|\n)*?\)\)/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -645,7 +646,7 @@ function preprocess(str) {
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
-        text: /^[\s\S]+?(?=[@/\\<!\{\[_*`]| {2,}\n|$)/
+        text: /^[\s\S]+?(?=[@/\\<!\(\{\[_*`]| {2,}\n|$)/
     };
 
     inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -760,6 +761,13 @@ function preprocess(str) {
                 src = src.substring(cap[0].length);
                 var values = stringToValues(cap[0]);
                 out += this.renderer.obj(values[0], values[1], values[2]);
+                continue;
+            }
+
+            // group
+            if (cap = this.rules.group.exec(src)) {
+                src = src.substring(cap[0].length);
+                out += this.renderer.group(cap[0].substring(2,cap[0].length-2));
                 continue;
             }
 
@@ -1007,6 +1015,10 @@ function preprocess(str) {
             content[i] = interpret.inlineLexer.output(content[i]);
 
         return valsToHTML(object, args, content);
+    };
+
+    Renderer.prototype.group = function(content) {
+        return '<span>' + interpret.inlineLexer.output(content) + '</span>';
     };
 
     Renderer.prototype.list = function(body, ordered) {
