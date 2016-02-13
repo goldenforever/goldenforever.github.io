@@ -34,6 +34,6 @@ it in a file explorer and opening `index.html` in a browser of your choosing.
 
 - - -
 
-*tldr;*
+**tl;dr** _(too loaded-with-mad-web-skills; didn't read)_
 
 ![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/diagram.png)
