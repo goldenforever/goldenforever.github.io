@@ -65,7 +65,7 @@ In the words of Abraham Lincoln:
 
 #### Styling text
 
-You can make text **[bold](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong)** or //[italic](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)//.
+You can make text *[bold](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong)* or //[italic](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)//.
 
 ```markdown
 //This text will be italic// and

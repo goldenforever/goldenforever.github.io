@@ -130,7 +130,7 @@
             }
         };
         
-        cm.setValue("These examples are from the cheatsheets you can look at above whilst using the editor.\r\n\r\n{menu()markdown examples,some-js examples}\r\n\r\n# markdown examples\r\n\r\n---\r\n\r\n\/\/This is italicized\/\/, *this is bold* and _this is underlined_.\r\n\r\n---\r\n\r\n\{-- This is a comment --} This isn\'t a comment.\r\n\r\n---\r\n\r\n#### This is a fourth level header\r\n\r\n---\r\n\r\nThis is a link to [Google](http:\/\/www.google.com)\r\n\r\n---\r\n\r\nFirst line.  \r\nSecond line.\r\n\r\n---\r\n\r\nFirst paragraph.\r\n\r\nSecond paragraph.\r\n\r\n---\r\n\r\n- Unordered list item\r\n- Unordered list item\r\n\r\n---\r\n\r\n1. Ordered list item\r\n2. Ordered list item\r\n\r\n---\r\n\r\n```\r\nprint(\"This is a code block\");\r\n```\r\n\r\n---\r\n\r\nLet\'s talk about `<html>`!\r\n\r\n---\r\n\r\n![](http:\/\/www.w3schools.com\/html\/pic_mountain.jpg)\r\n\r\n# some-js examples\r\n\r\nThis is far{hspace(50px)}from this.\r\n\r\n---\r\n\r\nThis is way above\r\n\r\n{vspace(50px)}\r\n\r\nthis.\r\n\r\n---\r\n\r\n{color(green)This will be green}\r\n\r\n---\r\n\r\nThis whole paragraph will have a {modify(background-color,blue)} blue background.\r\n\r\n---\r\n\r\n{menu()Home,About Us,Contact Us}\r\n\r\n---\r\n\r\n{header(3)This is a h3 element}\r\n\r\n---\r\n\r\n{tagline()Don\'t call us, we\'ll call you.}\r\n\r\n---\r\n\r\n{icon(smile-o)}\r\n\r\n---\r\n\r\n{font(Arial)A different font!}\r\n\r\n<style>#outp :not(hr) + nav {background-color: transparent; border: 1px dashed black}</style>");
+        cm.setValue("# Hello world\n\nThis is my first some-js website.");
         $("#edit").trigger("click");
         updateView();
         

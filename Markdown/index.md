@@ -6,7 +6,38 @@
 
 ## Get It
 
-CDN: ``
+<script>
+loadSources([[1,'https://cdn.jsdelivr.net/highlight.js/9.1.0/styles/github.min.css']]);
+</script>
+
+This should be your `index.html` file.
+
+```html
+<!DOCTYPE html>
+<!-- This is where you specify the name of your file -->
+<html md="hello_world.md">
+    <noscript>
+        <!-- This is a redirect in case the user doesn't use JavaScript -->
+        <meta http-equiv="refresh" content="0;URL=hello_world.md">
+    </noscript>
+    <!-- This is the script that does the magic -->
+    <script type="text/javascript" src="//cdn.rawgit.com/goldenforever/some-js/master/some.min.js"></script>
+</html>
+```
+
+This is your hello world example code (`hello_world.md`)
+```markdown
+# Hello world
+
+This is my first some-js website.
+```
+
+*That's it.* You can see the website you have created by right clicking
+it in a file explorer and opening `index.html` in a browser of your choosing.
+
+- - -
+
+You can see the project on Github here: https://github.com/goldenforever/some-js
 
 {{Markdown/design.md}}
 
