@@ -2,7 +2,11 @@
 
 {tagline()&nbsp;&nbsp;&nbsp;&nbsp;simple web development}
 
-{menu()Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor}
+{menu()Get It,Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor}
+
+## Get It
+
+CDN: ``
 
 {{Markdown/design.md}}
 

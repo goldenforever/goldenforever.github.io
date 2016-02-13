@@ -1,0 +1,10 @@
+syntax: glob
+*.pyc
+build/
+dist/
+jsmin.egg-info
+local/
+lib/
+bin/
+include/
+js_tests/
