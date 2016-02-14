@@ -35,6 +35,8 @@ This is my first some-js website.
 *That's it.* You can see the website you have created by right clicking
 it in a file explorer and opening `index.html` in a browser of your choosing.
 
+You can learn from the tutorial which can be found [here](../some-js-tutorial).
+
 - - -
 
 You can see the project on Github here: https://github.com/goldenforever/some-js
