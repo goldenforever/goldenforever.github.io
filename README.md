@@ -1,6 +1,7 @@
 # some-js
 
 Making web development quicker and easier: -
+
 > A runtime JavaScript compiler of a language much more fit for purpose than the current mix of HTML, CSS and JS.
 
 [This link](http://some-website.com/some-js) is an example of a website created with it, and gives much more info.
@@ -34,6 +35,6 @@ it in a file explorer and opening `index.html` in a browser of your choosing.
 
 - - -
 
-**tl;dr** _(too loaded-with-mad-web-skills; didn't read)_
+## tl;dr _(too loaded-with-mad-web-skills; didn't read)_
 
 ![](http://dcs.warwick.ac.uk/~csunbg/some-js/images/diagram.png)
