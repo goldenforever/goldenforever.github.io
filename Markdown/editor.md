@@ -85,12 +85,11 @@
     </div>
 </div>
 
-<script>
-    loadSources([
-        [0,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.min.js'],
-        [1,'https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css']
-    ]);
 
+<script src="https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.min.js"></script>
+<link href="https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css">
+
+<script>
     var isOpen = false;
     var isOpen2 = false;
     

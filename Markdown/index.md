@@ -6,10 +6,6 @@
 
 ## Get It
 
-<script>
-loadSources([[1,'https://cdn.jsdelivr.net/highlight.js/9.1.0/styles/github.min.css']]);
-</script>
-
 This should be your `index.html` file.
 
 ```html
