@@ -6,7 +6,7 @@
 
 ## Get It
 
-This should be your `index.html` file.
+This should be your `index.html` file. {icon(smile-o)}
 
 ```html
 <!DOCTYPE html>
@@ -37,16 +37,16 @@ You can learn from the tutorial which can be found [here](../some-js-tutorial).
 
 You can see the project on Github here: https://github.com/goldenforever/some-js
 
-{{Markdown/design.md}}
+{add(Markdown/design.md)}
 
-{{Markdown/todos.md}}
+{add(Markdown/todos.md)}
 
-{{Markdown/reqs.md}}
+{add(Markdown/reqs.md)}
 
-{{Markdown/comp.md}}
+{add(Markdown/comp.md)}
 
-{{Markdown/docs.md}}
+{add(Markdown/docs.md)}
 
-{{Markdown/report.md}}
+{add(Markdown/report.md)}
 
-{{Markdown/editor.md}}
+{add(Markdown/editor.md)}

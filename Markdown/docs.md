@@ -242,7 +242,7 @@ If you would like to disable any highlighting on a block, follow the backticks w
 
 Differences from Markdown:
 
-{{Markdown/syntax.md}}
+{add(Markdown/syntax.md)}
 
 ### Tutorial
 

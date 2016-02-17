@@ -53,6 +53,39 @@ function preprocess(str) {
      * Object functions
      */
 
+    var objects = {
+        "menu": [
+            '<nav>',
+            '<span class="link-container"><a onclick="changePage(\'||p||\');">',
+            '</a></span>',
+            '<span class="separator"></span>',
+            '</nav>'
+        ],
+        "tagline":[
+            '<div class="tagline t~?0?~">',
+            '',
+            '',
+            '',
+            '</div>'
+        ],
+        "modify":[
+            '<script type="text/javascript" id="this">',
+            '',
+            '',
+            '',
+            '$("#this").parent().css("~?0?~","~?1?~");$("#this").remove();</script>'
+        ],
+        "icon":['<i class="fa fa-~?0?~">', '', '', '', '</i>'],
+        "font":['<span style="font-family:~?0?~">', '', '', '', '</span>'],
+        "header":['<h~?0?~>', '', '', '', '</h~?0?~>'],
+        "color":['<span style="color:~?0?~">', '', '', '', '</span>'],
+        "vspace":['<div style="margin-bottom:~?0?~">', '', '', '', '</div>'],
+        "hspace":['<span style="margin-left:~?0?~">', '', '', '', '</span>'],
+        "escape":['', '', '', '', '']
+    };
+
+    var objList = Object.getOwnPropertyNames(objects);
+
     function valsToHTML(object, args, content) {
         if (object === "tagline") {
             if (args.length < 1) {
@@ -60,49 +93,33 @@ function preprocess(str) {
                 args[0] = args[1].length<4 ? args[1].length+2 : 6;
             }
         }
-        var x = {
-            "menu": [
-                '<nav>',
-                '<span class="link-container"><a onclick="changePage(\'||p||\');">',
-                content,
-                '</a></span>',
-                '<span class="separator"></span>',
-                '</nav>'
-            ],
-            "tagline":[
-                '<div class="tagline t' + args[0] + '">',
-                '',
-                content,
-                '',
-                '',
-                '</div>'
-            ],
-            "modify":[
-                '<script type="text/javascript" id="this">',
-                '',
-                content,
-                '',
-                '',
-                '$("#this").parent().css("'+args[0]+'","'+args[1]+'");$("#this").remove();</script>'
-            ],
-            "icon":['<i class="fa fa-'+args[0]+'">', '', [''], '', '', '</i>'],
-            "font":['<span style="font-family:'+args[0]+'">', '', content, '', '', '</span>'],
-            "header":['<h'+args[0]+'>', '', content, '', '', '</h'+args[0]+'>'],
-            "color":['<span style="color:'+args[0]+'">', '', content, '', '', '</span>'],
-            "vspace":['<div style="margin-bottom:'+args[0]+'">', '', [''], '', '', '</div>'],
-            "hspace":['<span style="margin-left:'+args[0]+'">', '', [''], '', '', '</span>'],
-            "escape":['', '', content, '', '', '']
-        }[object];
 
-        /* Loop */
-        var tmp = x[1];
-        for (var i=0;i<x[2].length;i++) {
-            x[1] = x[1].replace("||p||", x[2][i].replace(/"/g,'%22').replace(/ /g,'%20')).replace(/\|\|i\|\|/g, i);
-            x[0] += x[1] + x[2][i] + x[3];
-            if (i<x[2].length-1) x[0] += x[4];
-            x[1] = tmp;
+        var obj = objects[object];
+
+        var str = obj[0];
+        var temp = obj[1];
+        for (var i=0;i<content.length;i++) {
+            obj[1] = obj[1].replace("||p||", content[i].replace(/"/g,'%22').replace(/ /g,'%20')).replace(/\|\|i\|\|/g, i);
+            str += obj[1] + content[i] + obj[2];
+            if (i<content.length-1) str += obj[3];
+            obj[1] = temp;
         }
-        return x[0] + x[5];
+        str += obj[4];
+
+        var res;
+        var regex = /~\?([0-9]+)\?~/;
+        do {
+            res = regex.exec(str);
+            if (res) {
+                if (parseInt(res[1]) < args.length) {
+                    str = str.substring(0, res.index) + args[parseInt(res[1])] + str.substring(res.index+res[0].length);
+                } else {
+                    return '<span style="font-size:20px;color:red;">Incorrect number of settings in this ' + object + ' object.</span>';
+                }
+            }
+        } while (res);
+
+        return str;
     }
 
     function stringToValues(str) {
@@ -759,7 +776,9 @@ function preprocess(str) {
             if (cap = this.rules.obj.exec(src)) {
                 src = src.substring(cap[0].length);
                 var values = stringToValues(cap[0]);
-                out += this.renderer.obj(values[0], values[1], values[2]);
+                out += objList.indexOf(values[0])>-1
+                        ? this.renderer.obj(values[0], values[1], values[2])
+                        : this.renderer.text(cap[0]);
                 continue;
             }
 
@@ -796,7 +815,7 @@ function preprocess(str) {
                     this.inLink = false;
                 }
                 src = src.substring(cap[0].length);
-                out += this.options.sanitize
+                out += this.options.sanitize && /^<s(cript|tyle)/i.test(cap[0])
                     ? this.options.sanitizer
                     ? this.options.sanitizer(cap[0])
                     : escape(cap[0])

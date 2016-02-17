@@ -31,20 +31,20 @@
 
 #### HTML Tags
 
-{{Markdown/htmltags.md}}
+{add(Markdown/htmltags.md)}
 
 #### Tables
 
-{{Markdown/tables.md}}
+{add(Markdown/tables.md)}
 
 #### Concept Drawings
 
 ```none
-{{Designs/tables.txt}}
+{add(Designs/tables.txt)}
 ```
 
 ### Old Concepts
 
 #### General Web Objects
 
-{{Markdown/gwo.md}}
+{add(Markdown/gwo.md)}
