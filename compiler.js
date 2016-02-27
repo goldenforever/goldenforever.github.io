@@ -2,8 +2,8 @@
  * Generate function
  */
 
-function generate(str) {
-    return postprocess(interpret(preprocess(str)));
+function generate(str, opt) {
+    return opt ? postprocess(interpret(preprocess(str), opt)) : postprocess(interpret(preprocess(str)));
 }
 
 /**
@@ -667,6 +667,10 @@ function preprocess(str) {
 
     inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
     inline._href = /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/;
+    inline._compat = {
+        underline: /(?!)/, strong:/^__([\s\S]+?)__(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,
+        em: /^\b_((?:[^_]|__)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/
+    };
 
     inline.link = replace(inline.link)
     ('inside', inline._inside)
@@ -677,11 +681,13 @@ function preprocess(str) {
     ('inside', inline._inside)
     ();
 
+
     /**
      * Normal Inline Grammar
      */
 
     inline.normal = merge({}, inline);
+    inline.c_normal = merge({}, inline.normal, inline._compat);
 
     /**
      * Pedantic Inline Grammar
@@ -705,6 +711,7 @@ function preprocess(str) {
         ('|', '|https?://|')
         ()
     });
+    inline.c_gfm = merge({}, inline.gfm, inline._compat);
 
     /**
      * GFM + Line Breaks Inline Grammar
@@ -714,6 +721,7 @@ function preprocess(str) {
         br: replace(inline.br)('{2,}', '*')(),
         text: replace(inline.gfm.text)('{2,}', '*')()
     });
+    inline.c_breaks = merge({}, inline.breaks, inline._compat);
 
     /**
      * Inline Lexer & Compiler
@@ -731,15 +739,30 @@ function preprocess(str) {
                 Error('Tokens array requires a `links` property.');
         }
 
-        if (this.options.gfm) {
-            if (this.options.breaks) {
-                this.rules = inline.breaks;
+        if (this.options.compatibility) {
+            if (this.options.gfm) {
+                if (this.options.breaks) {
+                    this.rules = inline.c_breaks;
+                } else {
+                    this.rules = inline.c_gfm;
+                }
             } else {
-                this.rules = inline.gfm;
+                this.rules = inline.c_normal;
             }
-        } else if (this.options.pedantic) {
+        } else {
+            if (this.options.gfm) {
+                if (this.options.breaks) {
+                    this.rules = inline.breaks;
+                } else {
+                    this.rules = inline.gfm;
+                }
+            }
+        }
+
+        if (this.options.pedantic) {
             this.rules = inline.pedantic;
         }
+
     }
 
     /**
@@ -1379,10 +1402,7 @@ function preprocess(str) {
 
     window.interpret = function (src, opt, callback) {
         if (callback || typeof opt === 'function') {
-            if (!callback) {
-                callback = opt;
-                opt = null;
-            }
+            if (!callback) { callback = opt; opt = null; }
 
             opt = merge({}, interpret.defaults, opt || {});
 
@@ -1469,6 +1489,7 @@ function preprocess(str) {
         };
 
     interpret.defaults = {
+        compatibility: false,
         gfm: true,
         tables: true,
         breaks: false,

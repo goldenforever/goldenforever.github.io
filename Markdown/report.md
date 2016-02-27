@@ -34,7 +34,7 @@ maintains Markdown's aim to be as publishable in its plain-text format (for the 
 
 #### How will I expand Markdown
 
-Most simple elements(paragraphs, links, images) are rendered from **Markdown**.
+Most simple elements(paragraphs, links, images) are rendered from *Markdown*.
 
 Some have been added from **GFM** - //Github Flavoured Markdown// - which is essentially Markdown with
 a few helpful changes and extensions used for project documentation on Github. These include tables.
