@@ -69,11 +69,11 @@ function preprocess(str) {
             '</div>'
         ],
         "modify":[
-            '<script type="text/javascript" id="this">',
+            '<scr'+'ipt type="text/javascript" class="_sjs_this">',
             '',
             '',
             '',
-            '$("#this").parent().css("~?0?~","~?1?~");$("#this").remove();</script>'
+            '$("._sjs_this").first().parent().css("~?0?~","~?1?~");$("._sjs_this").first().remove();</scr'+'ipt>'
         ],
         "icon":['<i class="fa fa-~?0?~">', '', '', '', '</i>'],
         "font":['<span style="font-family:~?0?~">', '', '', '', '</span>'],
@@ -114,7 +114,7 @@ function preprocess(str) {
                 if (parseInt(res[1]) < args.length) {
                     str = str.substring(0, res.index) + args[parseInt(res[1])] + str.substring(res.index+res[0].length);
                 } else {
-                    return '<span style="font-size:20px;color:red;">Incorrect number of settings in this ' + object + ' object.</span>';
+                    return '<span style="color:red">Incorrect number of settings in this <strong>' + object + '</strong> object.</span>';
                 }
             }
         } while (res);
@@ -1529,6 +1529,9 @@ function postprocess(str) {
 
 function contextualise() {
     $('p:empty').remove();
+    $('._sjs_this').each(function(i, x) {
+        eval(x.innerHTML);
+    });
 }
 
 /**

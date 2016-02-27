@@ -108,7 +108,7 @@ As of 17/12/15 the single JavaScript file size is about 50KB in raw size (unmini
 
 In combination of the raw assets, this size increases to 171.1KB ~ 2.8% of maximum allowed.
 
-Interestingly, this website benefitted greatly from Markdown being a smaller file than the HTML equivalent.
+Interestingly, this website benefited greatly from Markdown being a smaller file than the HTML equivalent.
 
 The Markdown files that generate this website are approximately 44KB in total - the minimised HTML equivalent
 is 64KB and the unminimised HTML equivalent is approximately 104KB.

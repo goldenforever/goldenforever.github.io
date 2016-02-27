@@ -1,28 +1,17 @@
 ## Editor
 
 <style>
-    .cm-s-neo .CodeMirror-gutters {
-        border-right: 0.1rem solid #ccc;
-        padding-right: 0.2rem;
-        margin-right: 0.3rem;
-    }
-    .CodeMirror.cm-s-neo {
+    #out, #edit {
         border: 0.1rem solid #ccc;
-    }
-    .cm-s-neo .CodeMirror-linenumber {
-        color: #ccc;
-    }
-    #out {
-        border: 0.1rem solid #ccc;
+        box-sizing: border-box;
+        height: 100%;
+        width: initial;
         position: absolute;
         top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        right: 0;
     }
-    #edit {
-        border: 0.1rem solid #ccc;
-    }
+    #hello { width:120%;position:relative;height:300px;overflow-x:hidden;overflow-y:visible;resize:vertical; }
+    #edit { left:5px;right:auto; }
     #ohhai, #ohhai2 {
         margin: 0 -10.5%;
         text-align: center;
@@ -35,6 +24,10 @@
         height: 24px;
         overflow-y: visible;
         z-index: 10;
+        -webkit-user-select: none;  /* Chrome all / Safari all */
+        -moz-user-select: none;     /* Firefox all */
+        -ms-user-select: none;      /* IE 10+ */
+        user-select: none;          /* Likely future */
     }
     #ohhai2 { z-index: 20; }
     #ohbai, #ohbai2 {
@@ -64,6 +57,9 @@
         margin-bottom: -15px;
         padding: 0;
     }
+    .CodeMirror, .CodeMirror-gutters {
+        height: 100% !important;
+    }
 </style>
 
 <div id="ohhai2" onclick="expandSheet2();">
@@ -78,17 +74,40 @@
         
     </div>
 </div>
-<div id="hello" style="height:90%;resize:vertical;position:relative;margin-left:-10%;margin-right:-10%;">
-    <div id="edit" style="height:100%;width:30%"></div>
-    <div id="out" style="position:absolute;left:30%;width:70%;overflow:auto;">
+<input id="width" type="range" style="width:120%;margin:10px -10%; 0">
+<div id="hello" style="position:relative;margin-left:-10%;margin-right:-10%;">
+    <div id="edit"></div>
+    <div id="out">
         <div id="outp" class="container"></div>
     </div>
 </div>
 
-<link href="https://cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css">
-
 <script>
+    window.defer(function(){
+        var cm = CodeMirror(document.getElementById('edit'), {
+          lineWrapping: true,
+          lineNumbers: true
+        });
 
+        var x = window.changePage;
+        window.changePage = function(a) {
+            x(a);
+            if (a === "Editor") {
+                cm.refresh();
+            }
+        };
+
+        cm.setValue("# Hello\nworld.");
+        updateView();
+
+        function updateView() {
+            document.getElementById("outp").innerHTML = generate(cm.getValue());
+            contextualise();
+        }
+
+        cm.on("change", updateView);
+
+    }, "typeof CodeMirror !== 'undefined'");
 
     var isOpen = false;
     var isOpen2 = false;
@@ -115,4 +134,11 @@
         isOpen = !isOpen;
     }
 
+    function adjWidth(e) {
+        $('#edit')[0].style.width = (e.target.value-1) + "%";
+        $('#out')[0].style.width = (99-e.target.value) + "%";
+    }
+    $('#width').on("click", adjWidth);
+    $('#width').on("change", adjWidth);
+    adjWidth({target: {value: 30}});
 </script>
