@@ -143,10 +143,7 @@ and turn it into `**Reasonable**Project`.
 ```
 
 > Here's an idea: why don't we take `SuperiorProject` and turn it into `**Reasonable**Project`.
-To Dos
 
-Fix top header v spacing
-Fix &lt; in code bug
 #### Multiple lines
 
 You can use triple backticks (\`\`\`) to format text as its own distinct block.

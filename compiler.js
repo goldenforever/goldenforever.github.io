@@ -657,7 +657,7 @@ function preprocess(str) {
         reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
         nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
         underline: /^\b_((?:.|\n)+?)_\b/,
-        strong: /^\*((?:.|\n)+?)\*/,
+        strong: /^\*((?:.|\n)+?\*?)\*/,
         em: /^\/\/((?:.|\n)*?[^:])\/\//,
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
@@ -1549,6 +1549,7 @@ function postprocess(str) {
  */
 
 function contextualise() {
+    $('body').css('opacity', '0').css('overflow', 'hidden');
     $('p:empty').remove();
     $('._sjs_this').each(function(i, x) {
         eval(x.innerHTML);
@@ -1559,7 +1560,48 @@ function contextualise() {
  * Add listeners
  */
 
-function addListeners() {}
+function addListeners() {
+    var navWidths = [];
+
+    $('nav').each(function(i, x) {
+        x = $(x);
+        var totalWidth = 0;
+        var c = x.children();
+        c.each(function(i, x) {
+            $(x).css('position', 'absolute').css('top', '0').css('left', '0');
+        });
+        console.log(x.parent().attr('id'));
+        for (var j=0; j<c.length; j++) totalWidth += c.eq(j).width();
+        navWidths[i] = totalWidth + parseInt(x.css('padding-left')) + parseInt(x.css('padding-right'));
+        console.log(navWidths[i]);
+        c.each(function(k, x) {
+            $(x).css('position', 'static');
+        });
+    });
+
+
+    $('nav').each(function(i, x) {
+        x = $(x);
+        function adjustMenu() {
+            if (x.css('display') != "none" && x.width() < navWidths[i]) {
+                x.children('.link-container').css('display', 'block');
+                x.children('.separator').css('display', 'none');
+            } else {
+                x.children('.link-container').css('display', 'inline');
+                x.children('.separator').css('display', 'inline');
+            }
+        }
+        $(window).on('resize orientationChanged', adjustMenu);
+    });
+
+    // Menus pre-set to first one
+    // var n = $('nav :first-child :first-child');
+    // for (var i=n.size()-1; i>=0; ) eval(n.eq(--i).attr("onclick"));
+    // If there's a hash, open it
+    if (window.location.hash.length > 1) changePage(window.location.hash.replace(/^#/,""));
+
+    $('body').css('opacity', '').css('overflow', '');
+}
 
 /**
  * Helper functions

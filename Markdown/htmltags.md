@@ -10,7 +10,7 @@ Filter 'Will Add?' column:
 
 Tag             | Description                                                                                         | Will Add? | Syntax            | Assumption                                     
 ----------------|-----------------------------------------------------------------------------------------------------|:---------:|:-----------------:|:----------------------------------------------:
-&lt;!--...-->   | Defines a comment                                                                                   | Yes       | `{-- Comment --}` |                                                
+&lt;!--...-->   | Defines a comment                                                                                   | Yes       | <code>{-<span></span>-  Comment --}</code> |
 &lt;!DOCTYPE>   | Defines the document type                                                                           | No        |                   | Needed on page load                                               
 &lt;abbr>       | Defines an abbreviation or an acronym                                                               | Yes       | `auto           ` |                                                
 &lt;address>    | Defines contact information for the author/owner of a document                                      | No        |                   | Not necessary                                  
@@ -20,14 +20,12 @@ Tag             | Description                                                   
 &lt;audio>      | Defines sound content                                                                               | No        |                   | Bad web practice                               
 &lt;base>       | Specifies the base URL/target for all relative URLs in a document                                   | No        |                   | Not necessary                                  
 &lt;bdi>        | Isolates a part of text that might be formatted in a different direction from other text outside it | No        |                   | Complex and not immediately necessary          
-&lt;bdo>        | Overrides the current text direction                                                                | No        |                   | Not necessary                                  
-&lt;br>         | Defines a single line break                                                                         | Yes       |                   |                                                
-&lt;button>     | Defines a clickable button                                                                          | No        |                   | Bad web practice                               
+&lt;bdo>        | Overrides the current text direction                                                                | No        |                   | Not necessary
+&lt;button>     | Defines a clickable button                                                                          | No        |                   | Bad web practice
 &lt;canvas>     | Used to draw graphics, on the fly, via scripting (usually JavaScript)                               | No        |                   | For pros                                       
-&lt;caption>    | Defines a table caption                                                                             | Yes       |                   |                                                
-&lt;cite>       | Defines the title of a work                                                                         | No        |                   | Too specific                                   
-&lt;col>        | Specifies column properties for each column within a &lt;colgroup> element                          | Maybe     |                   |                                                
-&lt;colgroup>   | Specifies a group of one or more columns in a table for formatting                                  | Maybe     |                   |                                                
+&lt;cite>       | Defines the title of a work                                                                         | No        |                   | Too specific
+&lt;col>        | Specifies column properties for each column within a &lt;colgroup> element                          | No        |                   | Bad browser support
+&lt;colgroup>   | Specifies a group of one or more columns in a table for formatting                                  | No        |                   | Bad browser support
 &lt;datalist>   | Specifies a list of pre-defined options for input controls                                          | Maybe     |                   |                                                
 &lt;dd>         | Defines a description/value of a term in a description list                                         | Maybe     |                   |                                                
 &lt;del>        | Defines text that has been deleted from a document                                                  | No        |                   | Too specific                                   
@@ -40,7 +38,7 @@ Tag             | Description                                                   
 &lt;figcaption> | Defines a caption for a &lt;figure> element                                                         | Yes       |                   |                                                
 &lt;figure>     | Specifies self-contained content                                                                    | Yes       |                   |                                                
 &lt;footer>     | Defines a footer for a document or section                                                          | No        |                   |                                                
-&lt;form>       | Defines an HTML form for user input                                                                 | Yes       |                   |                                                
+&lt;form>       | Defines an HTML form for user input                                                                 | Maybe     |                   |
 &lt;header>     | Defines a header for a document or section                                                          | Yes       |                   |                                                
 &lt;iframe>     | Defines an inline frame                                                                             | No        |                   | For pros                                       
 &lt;input>      | Defines an input control                                                                            | Yes       |                   |                                                
@@ -69,25 +67,25 @@ Tag             | Description                                                   
 &lt;rt>         | Defines an explanation/pronunciation of characters (for East Asian typography)                      | No        |                   | For pros                                       
 &lt;ruby>       | Defines a ruby annotation (for East Asian typography)                                               | No        |                   | For pros                                       
 &lt;samp>       | Defines sample output from a computer program                                                       | No        |                   |                                                
-&lt;script>     | Defines a client-side script                                                                        | Yes       |                   |                                                
+&lt;script>     | Defines a client-side script                                                                        | No        |                   | Just use <<span></span>script> tags
 &lt;section>    | Defines a section in a document                                                                     | Yes       |                   |                                                
 &lt;select>     | Defines a drop-down list                                                                            | Yes       |                   |                                                
 &lt;small>      | Defines smaller text                                                                                | No        |                   | Not necessary                             
 &lt;source>     | Defines multiple media resources for media elements (&lt;video> and &lt;audio>)                     | Yes       |                   |                                                
 &lt;span>       | Defines a section in a document                                                                     | No        |                   |                                                
 &lt;style>      | Defines style information for a document                                                            | Yes       |                   |                                                
-&lt;sub>        | Defines subscripted text                                                                            | Yes       |                   |                                                
+&lt;sub>        | Defines subscripted text                                                                            | Yes       | {sub()content}    |
 &lt;summary>    | Defines a visible heading for a &lt;details> element                                                | No        |                   |                                                
-&lt;sup>        | Defines superscripted text                                                                          | Yes       |                   |                                                
+&lt;sup>        | Defines superscripted text                                                                          | Yes       | {super()content}  |
 &lt;textarea>   | Defines a multiline input control (text area)                                                       | No        |                   |                                                
 &lt;tfoot>      | Groups the footer content in a table                                                                | No        |                   |                                                
 &lt;time>       | Defines a date/time                                                                                 | Yes       | `auto           ` |                                                
-&lt;title>      | Defines a title for the document                                                                    | No        |                   | Web crawlers need this and don't run JavaScript
+&lt;title>      | Defines a title for the document                                                                    | No        |                   | Web crawlers need this and don't typically run JavaScript
 &lt;track>      | Defines text tracks for media elements (&lt;video> and &lt;audio>)                                  | No        |                   | Too specific                                   
 &lt;u>          | Defines text that should be stylistically different from normal text                                | Yes       | `_underlined_   ` |                                                
 &lt;var>        | Defines a variable                                                                                  | No        |                   |                                                
-&lt;video>      | Defines a video or movie                                                                            | Yes       | [[&#124;>         |                                                
-&lt;wbr>        | Defines a possible line-break                                                                       | Yes       | `auto           ` |                                                
+&lt;video>      | Defines a video or movie                                                                            | Yes       | {video(url)}      |
+&lt;wbr>        | Defines a possible line-break                                                                       | No        |                   | Enabled by default
 
 <script>
 function tagFilter(element) {

@@ -122,12 +122,11 @@ are based on 10px sizing. So basically 1.5rem = 15px :) */
 html {
     font-size: 62.5%; }
 body {
-    font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+    font-size: 1.5rem; /* currently ems cause chrome bug misinterpreting rems on body element */
     line-height: 1.6;
-    font-weight: 400;
+    font-weight: 300;
     font-family: "Raleway", "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #222; }
-
 
 /* Typography
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -418,9 +417,7 @@ there.
 ------------------------------------------------------
 ------------------------------------------------------*/
 
-.separator {
-    margin-right: 1.8rem;
-}
+.separator {}
 
 span.underline {
     text-decoration: underline;
@@ -440,12 +437,16 @@ blockquote {
 
 nav {
     background-color: #f6f6f6;
-    padding: 1rem 1.5rem;
+    padding: 1rem;
     margin: 0 -1rem 1rem -1rem;
     border: 0.1rem solid #ccc;
     position: relative;
     transition: height 1s ease-in-out;
     overflow: hidden;
+}
+
+nav .link-container {
+    padding: 0 .5rem;
 }
 
 nav:first-of-type {
