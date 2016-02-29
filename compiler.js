@@ -14,32 +14,29 @@ function preprocess(str) {
     str = str.replace(/\{--(.|\n)*?--}/g, "");
 
     var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
-    var indices = [], match = re.exec(str), count = 1, cont = false, i=3, c;
+    var indices = [], match = re.exec(str), count, cont, i, c;
+
     while (match) {
         indices[indices.length] = match.index;
         match = re.exec(str);
     }
-    for (var j=indices.length-1; j>=0; j--)
+
+    for (var j=indices.length-1; j>=0; j--) {
+        cont = false; i = 3; count = 1;
         while (count > 0) {
             if (indices[j]+i<str.length) {
                 c = str.charAt(indices[j] + i);
-                if (!cont) {
-                    if (c === ')')
-                        cont = true;
-                } else {
-                    if (c === '{') {
-                        count++;
-                    } else if (c === '}') {
-                        count--;
-                        if (count > 0)
-                            str = str.substring(0, indices[j] + i + 1) + '<' + count + '>' + str.substring(indices[j] + i + 1);
-                    }
-                }
+                if (!cont && c === ')')
+                    cont = true;
+                else if (c === '{')
+                    count++;
+                else if (c === '}' && --count > 0)
+                    str = str.substring(0, indices[j] + i + 1) + '<' + count + '>' + str.substring(indices[j] + i + 1);
                 i++;
-            } else {
-                break;
-            }
+            } else break;
         }
+    }
+
     return str;
 }
 
@@ -58,7 +55,7 @@ function preprocess(str) {
             '<nav>',
             '<span class="link-container"><a onclick="changePage(\'||p||\');">',
             '</a></span>',
-            '<span class="separator"></span>',
+            '<span class="separator"> </span>',
             '</nav>'
         ],
         "tagline":[
@@ -648,7 +645,7 @@ function preprocess(str) {
      */
 
     var inline = {
-        obj: /^\{[a-zA-Z\-]+\(.*?\).*?(?:}(?!<[0-9]+>)|$)/,
+        obj: /^\{[a-zA-Z\-]+\(.*?\).*?}(?!<[0-9]+>)/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_>/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
@@ -1379,9 +1376,7 @@ function preprocess(str) {
     noop.exec = noop;
 
     function merge(obj) {
-        var i = 1
-            , target
-            , key;
+        var i = 1, target, key;
 
         for (; i < arguments.length; i++) {
             target = arguments[i];
@@ -1570,10 +1565,8 @@ function addListeners() {
         c.each(function(i, x) {
             $(x).css('position', 'absolute').css('top', '0').css('left', '0');
         });
-        console.log(x.parent().attr('id'));
         for (var j=0; j<c.length; j++) totalWidth += c.eq(j).width();
         navWidths[i] = totalWidth + parseInt(x.css('padding-left')) + parseInt(x.css('padding-right'));
-        console.log(navWidths[i]);
         c.each(function(k, x) {
             $(x).css('position', 'static');
         });
@@ -1592,11 +1585,13 @@ function addListeners() {
             }
         }
         $(window).on('resize orientationChanged', adjustMenu);
+        adjustMenu();
     });
 
     // Menus pre-set to first one
-    // var n = $('nav :first-child :first-child');
-    // for (var i=n.size()-1; i>=0; ) eval(n.eq(--i).attr("onclick"));
+    var n = $('nav :first-child :first-child');
+    for (var i=n.size()-1; i>=0; ) eval(n.eq(--i).attr("onclick"));
+
     // If there's a hash, open it
     if (window.location.hash.length > 1) changePage(window.location.hash.replace(/^#/,""));
 
@@ -1608,12 +1603,12 @@ function addListeners() {
  */
 
 window.changePage = function(name) {
-    if (name) {
-        var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z\d\-]]/g, '');
+    if (name && name.indexOf('href')<0) {
+        var tag = '#' + name.toLowerCase().replace(/%20| /g, '-').replace(/%22|[^a-z0-9\-]]/g, '');
         var query = $(tag);
         if (query.length) {
-            query.css("display", "block");
-            query.siblings('.section').css("display", "none");
+            query.removeClass('hide');
+            query.siblings('.section').addClass('hide');
             query = query.siblings('nav').first().find('.link-container a');
             query.css('color', '');
             for (var i=0; i<query.length; i++) {

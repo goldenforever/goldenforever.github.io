@@ -103,6 +103,7 @@
         function updateView() {
             document.getElementById("outp").innerHTML = generate(cm.getValue());
             contextualise();
+            $('body').css('opacity', '').css('overflow', '');
         }
 
         cm.on("change", updateView);

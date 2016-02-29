@@ -446,7 +446,7 @@ nav {
 }
 
 nav .link-container {
-    padding: 0 .5rem;
+    padding-right: 1rem;
 }
 
 nav:first-of-type {
@@ -497,12 +497,37 @@ body {
     overflow-y: scroll;
 }
 
-.container > nav:first-child {
+body > .container > nav:first-child {
     position: fixed;
-    top: 1rem;
+    top: 0;
     left: 0;
     width: 100%;
-    z-index: 999
+    z-index: 999;
+    background-color: rgba(255,255,255,0.9);
+    border: 0;
+    border-bottom: 2px solid rgba(153,153,153,0.7);
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+    padding-right: 1.5rem;
+}
+
+body > .container > nav:first-child + * {
+    padding-top: 3rem;
+}
+
+body > .container > nav:first-child .link-container {
+    display: inline !important;
+    padding-right: .5%;
+    padding-right: .5%;
+}
+
+nav a[href] {
+    text-decoration: none;
+}
+
+.hide {
+    display: none;
 }
 
 ::-webkit-scrollbar * {
