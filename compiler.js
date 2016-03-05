@@ -11,7 +11,7 @@ function generate(str, opt) {
  */
 
 function preprocess(str) {
-    str = str.replace(/\{--(.|\n)*?--}/g, "");
+    str = str.replace(/\{--(.|\n)*?--}/g, "").replace(/\{--.*/g, "");
 
     var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
     var indices = [], match = re.exec(str), count, cont, i, c;

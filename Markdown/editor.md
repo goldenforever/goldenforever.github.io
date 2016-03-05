@@ -74,7 +74,7 @@
         
     </div>
 </div>
-<input id="width" type="range" style="width:120%;margin:10px -10%; 0">
+<input value="30" id="width" type="range" style="width:120%;margin:10px -10%; 0">
 <div id="hello" style="position:relative;margin-left:-10%;margin-right:-10%;">
     <div id="edit"></div>
     <div id="out">
