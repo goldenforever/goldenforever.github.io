@@ -13,7 +13,7 @@ function generate(str, opt) {
 function preprocess(str) {
     str = str.replace(/\{--(.|\n)*?--}/g, "").replace(/\{--.*/g, "");
 
-    var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
+    var re = /\{[a-zA-Z_]+\(.*?\).*?}(?=(.{0}(?!<\/script>)(.|\n))*?(<script>|$))/g;
     var indices = [], match = re.exec(str), count, cont, i, c;
 
     while (match) {
@@ -66,12 +66,15 @@ function preprocess(str) {
             '</div>'
         ],
         "modify":[
-            '<scr'+'ipt type="text/javascript" class="_sjs_this">',
+            '<script type="text/javascript" class="_sjs_this">',
             '',
             '',
             '',
             '$("._sjs_this").first().parent().css("~?0?~","~?1?~");$("._sjs_this").first().remove();</scr'+'ipt>'
         ],
+        "break":['<div class="page-break">', '', '', '', '</div>'],
+        "print":['<div class="__print__">', '', '', '', '</div>'],
+        "donotprint":['<div class="__donotprint__">', '', '', '', '</div>'],
         "icon":['<i class="fa fa-~?0?~">', '', '', '', '</i>'],
         "font":['<span style="font-family:~?0?~">', '', '', '', '</span>'],
         "header":['<h~?0?~>', '', '', '', '</h~?0?~>'],
