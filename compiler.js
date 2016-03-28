@@ -45,6 +45,7 @@ function preprocess(str) {
  */
 (function() {
     var counter = {"1":0,"2":0,"3":0,"4":0,"5":0,"6":0};
+    window.header_tree = [];
 
     /**
      * Object functions
@@ -78,23 +79,63 @@ function preprocess(str) {
         "icon":['<i class="fa fa-~?0?~">', '', '', '', '</i>'],
         "font":['<span style="font-family:~?0?~">', '', '', '', '</span>'],
         "header":['<h~?0?~>', '', '', '', '</h~?0?~>'],
+        "heading":['~>', 'header'],
         "color":['<span style="color:~?0?~">', '', '', '', '</span>'],
         "vspace":['<div style="margin-bottom:~?0?~">', '', '', '', '</div>'],
         "hspace":['<span style="margin-left:~?0?~">', '', '', '', '</span>'],
-        "escape":['', '', '', '', '']
+        "vertical":['~>', 'vspace'],
+        "horizontal":['~>', 'hspace'],
+        "date":['<span class="__date__">', '', '', '', '</span>'],
+        "bold":['<strong>', '', '', '', '</strong>'],
+        "italic":['<em>', '', '', '', '</em>'],
+        "underline":['<span class="__underline__">', '', '', '', '</span>'],
+        "super":['<sup>', '', '', '', '</sup>'],
+        "sub":['<sub>', '', '', '', '</sub>'],
+        "hspace":['<span style="margin-left:~?0?~">', '', '', '', '</span>'],
+        "group":['<span class="group">', '', '', '', '</span>'],
+        "align":['~>', 'text-align', '~?0?~'],
+        "background":[''],
+        "backgroundimage":['~>', 'background-image', 'url("~?0?~")'],
+        "backgroundcolor":['~>', 'background-color', '~?0?~'],
+        "comment":[''],
+        "contents":['<span class="__contents__">', '', '', '', '</span>'],
+        "up":['<span style="position:relative;bottom:~?0?~">', '', '', '', '</span>'],
+        "down":['<span style="position:relative;top:~?0?~">', '', '', '', '</span>'],
+        "left":['<span style="position:relative;right:~?0?~">', '', '', '', '</span>'],
+        "right":['<span style="position:relative;left:~?0?~">', '', '', '', '</span>']
     };
 
     var objList = Object.getOwnPropertyNames(objects);
 
     function valsToHTML(object, args, content) {
-        if (object === "tagline") {
+        if (object === "comment") {
+            return "";
+        } else if (object === "tagline") {
             if (args.length < 1) {
                 args[1] = content[0].split(" ");
                 args[0] = args[1].length<4 ? args[1].length+2 : 6;
             }
+        } else if (object === "background") {
+            if (args.length > 0) {
+                if (args[0].match(/\.[a-zA-Z]{1,7}$/g) == null) {
+                    return valsToHTML('backgroundcolor', args, content);
+                } else {
+                    return valsToHTML('backgroundimage', args, content);
+                }
+            }
         }
 
         var obj = objects[object];
+
+        if (obj[0].indexOf('~>')>-1) {
+            // Shortcut
+            if (obj.length < 3) return valsToHTML(obj[1], args, content);
+            // Modify
+            var mods = "";
+            for (var index = 1; index+1 < obj.length; index += 2)
+                mods += valsToHTML("modify", [obj[index], insertArgs(obj[index+1], args)], content);
+            return mods;
+        }
 
         var str = obj[0];
         var temp = obj[1];
@@ -106,6 +147,10 @@ function preprocess(str) {
         }
         str += obj[4];
 
+        return insertArgs(str, args);
+    }
+
+    function insertArgs(str, args) {
         var res;
         var regex = /~\?([0-9]+)\?~/;
         do {
@@ -202,6 +247,25 @@ function preprocess(str) {
             lastPunc = punc;
         }
         return str;
+    }
+
+    function addNode(tree, node, history) {
+         if (node[1] < 2 || window.header_tree.length < 1) {
+              window.header_tree.push(node);
+              return;
+         }
+         var text = node[0];
+         var level = node[1];
+         for (var i=tree.length-1; i>=0; i--) {
+              if (tree[i][1] < node[1]) {
+                   history.push(i);
+                   if (tree[i][3]) return addNode(tree[i][3], node, history);
+                   else eval('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history + '],[]]);');
+                   return;
+              }
+         }
+         eval('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history.concat([eval('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].length')]) + '],[]]);');
+         return;
     }
 
     /**
@@ -1030,6 +1094,7 @@ function preprocess(str) {
     Renderer.prototype.heading = function(text, level, raw) {
         var headerCloses = 0;
         var out = "";
+        addNode(window.header_tree, [text, level, [0], []], []);
         for (var i=level; i<7; i++) {
             headerCloses += counter[""+i];
             counter[""+i] = 0;
@@ -1099,7 +1164,7 @@ function preprocess(str) {
     };
 
     Renderer.prototype.underline = function(text) {
-        return '<span class="underline">' + text + '</span>';
+        return '<span class="__underline__">' + text + '</span>';
     };
 
     Renderer.prototype.em = function(text) {
@@ -1539,6 +1604,39 @@ function preprocess(str) {
  */
 
 function postprocess(str) {
+    /******** Contents bar ********/
+    var tree_str = "";
+
+    var matches = str.match(/<span class="__contents__">.*?<\/span>/g);
+
+    for (var i = 0; i < matches.length; i++)
+        matches[i] = [matches[i], matches[i].substring(27, matches[i].length-7).split("~!#!~")];
+
+    var element;
+
+    function deep(element) {
+        if (element[3].length < 1) {
+            console.log(element[0]);
+            return "<li>" + element[0] + "</li>";
+        }
+        var str = "";
+        for (var i=0; i<element[3].length; i++)
+            str += deep(element[3][i]);
+        return '<li><span class="__headername__">' + element[0] + '</span><ol>' + str + '</ol></li>';
+    }
+
+    console.log(window.header_tree);
+
+    tree_str = deep(window.header_tree[window.header_tree.length-1]);
+    tree_str = tree_str.substring(4, tree_str.length - 5);
+
+    // for (var i = 0; i < split.length; i++)
+    //     tree_str += '<h'+split[i][1]+'><span class="__counter__">' + split[i].slice(2).join('.') + '</span>' + split[i][0] + '</h'+split[i][1]+'>';
+
+    for (var i = 0; i < matches.length; i++)
+        str = str.replace(/<span class="__contents__">.*?<\/span>/, '<div class="__contents__">' + tree_str + "</div>");
+    /****************************/
+
     return '<div class="container">' + str + '</div>';
 }
 
@@ -1552,6 +1650,22 @@ function contextualise() {
     $('._sjs_this').each(function(i, x) {
         eval(x.innerHTML);
     });
+
+    (function(){
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth();
+        var year = d.getFullYear();
+        if (day % 10 == 1) day += "st of ";
+        else if (day % 10 == 2) day += "nd of ";
+        else if (day % 10 == 3) day += "rd of ";
+        else day += "th of ";
+        month = ["January", "February", "March",
+                 "April", "May", "June",
+                 "July", "August", "September",
+                 "October", "November", "December"][month] + ", ";
+        $('.__date__').html(day + month + year);}
+    )()
 }
 
 /**
