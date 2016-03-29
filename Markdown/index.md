@@ -1,12 +1,12 @@
-# <img src="images/diamond.svg" style="margin:-1rem -0.5rem;position:relative;top:0.6rem;"> some-js
+# {emoji()gem}*some-js*
 
-{tagline()&nbsp;&nbsp;&nbsp;&nbsp;simple web development}
+{tagline()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;simple web development}
 
 {menu()Get It,Design,To Dos,Requirements Specification,Components,Documentation,Progress Report,Editor}
 
 ## Get It
 
-This should be your `index.html` file. {icon(smile-o)}
+This should be your `index.html` file. {emoji()smile}
 
 ```html
 <!DOCTYPE html>
