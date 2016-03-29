@@ -31,11 +31,11 @@
 
 #### HTML Tags
 
-{add(Markdown/htmltags.md)}
+{add(Markdown/htmltags.sj)}
 
 #### Tables
 
-{add(Markdown/tables.md)}
+{add(Markdown/tables.sj)}
 
 #### Concept Drawings
 
@@ -47,4 +47,4 @@
 
 #### General Web Objects
 
-{add(Markdown/gwo.md)}
+{add(Markdown/gwo.sj)}

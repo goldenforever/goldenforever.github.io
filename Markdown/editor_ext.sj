@@ -1,5 +1,4 @@
-## Editor
-
+</div>
 <style>
     #_sjs_out, #_sjs_edit {
         border: 0.1rem solid #ccc;
@@ -9,11 +8,12 @@
         position: absolute;
         top: 0;
         right: 0;
+        overflow-y: auto;
     }
-    #_sjs_hello { width:120%;position:relative;height:300px;overflow-x:hidden;overflow-y:visible;resize:vertical; }
+    #_sjs_hello { width:99%;position:relative;height:300px;overflow-x:hidden;overflow-y:scroll;resize:vertical; }
     #_sjs_edit { left:5px;right:auto; }
     #_sjs_ohhai, #_sjs_ohhai2 {
-        margin: 0 -10.5%;
+        margin: 0;
         text-align: center;
         border: 1px solid rgba(0,0,0,0.1);
         border-width: 1px 2px;
@@ -62,20 +62,23 @@
     }
 </style>
 
+{--
 <div id="_sjs_ohhai2" onclick="expandSheet2();">
     <div id="_sjs_ohbai2">some-js Cheatsheet</div>
     <div id="_sjs_cheat-sheet2">
-        
+
     </div>
 </div>
 <div id="_sjs_ohhai" onclick="expandSheet();">
     <div id="_sjs_ohbai">Markdown Cheatsheet</div>
     <div id="_sjs_cheat-sheet">
-        
+
     </div>
 </div>
-<input id="_sjs_width" value="30" type="range" style="width:120%;margin:10px -10%; 0">
-<div id="_sjs_hello" style="position:relative;margin-left:-10%;margin-right:-10%;">
+--}
+
+<div style="padding-right:20px;"><input id="_sjs_width" value="30" type="range" style="width:99%;margin:10px;"></div>
+<div id="_sjs_hello" style="position:relative;">
     <div id="_sjs_edit"></div>
     <div id="_sjs_out">
         <div id="_sjs_outp" class="container"></div>

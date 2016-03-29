@@ -1619,6 +1619,7 @@ function postprocess(str) {
     var element;
 
     function deep(element) {
+        if (element == null) return "";
         if (element[3].length < 1) {
             return "<li>" + element[0] + "</li>";
         }

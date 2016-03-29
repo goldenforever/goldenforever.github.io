@@ -37,16 +37,16 @@ You can learn from the tutorial which can be found [here](../some-js-tutorial).
 
 You can see the project on Github here: https://github.com/goldenforever/some-js
 
-{add(Markdown/design.md)}
+{add(Markdown/design.sj)}
 
-{add(Markdown/todos.md)}
+{add(Markdown/todos.sj)}
 
-{add(Markdown/reqs.md)}
+{add(Markdown/reqs.sj)}
 
-{add(Markdown/comp.md)}
+{add(Markdown/comp.sj)}
 
-{add(Markdown/docs.md)}
+{add(Markdown/docs.sj)}
 
-{add(Markdown/report.md)}
+{add(Markdown/report.sj)}
 
-{add(Markdown/editor.md)}
+{add(Markdown/editor.sj)}

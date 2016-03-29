@@ -527,7 +527,7 @@ nav a[href] {
 }
 ::-webkit-scrollbar-thumb {
     border: 0.1rem solid rgba(0,0,0,0.22) !important;
-    background:rgba(0,0,0,0.04) !important;
+    background: rgba(0,0,0,0.04) !important;
 }
 
 code, kbd, samp {
