@@ -11,16 +11,19 @@ function generate(str, opt) {
  */
 
 function preprocess(str) {
+    // Tested - removing comments
     str = str.replace(/\{--(.|\n)*?--}/g, "").replace(/\{--.*/g, "");
-
+    // Tested
     var re = /\{[a-zA-Z_]+\(.*?\).*?}(?=(.{0}(?!<\/script>)(.|\n))*?(<script>|$))/g;
-    var indices = [], match = re.exec(str), count, cont, i, c;
 
+    // Tested - Finding the start indices of Web Objects
+    var indices = [], match = re.exec(str), count, cont, i, c;
     while (match) {
         indices[indices.length] = match.index;
         match = re.exec(str);
     }
 
+    // Tested
     for (var j=indices.length-1; j>=0; j--) {
         cont = false; i = 3; count = 1;
         while (count > 0) {
@@ -30,8 +33,9 @@ function preprocess(str) {
                     cont = true;
                 else if (c === '{')
                     count++;
-                else if (c === '}' && --count > 0)
+                else if (c === '}' && --count > 0) {
                     str = str.substring(0, indices[j] + i + 1) + '<' + count + '>' + str.substring(indices[j] + i + 1);
+                }
                 i++;
             } else break;
         }
@@ -262,11 +266,11 @@ function preprocess(str) {
               if (tree[i][1] < node[1]) {
                    history.push(i);
                    if (tree[i][3]) return addNode(tree[i][3], node, history);
-                   else eval('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history + '],[]]);');
+                   else eval(('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history + '],[]]);').replace(/\[]\[3]/g, ""));
                    return;
               }
          }
-         eval('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history.concat([eval('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].length')]) + '],[]]);');
+         eval(('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history.concat([eval(('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].length').replace(/\[]\[3]/g, ""))]) + '],[]]);').replace(/\[]\[3]/g, ""));
          return;
     }
 
@@ -836,6 +840,8 @@ function preprocess(str) {
      */
 
     InlineLexer.rules = inline;
+
+    window.hai = (inline);
 
     /**
      * Static Lexing/Compiling Method
@@ -1639,6 +1645,9 @@ function postprocess(str) {
         str = str.replace(/<span class="__contents__">.*?<\/span>/, '<div class="__contents__">' + tree_str + "</div>");
     /****************************/
 
+    // All scripts which have executed are given a class to show it
+    str = str.replace(/<\/script>/g, ";try{document.currentScript.classList.add('__executed__')}catch(e){[].slice.call(document.getElementsByTagName('script')).pop().classList.add('__executed__')}</script>");
+
     return '<div class="container">' + str + '</div>';
 }
 
@@ -1649,7 +1658,8 @@ function postprocess(str) {
 function contextualise() {
     $('body').css('opacity', '0').css('overflow', 'hidden');
     $('p:empty').remove();
-    $('._sjs_this').each(function(i, x) {
+
+    $('._sjs_this, script:not(.__executed__)').each(function(i, x) {
         eval(x.innerHTML);
     });
 

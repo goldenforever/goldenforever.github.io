@@ -81,7 +81,7 @@
 <div id="_sjs_hello" style="position:relative;">
     <div id="_sjs_edit"></div>
     <div id="_sjs_out">
-        <div id="_sjs_outp" class="container"></div>
+        <div id="_sjs_outp"></div>
     </div>
 </div>
 
@@ -111,10 +111,14 @@
         updateView();
 
         function updateView() {
-            document.getElementById("_sjs_outp").innerHTML = generate(cm.getValue());
-            contextualise();
-            $('body').css('opacity', '').css('overflow', '');
-            localStorage.setItem("editorcode", cm.getValue());
+            try {
+                document.getElementById("_sjs_outp").innerHTML = generate(cm.getValue());
+                contextualise();
+                $('body').css('opacity', '').css('overflow', '');
+                localStorage.setItem("editorcode", cm.getValue());
+            } catch (e) {
+                document.getElementById("_sjs_outp").innerHTML = "<h3><strong>Error parsing.</strong> Compiler produces this error:</h3><pre><code style='color:red'>" + e.stack + "</pre></code>";
+            }
         }
 
         cm.on("change", updateView);
