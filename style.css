@@ -586,7 +586,12 @@ code, kbd, samp {
     font-weight: inherit;
     text-decoration: inherit;
 }
+.__contents__ { font-size: 1.8rem; }
+.__contents__ > li { font-weight: bold; }
+.__contents__ > li > ol { font-weight: initial; }
 .__contents__ ol { counter-reset: item }
 .__contents__ li { display: block }
 .__contents__ li:before { content: counters(item, ".") " "; counter-increment: item; margin-right: 1rem; }
+.__contents__ > li:before { content: ''; margin: 0; }
+.__contents__ > li:before { content: ''; margin: 0; }
 .__contents__ > .__headername__ { display: none }
