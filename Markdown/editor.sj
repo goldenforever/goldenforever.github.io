@@ -2,7 +2,7 @@
 
 <script>
     $('nav').on('click', function () {
-        if ($('#editor.section:not(.hide)').size() > 0) $('body,html').css('overflow','hidden');
+        if ($('#editor.section:not(.hide)').size() > 0) { $('html').css('overflow','hidden'); $('body').css('overflow','scroll'); }
         else $('body,html').css('overflow','');
     });
 </script>

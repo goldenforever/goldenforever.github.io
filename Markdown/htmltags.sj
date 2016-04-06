@@ -10,7 +10,7 @@ Filter 'Will Add?' column:
 
 Tag             | Description                                                                                         | Will Add? | Syntax            | Assumption                                     
 ----------------|-----------------------------------------------------------------------------------------------------|:---------:|:-----------------:|:----------------------------------------------:
-&lt;!--...-->   | Defines a comment                                                                                   | Yes       | <code>{-<span></span>-  Comment --}</code> |
+&lt;!--...-->   | Defines a comment                                                                                   | Yes       | <code>{-<span></span>-  Comment @@@ </code> |
 &lt;!DOCTYPE>   | Defines the document type                                                                           | No        |                   | Needed on page load                                               
 &lt;abbr>       | Defines an abbreviation or an acronym                                                               | Yes       | `auto           ` |                                                
 &lt;address>    | Defines contact information for the author/owner of a document                                      | No        |                   | Not necessary                                  
