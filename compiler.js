@@ -141,7 +141,6 @@ function preprocess(str) {
         if (object === "comment") {
             return "";
         } else if (object === "escape") {
-            console.log(content);
             return '<span>' + toHTMLCharCodes(content.join()) + '</span>';
         } else if (object === "tagline") {
             if (args.length < 1) {
@@ -776,7 +775,7 @@ function preprocess(str) {
 
     var inline = {
         obj: /^\{[a-zA-Z\-]+\(.*?\).*?}(?!<[0-9]+>)/,
-        escape: /^\\([\\`*{}\[\]()#+\-.!_>@/])/,
+        escape: /^\\([\\`*{}\[\]()#+\-.!_<>@/])/,
         autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
         tag: /^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,
