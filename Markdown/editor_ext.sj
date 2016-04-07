@@ -124,7 +124,7 @@
             $('body').css('opacity', '').css('overflow', '');
             localStorage.setItem("editorcode", cm.getValue());
         } catch (e) {
-            document.getElementById("_sjs_outp").innerHTML = "<h3><strong>Error parsing.</strong> Compiler produces this error:</h3><pre><code style='color:red'>" + e.stack + "</pre></code>";
+            document.getElementById("_sjs_outp").innerHTML = "<div class=\"container\"><h3><strong>Error parsing.</strong> Compiler produces this error:</h3><pre><code style='color:red'>" + e.stack + "</pre></code></div>";
         }
     }
 

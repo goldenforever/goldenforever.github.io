@@ -93,7 +93,7 @@ function preprocess(str) {
             '</div>'
         ],
         "modify":[
-            '<script type="text/javascript" class="_sjs_this">',
+            '<scr'+'ipt type="text/javascript" class="_sjs_this">',
             '',
             '',
             '',
@@ -124,6 +124,7 @@ function preprocess(str) {
         "backgroundimage":['~>', 'background-image', 'url("~?0?~")'],
         "backgroundcolor":['~>', 'background-color', '~?0?~'],
         "comment":[''],
+        "escape":[''],
         "rule":['<hr>', '', '', '', ''],
         "contents":['<span class="__contents__">', '', '', '', '</span>'],
         "emoji":['<i style="font-style:inherit;" class="__emoji__">', ':', ':', '', '</i>'],
@@ -139,6 +140,9 @@ function preprocess(str) {
     function valsToHTML(object, args, content) {
         if (object === "comment") {
             return "";
+        } else if (object === "escape") {
+            console.log(content);
+            return '<span>' + toHTMLCharCodes(content.join()) + '</span>';
         } else if (object === "tagline") {
             if (args.length < 1) {
                 args[1] = content[0].split(" ");
@@ -298,6 +302,33 @@ function preprocess(str) {
          }
          eval(('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].push(["'+text.replace(/[^\\]"/g, '\\"')+'",'+level+',[' + history.concat([eval(('window.header_tree[' + (""+history).replace(/,/g, "][3][") + '][3].length').replace(/\[]\[3]/g, ""))]) + '],[]]);').replace(/\[]\[3]/g, ""));
          return;
+    }
+
+    function fixedCharCodeAt(e, b) {
+        b = b || 0;
+        var d = e.charCodeAt(b);
+        var c, a;
+        if (55296 <= d && d <= 56319) {
+            c = d;
+            a = e.charCodeAt(b + 1);
+            if (isNaN(a)) {
+                throw "High surrogate not followed by low surrogate in fixedCharCodeAt()"
+            }
+            return ((c - 55296) * 1024) + (a - 56320) + 65536
+        }
+        if (56320 <= d && d <= 57343) {
+            return false
+        }
+        return d
+    };
+
+    function toHTMLCharCodes(str) {
+        var out = "";
+        for (var i=0; i<str.length; i++) {
+            code = fixedCharCodeAt(str,i);
+            if (code) out += '&#'+code+';';
+        }
+        return out;
     }
 
     /**
@@ -1143,8 +1174,9 @@ function preprocess(str) {
     };
 
     Renderer.prototype.obj = function(object, args, content) {
-        for (var i=0; i<content.length; i++)
-            content[i] = interpret.inlineLexer.output(content[i]);
+        if (object != "escape")
+            for (var i=0; i<content.length; i++)
+                content[i] = interpret.inlineLexer.output(content[i]);
 
         return valsToHTML(object, args, content);
     };
