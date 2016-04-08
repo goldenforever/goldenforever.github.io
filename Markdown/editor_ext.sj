@@ -86,6 +86,7 @@
     </div>
 </div>
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.css">
 <script>
     var string = "# Hello\nworld.";
 
