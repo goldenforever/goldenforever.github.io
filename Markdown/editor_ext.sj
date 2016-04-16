@@ -11,8 +11,9 @@
         right: 0;
         overflow-y: auto;
     }
-    #_sjs_hello { width:99%;position:relative;height:300px;overflow-x:hidden;overflow-y:scroll;resize:vertical; }
-    #_sjs_edit { left:5px;right:auto; }
+    #_sjs_hello { position:relative;height:300px;overflow-x:hidden;overflow-y:scroll;resize:vertical; }
+    #_sjs_edit { left:5px;right:auto;border-right-width:5px; }
+    #_sjs_out { border-left-width:5px; }
     #_sjs_ohhai, #_sjs_ohhai2 {
         margin: 0;
         text-align: center;
@@ -61,13 +62,26 @@
     .CodeMirror, .CodeMirror-gutters {
         height: 100% !important;
     }
+    #_sjs {
+        position: relative;
+        left: .5%
+    }
+    #_sjs_webkit {
+        display: block;
+        text-align: center;
+    }
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      #_sjs_webkit {
+        display: none;
+      }
+    }
 </style>
 
+<div id="_sjs">
 @@@
 <div id="_sjs_ohhai2" onclick="expandSheet2();">
     <div id="_sjs_ohbai2">some-js Cheatsheet</div>
     <div id="_sjs_cheat-sheet2">
-
     </div>
 </div>
 <div id="_sjs_ohhai" onclick="expandSheet();">
@@ -77,16 +91,21 @@
     </div>
 </div>
 @@@
+<p style="opacity:.7;pointer-events:none;position:relative;height:1px;margin:0;overflow:visible;width:100%">{align(center)}{color(#000){down(4px){icon(arrow-left)} drag this to adjust the size of the editor {icon(arrow-right)}}}</p>
 
-<div style="padding-right:20px;"><input id="_sjs_width" value="30" type="range" style="width:99%;margin:10px;"></div>
+<div style="padding-right:20px;"><input id="_sjs_width" value="30" type="range" style="width:100%;margin:5px;"></div>
 <div id="_sjs_hello" style="position:relative;">
     <div id="_sjs_edit"></div>
     <div id="_sjs_out">
         <div id="_sjs_outp"></div>
     </div>
 </div>
+<p style="opacity:.7;pointer-events:none;position:absolute;right:-170px;height:1px;margin:0px;overflow:visible;transform:rotate(90deg);text-align:center;width:320px;bottom:160px;">{color(#000){down(4px)drag this to adjust the size of the editor {icon(arrow-right)}}}</p>
+</div>
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.css">
+<p id="_sjs_webkit">May work better in a webkit browser such as *Google Chrome* or *Safari*.</p>
+
+<p style="margin:0;padding:0"><link rel="stylesheet" href="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.css"></p>
 <script>
     var string = "# Hello\nworld.";
 
@@ -157,8 +176,8 @@
     }
 
     function adjWidth(e) {
-        $('#_sjs_edit').css('width', (e.target.value-1) + "%");
-        $('#_sjs_out').css('width', (99-e.target.value) + "%");
+        $('#_sjs_edit').css('width', (e.target.value) + "%");
+        $('#_sjs_out').css('width', (100-e.target.value) + "%");
     }
 
     $('#_sjs_width').on("click", adjWidth);

@@ -547,6 +547,14 @@ code, kbd, samp {
     padding-top: 1rem;
 }
 
+.__highlight__ {
+    -webkit-filter: brightness(1.2);
+    filter: brightness(1.2);
+    background-color: yellow;
+    margin: -0.2rem;
+    padding: .2rem
+}
+
 /** Word Processor Printing **/
 .__print__ { display: none }
 .__donotprint__ { display: block }

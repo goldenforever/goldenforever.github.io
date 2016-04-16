@@ -15,7 +15,7 @@ function generate(str, opt) {
 
 function preprocess(str) {
     // Tested - removing comments
-    str = str.replace(/(^|\n)@{3,}\s*?\n(.|\n)*?\n@{3,}\s*?($|\n)/g, "").replace(/\@{2,} .*/g, "");
+    str = str.replace(/\r\n?/g, "\n").replace(/(^|\n)@{3,}\s*?\n(.|\n)*?(\n@{3,}\s*?($|\n))/g, "").replace(/\@{2,}[ \t].*/g, "");
 
     // Tested
     var re = /\{[a-zA-Z_]+\(.*?\).*?}/g;
@@ -125,7 +125,7 @@ function preprocess(str) {
         "hspace":['<span style="margin-left:~?0?~">', '', '', '', '</span>'],
         "group":['<span class="group">', '', '', '', '</span>'],
         "align":['~>', 'text-align', '~?0?~'],
-        "highlight":['<span style="-webkit-filter:brightness(1.2);filter:brightness(1.2);background-color:~?0?~">', '', '', '', '</span>'],
+        "highlight":['<span class="__highlight__" style="background-color:~?0?~">', '', '', '', '</span>'],
         "background":[''],
         "backgroundimage":['~>', 'background-image', 'url("~?0?~")'],
         "backgroundcolor":['~>', 'background-color', '~?0?~'],
