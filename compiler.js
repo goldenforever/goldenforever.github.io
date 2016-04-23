@@ -782,7 +782,7 @@ function preprocess(str) {
     var inline = {
         obj: /^\{[a-zA-Z\-]+\(.*?\).*?}(?!<[0-9]+>)/,
         escape: /^\\([\\`*{}\[\]()#+\-.!_<>@/])/,
-        autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
+        //autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
         url: noop,
         tag: /^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,
         link: /^!?\[(inside)\]\(href\)/,
@@ -794,6 +794,7 @@ function preprocess(str) {
         code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
         br: /^ {2,}\n(?!\s*$)/,
         del: noop,
+        email: noop,
         text: /^[\s\S]+?(?=[@/\\<!\{\[_*`]| {2,}\n|$)/
     };
 
@@ -836,7 +837,8 @@ function preprocess(str) {
 
     inline.gfm = merge({}, inline.normal, {
         escape: replace(inline.escape)('])', '~|])')(),
-        url: /^(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/,
+        url: /^https?:\/\/[^\s<]+[^<.,:;"')\]\s]/i,
+        email: /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|co|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|(?:co|org|ac\.[a-z][a-z])|[a-z][a-z]))/i,
         del: /^~~(?=\S)([\s\S]*?\S)~~/,
         text: replace(inline.text)
         (']|', '~]|')
@@ -903,8 +905,6 @@ function preprocess(str) {
 
     InlineLexer.rules = inline;
 
-    window.hai = (inline);
-
     /**
      * Static Lexing/Compiling Method
      */
@@ -939,27 +939,36 @@ function preprocess(str) {
                 continue;
             }
 
-            // autolink
-            if (cap = this.rules.autolink.exec(src)) {
-                src = src.substring(cap[0].length);
-                if (cap[2] === '@') {
-                    text = cap[1].charAt(6) === ':'
-                        ? this.mangle(cap[1].substring(7))
-                        : this.mangle(cap[1]);
-                    href = this.mangle('mailto:') + text;
-                } else {
-                    text = escape(cap[1]);
-                    href = text;
-                }
-                out += this.renderer.link(href, null, text);
-                continue;
-            }
+//            // autolink
+//            if (cap = this.rules.autolink.exec(src)) {
+//                src = src.substring(cap[0].length);
+//                if (cap[2] === '@') {
+//                    text = cap[1].charAt(6) === ':'
+//                        ? this.mangle(cap[1].substring(7))
+//                        : this.mangle(cap[1]);
+//                    href = this.mangle('mailto:') + text;
+//                } else {
+//                    text = escape(cap[1]);
+//                    href = text;
+//                }
+//                out += this.renderer.link(href, null, text);
+//                continue;
+//            }
 
             // url (gfm)
             if (!this.inLink && (cap = this.rules.url.exec(src))) {
                 src = src.substring(cap[0].length);
-                text = escape(cap[1]);
+                text = escape(cap[0]);
                 href = text;
+                out += this.renderer.link(href, null, text);
+                continue;
+            }
+
+            // email
+            if (!this.inLink && (cap = this.rules.email.exec(src))) {
+                src = src.substring(cap[0].length);
+                text = this.mangle(cap[0]);
+                href = this.mangle('mailto:') + text;
                 out += this.renderer.link(href, null, text);
                 continue;
             }
@@ -1634,7 +1643,7 @@ function preprocess(str) {
         silent: false,
         highlight: null,
         langPrefix: 'lang-',
-        smartypants: false,
+        smartypants: true,
         headerPrefix: '',
         renderer: new Renderer,
         xhtml: false

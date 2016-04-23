@@ -1,5 +1,11 @@
 </div>
 
+@@@
+{setting}(dlkalaskas)
+{+sdhjdhjaa}()
+{saskl;ask}()
+@@@
+
 <style>
     #_sjs_out, #_sjs_edit {
         border: 0.1rem solid #ccc;
@@ -135,6 +141,7 @@
     function updateView() {
         try {
             var val = generate(cm.getValue());
+            window.val = val;
             try {
                 document.getElementById("_sjs_outp").innerHTML = val;
             } catch (f) {
