@@ -474,6 +474,11 @@ img, .table-wrapper {
 .table-wrapper {
     overflow-x: auto;
     border-bottom: 1px solid #E1E1E1;
+    display: block;
+    text-align: center;
+}
+
+.table-inner {
     display: inline-block;
 }
 

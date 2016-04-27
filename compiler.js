@@ -85,13 +85,6 @@ function preprocess(str) {
             '<span class="separator"> </span>',
             '</nav>'
         ],
-        "tagline":[
-            '<div class="tagline t~?0?~">',
-            '',
-            '',
-            '',
-            '</div>'
-        ],
         "modify":[
             '<scr'+'ipt type="text/javascript" class="_sjs_this">',
             '',
@@ -99,6 +92,8 @@ function preprocess(str) {
             '',
             '$("._sjs_this").first().parent().css("~?0?~","~?1?~");$("._sjs_this").first().remove();</scr'+'ipt>'
         ],
+        "tagline":['<div class="tagline t~?0?~">', '', '', '', '</div>'],
+        "subtitle":['~>', 'tagline'],
         "break":['<div class="page-break">', '', '', '', '</div>'],
         "print":['<div class="__print__">', '', '', '', '</div>'],
         "donotprint":['<div class="__donotprint__">', '', '', '', '</div>'],
@@ -1213,7 +1208,7 @@ function preprocess(str) {
     };
 
     Renderer.prototype.table = function(header, body) {
-        return '<div class="table-wrapper">\n'
+        return '<div class="table-wrapper"><div class="table-inner">\n'
             + '<table>\n'
             + '<thead>\n'
             + header
@@ -1222,7 +1217,7 @@ function preprocess(str) {
             + body
             + '</tbody>\n'
             + '</table>\n'
-            + '</div>\n';
+            + '</div></div>\n';
     };
 
     Renderer.prototype.tablerow = function(content) {
